@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+test_list
+tests/list.hpp
+.vscode/settings.json
