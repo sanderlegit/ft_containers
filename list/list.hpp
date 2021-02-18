@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/17 16:48:32 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/18 13:56:43 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ namespace ft {
 
 			//TODO
 			typedef	list_bi_iterator		iterator;
-			typedef	std::bidirectional_iterator_tag<const>	const_iterator;
+			//typedef	std::bidirectional_iterator_tag<const>	const_iterator;
 			//typedef	std::reverse_iterator<iterator>			reverse_iterator;
 			//typedef	std::reverse_iterator<const_iterator>	const_reverse_iterator;
 			//TODO make this used everywhere
@@ -200,11 +200,11 @@ namespace ft {
 				//delete all links
 				while (!empty()) {
 					pop_back();
-					std::cout << "empty:" << empty();
-					std::cout << " size:" << size();
-					if (!empty())
-						std::cout << " tail:" << back();
-					std::cout << std::endl;
+					//std::cout << "empty:" << empty();
+					//std::cout << " size:" << size();
+					//if (!empty())
+						//std::cout << " tail:" << back();
+					//std::cout << std::endl;
 				}
 			}
 

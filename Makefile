@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/15 16:29:54 by averheij      #+#    #+#                  #
-#    Updated: 2021/02/17 13:18:47 by averheij      ########   odam.nl          #
+#    Updated: 2021/02/18 12:33:59 by averheij      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@
 CONTAINERS 	=	list
 INCL		=	$(CONTAINERS:%=-I%)
 
-#OFILES		=	$(SRC:%.cpp=%.o)
+TESTFILES 	=	$(CONTAINERS:%=tests/test_%.o)
+OFILES		=	$(TESTFILES:%.cpp=%.o)
 
 CFLAGS		=	-Wall -Wextra -Werror -pedantic -std=c++98
 CXX			=	g++
@@ -26,13 +27,17 @@ endif
 all: $(CONTAINERS)
 
 %.o: %.cpp
-	$(CXX) $(CFLAGS) -c $< -o $@ $(INCL)
+	$(CXX) -c $< -o $@ $(INCL)
 
-$(CONTAINERS):
+#tests/test_%.o: tests/test_%.cpp
+	#$(CXX) -c $< -o $@ $(INCL)
+
+$(CONTAINERS): $(OFILES)
 ifeq ($(MAIN), 1)
-	$(CXX) $(CFLAGS) main.cpp -o test_$@ $(INCL)
+	#$(CXX) $(CFLAGS) main.cpp -o test_$@ $(INCL)
 else
-	$(CXX) $(CFLAGS) tests/test_$@.cpp -o test_$@ $(INCL)
+	#$(CXX) $(CFLAGS) tests/test_$@.cpp -o test_$@ $(INCL)
+	$(CXX) $(CFLAGS) tests/test_$@.o -o test_$@ $(INCL)
 endif
 
 #map:
