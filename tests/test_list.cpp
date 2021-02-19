@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/18 14:27:06 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/19 13:49:28 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@
 
 template<class T>
 struct data {
-	std::list<T>	*std;
-	ft::list<T>		*ft;
+	//std::list<T>	*std;
+	//ft::list<T>		*ft;
 	int				pass = 0;
 	int				fail = 0;
 	int				current_fail = 0;
@@ -40,8 +40,6 @@ struct data {
 template<class T>
 data<T>		*init_data(void) {
 	data<T>		*d = new data<T>;
-	d->std = new std::list<T>();
-	d->ft = new ft::list<T>();
 	return d;
 }
 
@@ -113,20 +111,66 @@ void		check_pass(data<T> *d, bool score) {
 
 //#define comp(A, B)		full_comp(d, std, ft, A, B)
 
+template<class T>
+void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
+	bool			r1;
+	bool			r2;
+	T				r3;
+	T				r4;
+	size_t			r5;
+	size_t			r6;
+
+	r1 = std->empty();
+	r2 = ft->empty();
+	print_comp("empty", r1, r2);
+	comp(r1 == r2);
+
+	if (!r1 && !r2) {
+		r3 = std->front();
+		r4 = ft->front();
+		r5 = std->size();
+		r6 = ft->size();
+		std->pop_front();
+		ft->pop_front();
+		print_comp("front", r3, r4);
+		comp(r3 == r4);
+		print_comp("size", r5, r6);
+		comp(r5 == r6);
+
+		std::cout << "\titerating through..." << std::endl;
+		while (!std->empty() && !ft->empty()) {
+			r3 = std->front();
+			r4 = ft->front();
+			r5 = std->size();
+			r6 = ft->size();
+			std->pop_front();
+			ft->pop_front();
+			comp(r3 == r4);
+			comp(r5 == r6);
+		}
+		print_comp("front", r3, r4);
+		print_comp("size", r5, r6);
+	}
+}
+
 /*-----------------------------------CONSTRUCTOR TESTS-----------------------------------*/
 
 template<class T>
 void		test_empty_constructor(data<T> *d) {
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	bool			r1;
+	bool			r2;
+
 	print_title("Empty Constructor");
+	std = new std::list<T>();
+	ft = new ft::list<T>();
 
-	std::list<T> 	*std = new std::list<T>();
-	ft::list<T> 	*ft = new ft::list<T>();
-
-	bool			r1 = std->empty();
-	bool			r2 = ft->empty();
-
-	print_comp("empty", r1, r2);
-	comp(r1 == r2);
+	//r1 = std->empty();
+	//r2 = ft->empty();
+	//print_comp("empty", r1, r2);
+	//comp(r1 == r2);
+	test_equivalence(d, std, ft);
 
 	delete std;
 	delete ft;
@@ -135,48 +179,51 @@ void		test_empty_constructor(data<T> *d) {
 
 template<class T>
 void		test_fill_constructor(data<T> *d) {
+	unsigned char	size;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	//bool			r1;
+	//bool			r2;
+	//T				r3;
+	//T				r4;
+	//size_t			r5;
+	//size_t			r6;
+
 	print_title("Fill Constructor");
+	size = randomize<char>();
+	val = randomize<T>();
+	std = new std::list<T>(size, val);
+	ft = new ft::list<T>(size, val);
 
-	unsigned char	size = randomize<char>();
-	T				val = randomize<T>();
+	//r1 = std->empty();
+	//r2 = ft->empty();
+	//print_comp("empty", r1, r2);
+	//comp(r1 == r2);
 
-	std::list<T> 	*std = new std::list<T>(size, val);
-	ft::list<T> 	*ft = new ft::list<T>(size, val);
+	//r3 = std->front();
+	//r4 = ft->front();
+	//r5 = std->size();
+	//r6 = ft->size();
+	//std->pop_front();
+	//ft->pop_front();
+	//print_comp("front", r3, r4);
+	//comp(r3 == r4);
+	//print_comp("size", r5, r6);
+	//comp(r5 == r6);
 
-	bool			r1 = std->empty();
-	bool			r2 = ft->empty();
+	//while (!std->empty() && !ft->empty()) {
+		//r3 = std->front();
+		//r4 = ft->front();
+		//r5 = std->size();
+		//r6 = ft->size();
+		//std->pop_front();
+		//ft->pop_front();
+		//comp(r3 == r4);
+		//comp(r5 == r6);
+	//}
+	test_equivalence(d, std, ft);
 
-	print_comp("empty", r1, r2);
-	comp(r1 == r2);
-
-	T			r3;
-	T			r4;
-	size_t		r5;
-	size_t		r6;
-
-	r3 = std->front();
-	r4 = ft->front();
-	r5 = std->size();
-	r6 = ft->size();
-	std->pop_front();
-	ft->pop_front();
-
-	print_comp("front", r3, r4);
-	comp(r3 == r4);
-	print_comp("size", r5, r6);
-	comp(r5 == r6);
-	while (!std->empty() && !ft->empty()) {
-		r3 = std->front();
-		r4 = ft->front();
-		r5 = std->size();
-		r6 = ft->size();
-		std->pop_front();
-		ft->pop_front();
-
-		comp(r3 == r4);
-		comp(r5 == r6);
-
-	}
 	delete std;
 	delete ft;
 	incr_score(d);
@@ -184,12 +231,13 @@ void		test_fill_constructor(data<T> *d) {
 
 template<class T>
 void		test_range_constructor(data<T> *d) {
-
+	//TODO
+	//test equality of size, head, tail, front; pop; through to check values
 }
 
 template<class T>
 void		test_copy_constructor(data<T> *d) {
-
+	//TODO
 }
 
 template<class T>
@@ -200,21 +248,64 @@ void		test_constructors(data<T> *d) {
 	test_copy_constructor(d);
 }
 
+/*-----------------------------------CAPACITY TESTS-----------------------------------*/
+
+template<class T>
+void		test_empty(data<T> *d) {
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	bool			r1;
+	bool			r2;
+
+	print_title("test empty");
+	val = randomize<T>();
+	std = new std::list<T>(5, val);
+	ft = new ft::list<T>(5, val);
+
+	r1 = std->empty();
+	r2 = ft->empty();
+	print_comp("empty", r1, r2);
+	comp(r1 == r2);
+
+	for (int i = 0; i < 5; i++) {
+		std->pop_front();
+		ft->pop_front();
+		r1 = std->empty();
+		r2 = ft->empty();
+		comp(r1 == r2);
+	}
+	r1 = std->empty();
+	r2 = ft->empty();
+	print_comp("empty", r1, r2);
+	comp(r1 == r2);
+
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_capacity(data<T> *d) {
+	test_empty(d);
+}
+
+/*-----------------------------------MAIN-----------------------------------*/
+
 template<class T>
 void		do_tests(void) {
-	data<T>		*d = init_data<T>();
+	data<T>		*d;
+
+	d = init_data<T>();
 
 	test_constructors(d);
-	//(rand() % 5); //0 - 4
+	test_capacity(d);
 
-	delete d->ft;
-	delete d->std;
-	delete d;
 	std::cout << "pass: " << d->pass << "\tfail:\t" << d->fail << std::endl;
+	delete d;
 }
 
 int			main(void) {
-
 	srand((int) time(0));
 	do_tests<int>();
 }
