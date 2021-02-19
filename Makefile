@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/15 16:29:54 by averheij      #+#    #+#                  #
-#    Updated: 2021/02/18 12:33:59 by averheij      ########   odam.nl          #
+#    Updated: 2021/02/19 13:01:27 by averheij      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,17 +17,21 @@ INCL		=	$(CONTAINERS:%=-I%)
 TESTFILES 	=	$(CONTAINERS:%=tests/test_%.o)
 OFILES		=	$(TESTFILES:%.cpp=%.o)
 
-CFLAGS		=	-Wall -Wextra -Werror -pedantic -std=c++98
+DFLAGS		=
+ifeq ($(F), 1)
+	DFLAGS += -fsanitize=address
+endif
+ifeq ($(G), 1)
+	DFLAGS += -g
+endif
+CFLAGS		=	-Wall -Wextra -Werror -pedantic -std=c++98 $(DFLAGS)
 CXX			=	g++
 
-ifeq ($(DEBUG), 1)
-	CFLAGS += -g -fsanitize=address
-endif
 
 all: $(CONTAINERS)
 
 %.o: %.cpp
-	$(CXX) -c $< -o $@ $(INCL)
+	$(CXX) $(DFLAGS) -c $< -o $@ $(INCL)
 
 #tests/test_%.o: tests/test_%.cpp
 	#$(CXX) -c $< -o $@ $(INCL)
