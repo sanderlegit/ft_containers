@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/18 13:56:43 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/19 13:33:11 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,16 @@
 # include <memory>
 # include <iterator>
 # include <cstddef>
+# include <cmath>
+
 
 
 #include <iostream>
 
 /*	memory		std::allocator
  *	iterator	bidirectional_iterator_tag //this doesnt look right
- *	cstddef		ptrdiff_t */
+ *	cstddef		ptrdiff_t
+ *	cmath		__true_type __is_integer*/
 
 namespace ft {
 	template <class T, class Alloc = std::allocator<T> >
@@ -51,15 +54,19 @@ namespace ft {
 			typedef	ptrdiff_t								difference_type;
 			typedef size_t									size_type;
 
+/*-------------------------------------------NODE CLASS-------------------------------------------*/
 		private:
-			class link {
+			class Node {
 				public:
-					link(void) : next(NULL), prev(NULL) {}
-					link(T* data_, link *next_ = NULL, link* prev_ = NULL) : data(data_), next(next_), prev(prev_) {}
+					typedef	T								value_type;
+					typedef	value_type*						pointer;
 
-					~link(void) {}
+					Node(void) : next(NULL), prev(NULL) {}
+					Node(pointer data_, Node *next_ = NULL, Node* prev_ = NULL) : data(data_), next(next_), prev(prev_) {}
 
-					link&		operator=(const link& rhs) {
+					~Node(void) {}
+
+					Node&		operator=(const Node& rhs) {
 						if (this != rhs) {
 							this->data = rhs.data;
 							this->next = rhs.next;
@@ -68,60 +75,99 @@ namespace ft {
 						return *this;
 					}
 
-					T			*data;
-					link		*next;
-					link		*prev;
+					pointer		data;
+					Node		*next;
+					Node		*prev;
 			};
 
 		public:
-			typedef link									node_type;
+			typedef Node									node_type;
+
+/*-------------------------------------------ITERATOR CLASS-------------------------------------------*/
+			class const_list_bi_iterator { //https://en.cppreference.com/w/cpp/iterator/iterator
+				public:
+					typedef std::bidirectional_iterator_tag			iterator_category;
+					typedef Node									node_type;
+					typedef	T										value_type;
+					typedef	const value_type&						const_reference;
+					typedef	const value_type*						const_pointer;
+					typedef	ptrdiff_t								difference_type;
+
+					const_list_bi_iterator(node_type& n = NULL) : node(n) {}
+					const_list_bi_iterator(const const_list_bi_iterator& src) { *this = src; }
+					~const_list_bi_iterator(void) {}
+
+					const_list_bi_iterator&		operator=(const_list_bi_iterator& rhs) {
+						node = rhs.node;
+						return *this;
+					}
+
+					const_list_bi_iterator		operator++(int n) {		//i++
+						const_list_bi_iterator ret(*this);
+						--*this;
+						return (ret);
+					}
+
+					const_list_bi_iterator		operator--(int n) {		//i--
+						const_list_bi_iterator ret(*this);
+						--*this;
+						return (ret);
+					}
+
+					const_list_bi_iterator&		operator++() { node = node->next; } //++i
+					const_list_bi_iterator&		operator--() { node = node->prev; } //--i
+
+					bool					operator==(const const_list_bi_iterator& rhs) const { return node == rhs.node; }
+					bool					operator!=(const const_list_bi_iterator& rhs) const { return node != rhs.node; }
+					pointer					operator->() const { return &node->data; }
+					reference 				operator*() const { return node->data; }
+
+					node_type	*node = NULL;
+			};
 
 			class list_bi_iterator { //https://en.cppreference.com/w/cpp/iterator/iterator
 				public:
-					typedef std::bidirectional_iterator_tag	iterator_category;		//TODO The rest of the typdefs should come from a template arg
+					typedef std::bidirectional_iterator_tag			iterator_category;
+					typedef Node									node_type;
+					typedef	T										value_type;
+					typedef	value_type&								reference;
+					typedef	value_type*								pointer;
+					typedef	ptrdiff_t								difference_type;
 
-					explicit list_bi_iterator() {}
-					//TODO
-					//constructor(node)
-					//destructor
-					//copy constructor
-					//operator=
+					list_bi_iterator(node_type& n = NULL) : node(n) {}
+					list_bi_iterator(const list_bi_iterator& src) { *this = src; }
+					~list_bi_iterator(void) {}
 
-					list_bi_iterator&		operator++() {
-						link = link->next;
+					list_bi_iterator&		operator=(list_bi_iterator& rhs) {
+						node = rhs.node;
+						return *this;
 					}
 
-					list_bi_iterator		operator++(int n) {		//TODO not what was meant
-						for (int i = 0; i < n; i++)
-							link = link->next;
+
+					list_bi_iterator		operator++(int n) {		//i++
+						list_bi_iterator ret(*this);
+						--*this;
+						return (ret);
 					}
 
-					list_bi_iterator&		operator--() {
-						link = link->prev;
+					list_bi_iterator		operator--(int n) {		//i--
+						list_bi_iterator ret(*this);
+						--*this;
+						return (ret);
 					}
 
-					list_bi_iterator		operator--(int n) {		//TODO not what was meant
-						for (int i = 0; i < n; i++)
-							link = link->prev;
-					}
+					list_bi_iterator&		operator++() { node = node->next; } //++i
+					list_bi_iterator&		operator--() { node = node->prev; } //--i
 
-					bool					operator==(const list_bi_iterator& rhs) const {
-						return link == rhs.link;
-					}
+					bool					operator==(const list_bi_iterator& rhs) const { return node == rhs.node; }
+					bool					operator!=(const list_bi_iterator& rhs) const { return node != rhs.node; }
+					pointer					operator->() const { return &node->data; }
+					reference 				operator*() const { return node->data; }
 
-					bool					operator!=(const list_bi_iterator& rhs) const {
-						return link != rhs.link;
-					}
+					operator const_list_bi_iterator() { return {node}; }
 
-					pointer					operator->() const {
-						return &link->data;
-					}
+					node_type	*node = NULL;
 
-					reference 				operator*() const {
-						return link->data;
-					}
-
-					node_type	*link;
 			};
 
 		public:
@@ -130,21 +176,21 @@ namespace ft {
 			 *const_iterator			a bidirectional iterator to const value_type	
 			 *reverse_iterator			reverse_iterator<iterator>	
 			 *const_reverse_iterator	reverse_iterator<const_iterator>	
-			 *node						class used for nodes	*/
+			 *Node						class used for nodes	*/
 
 			//TODO
 			typedef	list_bi_iterator		iterator;
-			//typedef	std::bidirectional_iterator_tag<const>	const_iterator;
+			typedef	const_list_bi_iterator	const_iterator;
 			//typedef	std::reverse_iterator<iterator>			reverse_iterator;
 			//typedef	std::reverse_iterator<const_iterator>	const_reverse_iterator;
-			//TODO make this used everywhere
 
 		private:
 			size_type					_size;
 			Alloc						alloc;
-			link*						head;
-			link*						tail;
+			node_type*					head;
+			node_type*					tail;
 
+/*-------------------------------------------CANON-------------------------------------------*/
 		public:
 			/*	(1) empty container constructor (default constructor)
 			 *		Constructs an empty container, with no elements.
@@ -166,46 +212,55 @@ namespace ft {
 			 *
 			 *		The storage for the elements is allocated using this internal allocator.  */
 
-			explicit list (const allocator_type& alloc = allocator_type())
+			explicit list(const allocator_type& alloc = allocator_type())
 								: _size(0), alloc(alloc),  head(NULL), tail(NULL) {}
 
-			explicit list (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
+			explicit list(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
 								: _size(0), alloc(alloc), head(NULL), tail(NULL) {
 				for (size_type i = 0; i != n; i++) {
 					push_back(val);
 				}
 			}
 
-			template <class InputIterator>
-			list (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
-			  					: alloc(alloc), _size(0) {
+		private:
+			template<typename Integer>
+			void	list_paradox_constructor(Integer n, Integer val, std::__true_type) {
+				for (size_type i = 0; i != n; i++) {
+					push_back(val);
+				}
+			}
+
+			template<typename InputIterator>
+			void	list_paradox_constructor(InputIterator first, InputIterator last, std::__false_type) {
 				while (first != last) {
+					std::cout << *first << std::endl;
 					push_back(*first);
 					first++;
 					_size++;
 				}
 			}
 
-			list (const list& x) {
+
+		public:
+			template <class InputIterator>
+			list(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
+			  					: alloc(alloc), _size(0), head(NULL), tail(NULL) {
+				list_paradox_constructor(first, last, typename std::__is_integer<InputIterator>::__type());
+			}
+
+			list(const list& x) {
 				(void)x;
 				//TODO
+				//Use begin, end and pass to range assign
+				//is there an "add range" function?
 			}
 
 			/*	This destroys all container elements, and deallocates all the
 			 *	storage capacity allocated by the list container using its allocator.  */
 
 			~list(void) {
-				//TODO
-				//destruct stuff
-				//delete all links
-				while (!empty()) {
+				while (!empty())
 					pop_back();
-					//std::cout << "empty:" << empty();
-					//std::cout << " size:" << size();
-					//if (!empty())
-						//std::cout << " tail:" << back();
-					//std::cout << std::endl;
-				}
 			}
 
 			/*	Copies all the elements from x into the container.
@@ -215,11 +270,51 @@ namespace ft {
 			 *	assigned to or destroyed.  */
 
 			list&				operator=(const list& x) {
-				(void)x;
-				//TODO
+				node_type		*ptr;
+
+				while (!empty())
+					pop_front();
+				ptr = x.head;
+				while (ptr) {
+					push_back(ptr->val);
+					ptr = ptr->next;
+				}
 			}
 
-			/*		CAPACITY 		*/
+/*-------------------------------------------ITERATORS-------------------------------------------*/
+
+			/*	Returns an iterator pointing to the first element in the list container.	*/
+
+			iterator			begin() {
+				return new iterator(head);
+			}
+
+			const_iterator		begin() const {
+				return new const_iterator(head);
+			}
+
+			/*	Returns an iterator referring to the past-the-end element in the list container.
+			 *	The past-the-end element is the theoretical element that would follow the last 
+			 *	element in the list container. It does not point to any element, and thus shall 
+			 *	not be dereferenced.
+			 *	If the container is empty, this function returns the same as list::begin.	*/
+
+			iterator			end() {
+				if (tail)
+					return new iterator(tail->next);
+				else
+					return new iterator(NULL);
+			}
+
+			const_iterator		end() const {
+				if (tail)
+					return new const_iterator(tail->next);
+				else
+					return new const_iterator(NULL);
+			}
+
+/*-------------------------------------------CAPACITY-------------------------------------------*/
+
 
 			/*	Returns whether the list container is empty (i.e. whether its size is 0).  */
 
@@ -259,21 +354,21 @@ namespace ft {
 				return *tail->data;
 			}
 
-			/*		MODIFIERS 			*/
+/*-------------------------------------------MODIFIERS-------------------------------------------*/
 
 			/*	Inserts a new element at the beginning of the list, right before its current first element. 
 			 *	The content of val is copied (or moved) to the inserted element.
 			 *	This effectively increases the container size by one. */
 
 			void				push_front(const value_type& val) {
-				link		*l;
+				node_type		*l;
 
 				if (head) {
-					l = new_link(val, head, NULL);
+					l = new_node(val, head, NULL);
 					head->prev = l;
 					head = l;
 				} else {
-					head = new_link(val, NULL, NULL);
+					head = new_node(val, NULL, NULL);
 					tail = head;
 				}
 				_size++;
@@ -283,7 +378,7 @@ namespace ft {
 			 *	This destroys the removed element. */
 
 			void				pop_front(void) {
-				link		*tmp;
+				node_type		*tmp;
 
 				if (head) {
 					tmp = head;
@@ -303,10 +398,10 @@ namespace ft {
 
 			void				push_back(const value_type& val) {
 				if (tail) {
-					tail->next = new_link(val, NULL, tail);
+					tail->next = new_node(val, NULL, tail);
 					tail = tail->next;
 				} else {
-					head = new_link(val, NULL, NULL);
+					head = new_node(val, NULL, NULL);
 					tail = head;
 				}
 				_size++;
@@ -316,7 +411,7 @@ namespace ft {
 			 * This destroys the removed element.  */
 
 			void				pop_back() {
-				link		*tmp;
+				node_type		*tmp;
 
 				if (tail) {
 					tmp = tail;
@@ -332,18 +427,18 @@ namespace ft {
 
 		private:
 
-			link*				new_link(const value_type& val, link *next = NULL, link *prev = NULL) {
-				//link		*l;
+			node_type*				new_node(const value_type& val, node_type *next = NULL, node_type *prev = NULL) {
+				//node		*l;
 
-				//l = alloc.allocate(sizeof(link));
+				//l = alloc.allocate(sizeof(node));
 				//alloc.construct(l, val, next, prev);
 				//return l;
 				value_type	*tmp;
 
 				tmp = alloc.allocate(1);
 				alloc.construct(tmp, val);
-				return new link(tmp, next, prev);
-				//return new link(val, next, prev);
+				return new Node(tmp, next, prev);
+				//return new node(val, next, prev);
 			}
 	};
 
