@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/19 13:49:28 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/19 14:44:55 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ T			randomize(void) {
 /*-----------------------------------TEST TOOLS-----------------------------------*/
 
 void		print_title(std::string str) {
-	std::cout << "  ----" << str << "----" <<std::endl;
+	std::cout << "\n  ----" << str << "----" <<std::endl;
 }
 
 template<class T, class R>
@@ -97,19 +97,6 @@ void		check_pass(data<T> *d, bool score) {
 		d->current_fail++;
 }
 #define comp(A)		check_pass(d, A)
-//#define comp(A, B)		print_comp(r1, r2); comp(r1 == r2)
-
-
-//template<class T, class Lstd, class Lft, class Fstd, class Fft, typename Rstd, typename Rft>
-//void		full_comp(data<T> *d, Lstd *l1, Lft *ft, Fstd f1, Fft f2) {
-	//Rstd 	r1 = l1->f1();
-	//Rft		r2 = ft->f2();
-
-	//print_comp(r1, r2);
-	//incr_score(d, r1 == r2);
-//}
-
-//#define comp(A, B)		full_comp(d, std, ft, A, B)
 
 template<class T>
 void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
@@ -137,7 +124,7 @@ void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
 		print_comp("size", r5, r6);
 		comp(r5 == r6);
 
-		std::cout << "\titerating through..." << std::endl;
+		std::cout << "  iterating through..." << std::endl;
 		while (!std->empty() && !ft->empty()) {
 			r3 = std->front();
 			r4 = ft->front();
@@ -152,6 +139,7 @@ void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
 		print_comp("size", r5, r6);
 	}
 }
+#define equal(A, B)	test_equivalence(d, A, B);
 
 /*-----------------------------------CONSTRUCTOR TESTS-----------------------------------*/
 
@@ -166,10 +154,6 @@ void		test_empty_constructor(data<T> *d) {
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 
-	//r1 = std->empty();
-	//r2 = ft->empty();
-	//print_comp("empty", r1, r2);
-	//comp(r1 == r2);
 	test_equivalence(d, std, ft);
 
 	delete std;
@@ -183,12 +167,6 @@ void		test_fill_constructor(data<T> *d) {
 	T				val;
 	std::list<T> 	*std;
 	ft::list<T> 	*ft;
-	//bool			r1;
-	//bool			r2;
-	//T				r3;
-	//T				r4;
-	//size_t			r5;
-	//size_t			r6;
 
 	print_title("Fill Constructor");
 	size = randomize<char>();
@@ -196,33 +174,7 @@ void		test_fill_constructor(data<T> *d) {
 	std = new std::list<T>(size, val);
 	ft = new ft::list<T>(size, val);
 
-	//r1 = std->empty();
-	//r2 = ft->empty();
-	//print_comp("empty", r1, r2);
-	//comp(r1 == r2);
-
-	//r3 = std->front();
-	//r4 = ft->front();
-	//r5 = std->size();
-	//r6 = ft->size();
-	//std->pop_front();
-	//ft->pop_front();
-	//print_comp("front", r3, r4);
-	//comp(r3 == r4);
-	//print_comp("size", r5, r6);
-	//comp(r5 == r6);
-
-	//while (!std->empty() && !ft->empty()) {
-		//r3 = std->front();
-		//r4 = ft->front();
-		//r5 = std->size();
-		//r6 = ft->size();
-		//std->pop_front();
-		//ft->pop_front();
-		//comp(r3 == r4);
-		//comp(r5 == r6);
-	//}
-	test_equivalence(d, std, ft);
+	equal(std, ft);
 
 	delete std;
 	delete ft;
@@ -231,13 +183,61 @@ void		test_fill_constructor(data<T> *d) {
 
 template<class T>
 void		test_range_constructor(data<T> *d) {
-	//TODO
-	//test equality of size, head, tail, front; pop; through to check values
+	unsigned char	size;
+	std::list<T> 	*src;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+
+	print_title("Range Constructor");
+	size = randomize<char>();
+	src = new std::list<T>();
+	for (size_t i = 0; i < size; i++)
+		src->push_back(randomize<T>());
+
+	//std::cout << "src: size: " << src->size() << std::endl;
+
+	std = new std::list<T>(src->begin(), src->end());
+	ft = new ft::list<T>(src->begin(), src->end());
+
+	equal(std, ft);
+
+	delete std;
+	delete ft;
+	delete src;
+	incr_score(d);
 }
 
 template<class T>
 void		test_copy_constructor(data<T> *d) {
-	//TODO
+	unsigned char	size;
+	T				val;
+	std::list<T> 	*stdsrc;
+	std::list<T> 	*std;
+	ft::list<T> 	*ftsrc;
+	ft::list<T> 	*ft;
+
+	print_title("Copy Constructor");
+	size = randomize<char>();
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+		//std::cout << ftsrc->front() << " " << ftsrc->back() << std::endl;
+	}
+	//ftsrc = new ft::list<T>(stdsrc->begin(), stdsrc->end());
+
+	std = new std::list<T>(*stdsrc);
+	ft = new ft::list<T>(*ftsrc);
+
+	equal(std, ft);
+
+	delete stdsrc;
+	delete std;
+	delete ftsrc;
+	delete ft;
+	incr_score(d);
 }
 
 template<class T>
