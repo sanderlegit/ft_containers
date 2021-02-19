@@ -6,13 +6,13 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/18 11:56:11 by averheij      #+#    #+#                  #
-#    Updated: 2021/02/19 13:35:25 by averheij      ########   odam.nl          #
+#    Updated: 2021/02/19 14:45:19 by averheij      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 states 	[proto, partial, written, buggy, tested]
 
-(constructor)		Construct list (public member function )			-partial
+(constructor)		Construct list (public member function )			-written,	tested
 (destructor)		List destructor (public member function )			-written,	tested
 operator=			Assign content (public member function )			-written
 

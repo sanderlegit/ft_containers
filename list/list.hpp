@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/19 13:33:11 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/19 14:44:27 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,18 +93,18 @@ namespace ft {
 					typedef	const value_type*						const_pointer;
 					typedef	ptrdiff_t								difference_type;
 
-					const_list_bi_iterator(node_type& n = NULL) : node(n) {}
+					const_list_bi_iterator(node_type* n = NULL) : node(n) {}
 					const_list_bi_iterator(const const_list_bi_iterator& src) { *this = src; }
 					~const_list_bi_iterator(void) {}
 
-					const_list_bi_iterator&		operator=(const_list_bi_iterator& rhs) {
+					const_list_bi_iterator&		operator=(const const_list_bi_iterator& rhs) {
 						node = rhs.node;
 						return *this;
 					}
 
 					const_list_bi_iterator		operator++(int n) {		//i++
 						const_list_bi_iterator ret(*this);
-						--*this;
+						++*this;
 						return (ret);
 					}
 
@@ -114,13 +114,13 @@ namespace ft {
 						return (ret);
 					}
 
-					const_list_bi_iterator&		operator++() { node = node->next; } //++i
-					const_list_bi_iterator&		operator--() { node = node->prev; } //--i
+					const_list_bi_iterator&		operator++() { node = node->next; return *this; } //++i
+					const_list_bi_iterator&		operator--() { node = node->prev; return *this; } //--i
 
 					bool					operator==(const const_list_bi_iterator& rhs) const { return node == rhs.node; }
 					bool					operator!=(const const_list_bi_iterator& rhs) const { return node != rhs.node; }
-					pointer					operator->() const { return &node->data; }
-					reference 				operator*() const { return node->data; }
+					pointer					operator->() const { return node->data; }
+					reference 				operator*() const { return *node->data; }
 
 					node_type	*node = NULL;
 			};
@@ -134,11 +134,11 @@ namespace ft {
 					typedef	value_type*								pointer;
 					typedef	ptrdiff_t								difference_type;
 
-					list_bi_iterator(node_type& n = NULL) : node(n) {}
+					list_bi_iterator(node_type* n = NULL) : node(n) {}
 					list_bi_iterator(const list_bi_iterator& src) { *this = src; }
 					~list_bi_iterator(void) {}
 
-					list_bi_iterator&		operator=(list_bi_iterator& rhs) {
+					list_bi_iterator&		operator=(const list_bi_iterator& rhs) {
 						node = rhs.node;
 						return *this;
 					}
@@ -146,23 +146,23 @@ namespace ft {
 
 					list_bi_iterator		operator++(int n) {		//i++
 						list_bi_iterator ret(*this);
-						--*this;
-						return (ret);
+						++*this;
+						return ret;
 					}
 
 					list_bi_iterator		operator--(int n) {		//i--
 						list_bi_iterator ret(*this);
 						--*this;
-						return (ret);
+						return ret;
 					}
 
-					list_bi_iterator&		operator++() { node = node->next; } //++i
-					list_bi_iterator&		operator--() { node = node->prev; } //--i
+					list_bi_iterator&		operator++() { node = node->next; return *this; } //++i
+					list_bi_iterator&		operator--() { node = node->prev; return *this; } //--i
 
 					bool					operator==(const list_bi_iterator& rhs) const { return node == rhs.node; }
 					bool					operator!=(const list_bi_iterator& rhs) const { return node != rhs.node; }
-					pointer					operator->() const { return &node->data; }
-					reference 				operator*() const { return node->data; }
+					pointer					operator->() const { return node->data; }
+					reference 				operator*() const { return *node->data; }
 
 					operator const_list_bi_iterator() { return {node}; }
 
@@ -231,15 +231,27 @@ namespace ft {
 			}
 
 			template<typename InputIterator>
-			void	list_paradox_constructor(InputIterator first, InputIterator last, std::__false_type) {
-				while (first != last) {
-					std::cout << *first << std::endl;
-					push_back(*first);
-					first++;
-					_size++;
-				}
-			}
+				void	list_fill(InputIterator first, InputIterator last) {
+					//std::cout << first.node << " " << last.node << std::endl;
+					//std::cout << (first.node != last.node) << std::endl;
+					//std::cout << (first != last) << std::endl;
 
+					while (first != last) {
+						//std::cout << *first << std::endl;
+						push_back(*first);
+						first++;
+						//std::cout << first.node << " " << last.node << std::endl;
+						//std::cout << (first.node != last.node) << std::endl;
+						//std::cout << (first != last) << std::endl;
+					}
+					//std::cout << "head: " << *head->data << std::endl;
+					//std::cout << "tail: " << *tail->data << std::endl;
+				}
+
+			template<typename InputIterator>
+			void	list_paradox_constructor(InputIterator first, InputIterator last, std::__false_type) {
+				list_fill(first, last);
+			}
 
 		public:
 			template <class InputIterator>
@@ -248,19 +260,26 @@ namespace ft {
 				list_paradox_constructor(first, last, typename std::__is_integer<InputIterator>::__type());
 			}
 
-			list(const list& x) {
-				(void)x;
-				//TODO
-				//Use begin, end and pass to range assign
-				//is there an "add range" function?
+			//list(const list& x) : alloc(allocator_type()), _size(0), head(NULL), tail(NULL) {
+			list(const list& x) : _size(0), head(NULL), tail(NULL) {
+				//std::cout << "copy " << x.size() <<std::endl;
+				//std::cout <<  x.front() << " " << x.back() << " " << std::endl;
+				list_fill(x.begin(), x.end());
 			}
 
 			/*	This destroys all container elements, and deallocates all the
 			 *	storage capacity allocated by the list container using its allocator.  */
 
 			~list(void) {
-				while (!empty())
+				while (!empty()) {
+					//std::cout << "empty:" << empty();
+					//std::cout << " size:" << size();
+					//if (!empty())
+						//std::cout << " tail:" << back();
+					//std::cout << std::endl;
 					pop_back();
+
+				}
 			}
 
 			/*	Copies all the elements from x into the container.
@@ -286,11 +305,11 @@ namespace ft {
 			/*	Returns an iterator pointing to the first element in the list container.	*/
 
 			iterator			begin() {
-				return new iterator(head);
+				return iterator(head);
 			}
 
 			const_iterator		begin() const {
-				return new const_iterator(head);
+				return const_iterator(head);
 			}
 
 			/*	Returns an iterator referring to the past-the-end element in the list container.
@@ -301,16 +320,16 @@ namespace ft {
 
 			iterator			end() {
 				if (tail)
-					return new iterator(tail->next);
+					return iterator(tail->next);
 				else
-					return new iterator(NULL);
+					return iterator(NULL);
 			}
 
 			const_iterator		end() const {
 				if (tail)
-					return new const_iterator(tail->next);
+					return const_iterator(tail->next);
 				else
-					return new const_iterator(NULL);
+					return const_iterator(NULL);
 			}
 
 /*-------------------------------------------CAPACITY-------------------------------------------*/
