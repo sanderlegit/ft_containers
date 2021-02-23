@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/23 16:07:15 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/23 16:29:32 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -354,7 +354,7 @@ namespace ft {
 				return (alloc.max_size() / (24 / sizeof(value_type)));
 			}
 
-			/*		ELEMENT ACCESS 		*/
+/*-------------------------------------------ELEMENT ACCESS-------------------------------------------*/
 
 			/*	Returns a reference to the first element in the list container.  */
 

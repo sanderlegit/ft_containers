@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/23 15:40:53 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/23 16:29:17 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,6 +308,17 @@ void		test_operators(data<T> *d) {
 	test_equals_operator(d, 0);
 	test_equals_operator(d, 1);
 }
+
+/*-----------------------------------ITERATOR TESTS-----------------------------------*/
+
+template<class T>
+void		test_iterators(data <T> *d) {
+	//test_begin(d);
+	//test_end(d);
+	//test_rbegin(d);
+	//test_rend(d);
+}
+
 /*-----------------------------------CAPACITY TESTS-----------------------------------*/
 
 template<class T>
@@ -468,9 +479,77 @@ void		test_back(data<T> *d, bool empty) {
 }
 
 template<class T>
+void		test_front_const(data<T> *d, bool empty) {
+	size_t 			size;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	T				r1;
+	T				r2;
+
+	print_title("Const Front");
+	val = randomize<T>();
+	if (empty) {
+		size = 0;
+	} else {
+		size = rand() % 256;
+	}
+	std = new std::list<T>(size, val);
+	ft = new ft::list<T>(size, val);
+
+	const ft::list<T>& ft_const = *ft;
+	const std::list<T>& std_const = *std;
+
+	r1 = std_const.front();
+	r2 = ft_const.front();
+	std::cout << "testing on:\tnew ft::list<T>(" << size << ", " << val << ");" << std::endl;
+	print_comp("front", r1, r2);
+	comp(r1 == r2);
+
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_back_const(data<T> *d, bool empty) {
+	size_t 			size;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	T				r1;
+	T				r2;
+
+	print_title("Const Back");
+	val = randomize<T>();
+	if (empty) {
+		size = 0;
+	} else {
+		size = rand() % 256;
+	}
+	std = new std::list<T>(size, val);
+	ft = new ft::list<T>(size, val);
+
+	const ft::list<T>& ft_const = *ft;
+	const std::list<T>& std_const = *std;
+
+	r1 = std_const.back();
+	r2 = ft_const.back();
+	std::cout << "testing on:\tnew ft::list<T>(" << size << ", " << val << ");" << std::endl;
+	print_comp("back", r1, r2);
+	comp(r1 == r2);
+
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
 void		test_element_access(data<T> *d) {
 	test_front(d, 0);
+	test_front_const(d, 0);
 	test_back(d, 0);
+	test_back_const(d, 0);
 }
 
 /*-----------------------------------MAIN-----------------------------------*/
