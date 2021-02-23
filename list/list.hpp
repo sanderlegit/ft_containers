@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/23 14:44:56 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/23 15:14:46 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -351,7 +351,7 @@ namespace ft {
 			/* Returns the maximum number of elements that the list container can hold.  */
 
 			size_type			max_size() const {
-				return alloc.max_size();
+				return (alloc.max_size() / (24 / sizeof(value_type)));
 			}
 
 			/*		ELEMENT ACCESS 		*/

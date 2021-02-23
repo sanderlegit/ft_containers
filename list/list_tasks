@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/18 11:56:11 by averheij      #+#    #+#                  #
-#    Updated: 2021/02/23 14:45:47 by averheij      ########   odam.nl          #
+#    Updated: 2021/02/23 15:14:58 by averheij      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,8 +24,8 @@ rend				Return reverse iterator to reverse end (public member function )
 
 	Capacity:
 empty				Test whether container is empty (public member function )	-written,	tested
-size				Return size (public member function )						-written
-max_size			Return maximum size (public member function )				-written
+size				Return size (public member function )						-written,	tested
+max_size			Return maximum size (public member function )				-written,	tested
 
 	Element access:			(all have const and non const)
 front				Access first element (public member function )		-written
