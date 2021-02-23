@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/23 16:29:32 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/23 18:01:34 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,10 +164,94 @@ namespace ft {
 					pointer					operator->() const { return node->data; }
 					reference 				operator*() const { return *node->data; }
 
-					operator const_list_bi_iterator() { return {node}; }
+					operator const_list_bi_iterator() { /* pass butter; */ return node; }		//TODO what is my purpose
 
 					node_type	*node = NULL;
+			};
 
+			class reverse_const_list_bi_iterator { //https://en.cppreference.com/w/cpp/iterator/iterator
+				public:
+					typedef std::bidirectional_iterator_tag			iterator_category;
+					typedef Node									node_type;
+					typedef	T										value_type;
+					typedef	const value_type&						const_reference;
+					typedef	const value_type*						const_pointer;
+					typedef	ptrdiff_t								difference_type;
+
+					reverse_const_list_bi_iterator(node_type* n = NULL) : node(n) {}
+					reverse_const_list_bi_iterator(const const_list_bi_iterator& src) { *this = src; }
+					~reverse_const_list_bi_iterator(void) {}
+
+					reverse_const_list_bi_iterator&		operator=(const reverse_const_list_bi_iterator& rhs) {
+						node = rhs.node;
+						return *this;
+					}
+
+					reverse_const_list_bi_iterator		operator++(int n) {		//i++
+						reverse_const_list_bi_iterator	ret(*this);
+						++(*this);
+						return ret;
+					}
+
+					reverse_const_list_bi_iterator		operator--(int n) {		//i--
+						reverse_const_list_bi_iterator	ret(*this);
+						--(*this);
+						return ret;
+					}
+
+					reverse_const_list_bi_iterator&		operator++() { node = node->prev; return *this; } //++i
+					reverse_const_list_bi_iterator&		operator--() { node = node->next; return *this; } //--i
+
+					bool					operator==(const reverse_const_list_bi_iterator& rhs) const { return node == rhs.node; }
+					bool					operator!=(const reverse_const_list_bi_iterator& rhs) const { return node != rhs.node; }
+					pointer					operator->() const { return node->data; }
+					reference 				operator*() const { return *node->data; }
+
+					node_type	*node = NULL;
+			};
+
+			class reverse_list_bi_iterator { //https://en.cppreference.com/w/cpp/iterator/iterator
+				public:
+					typedef std::bidirectional_iterator_tag			iterator_category;
+					typedef Node									node_type;
+					typedef	T										value_type;
+					typedef	value_type&								reference;
+					typedef	value_type*								pointer;
+					typedef	ptrdiff_t								difference_type;
+
+					reverse_list_bi_iterator(node_type* n = NULL) : node(n) {}
+					reverse_list_bi_iterator(const reverse_list_bi_iterator& src) { *this = src; }
+					~reverse_list_bi_iterator(void) {}
+
+					reverse_list_bi_iterator&		operator=(const reverse_list_bi_iterator& rhs) {
+						node = rhs.node;
+						return *this;
+					}
+
+
+					reverse_list_bi_iterator		operator++(int n) {		//i++
+						reverse_list_bi_iterator	ret(*this);
+						++(*this);
+						return ret;
+					}
+
+					reverse_list_bi_iterator		operator--(int n) {		//i--
+						reverse_list_bi_iterator	ret(*this);
+						--(*this);
+						return ret;
+					}
+
+					reverse_list_bi_iterator&		operator++() { node = node->prev; return *this; } //++i
+					reverse_list_bi_iterator&		operator--() { node = node->next; return *this; } //--i
+
+					bool					operator==(const reverse_list_bi_iterator& rhs) const { return node == rhs.node; }
+					bool					operator!=(const reverse_list_bi_iterator& rhs) const { return node != rhs.node; }
+					pointer					operator->() const { return node->data; }
+					reference 				operator*() const { return *node->data; }
+
+					operator reverse_const_list_bi_iterator() { /* pass butter; */ return node; }		//TODO what is my purpose
+
+					node_type	*node = NULL;
 			};
 
 		public:
@@ -179,10 +263,10 @@ namespace ft {
 			 *Node						class used for nodes	*/
 
 			//TODO
-			typedef	list_bi_iterator		iterator;
-			typedef	const_list_bi_iterator	const_iterator;
-			//typedef	std::reverse_iterator<iterator>			reverse_iterator;
-			//typedef	std::reverse_iterator<const_iterator>	const_reverse_iterator;
+			typedef	list_bi_iterator				iterator;
+			typedef	const_list_bi_iterator			const_iterator;
+			typedef	reverse_list_bi_iterator		reverse_iterator;
+			typedef	reverse_const_list_bi_iterator	const_reverse_iterator;
 
 		private:
 			size_type					_size;
@@ -305,11 +389,11 @@ namespace ft {
 
 			/*	Returns an iterator pointing to the first element in the list container.	*/
 
-			iterator			begin() {
+			iterator				begin() {
 				return iterator(head);
 			}
 
-			const_iterator		begin() const {
+			const_iterator			begin() const {
 				return const_iterator(head);
 			}
 
@@ -319,18 +403,30 @@ namespace ft {
 			 *	not be dereferenced.
 			 *	If the container is empty, this function returns the same as list::begin.	*/
 
-			iterator			end() {
+			iterator				end() {
 				if (tail)
 					return iterator(tail->next);
 				else
 					return iterator(NULL);
 			}
 
-			const_iterator		end() const {
+			const_iterator			end() const {	//TODO check that this is desired behaviour, not just seg fault
 				if (tail)
 					return const_iterator(tail->next);
 				else
 					return const_iterator(NULL);
+			}
+
+			/* Returns a reverse iterator pointing to the last element in the container (i.e., its reverse beginning).
+			 * Reverse iterators iterate backwards: increasing them moves them towards the beginning of the container.
+			 * rbegin points to the element right before the one that would be pointed to by member end.	*/
+
+			reverse_iterator		rbegin() {
+				return reverse_iterator(tail);
+			}
+
+			const_reverse_iterator	rbegin() const {
+				return const_reverse_iterator(tail);
 			}
 
 /*-------------------------------------------CAPACITY-------------------------------------------*/

@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/15 16:29:54 by averheij      #+#    #+#                  #
-#    Updated: 2021/02/19 13:01:27 by averheij      ########   odam.nl          #
+#    Updated: 2021/02/23 16:51:47 by averheij      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,14 +24,15 @@ endif
 ifeq ($(G), 1)
 	DFLAGS += -g
 endif
-CFLAGS		=	-Wall -Wextra -Werror -pedantic -std=c++98 $(DFLAGS)
+FTFLAGS		=	-Wall -Wextra -Werror
+CFLAGS		=	-pedantic -std=c++98 $(DFLAGS)
 CXX			=	g++
 
 
 all: $(CONTAINERS)
 
 %.o: %.cpp
-	$(CXX) $(DFLAGS) -c $< -o $@ $(INCL)
+	$(CXX) $(CFLAGS) -c $< -o $@ $(INCL)
 
 #tests/test_%.o: tests/test_%.cpp
 	#$(CXX) -c $< -o $@ $(INCL)
@@ -41,7 +42,7 @@ ifeq ($(MAIN), 1)
 	#$(CXX) $(CFLAGS) main.cpp -o test_$@ $(INCL)
 else
 	#$(CXX) $(CFLAGS) tests/test_$@.cpp -o test_$@ $(INCL)
-	$(CXX) $(CFLAGS) tests/test_$@.o -o test_$@ $(INCL)
+	$(CXX) $(FTFLAGS) $(CFLAGS) tests/test_$@.o -o test_$@ $(INCL)
 endif
 
 #map:
