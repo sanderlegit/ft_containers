@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/23 15:14:46 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/23 16:07:15 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,15 +103,15 @@ namespace ft {
 					}
 
 					const_list_bi_iterator		operator++(int n) {		//i++
-						const_list_bi_iterator ret(*this);
-						++*this;
-						return (ret);
+						const_list_bi_iterator	ret(*this);
+						++(*this);
+						return ret;
 					}
 
 					const_list_bi_iterator		operator--(int n) {		//i--
-						const_list_bi_iterator ret(*this);
-						--*this;
-						return (ret);
+						const_list_bi_iterator	ret(*this);
+						--(*this);
+						return ret;
 					}
 
 					const_list_bi_iterator&		operator++() { node = node->next; return *this; } //++i
@@ -145,14 +145,14 @@ namespace ft {
 
 
 					list_bi_iterator		operator++(int n) {		//i++
-						list_bi_iterator ret(*this);
-						++*this;
+						list_bi_iterator	ret(*this);
+						++(*this);
 						return ret;
 					}
 
 					list_bi_iterator		operator--(int n) {		//i--
-						list_bi_iterator ret(*this);
-						--*this;
+						list_bi_iterator	ret(*this);
+						--(*this);
 						return ret;
 					}
 

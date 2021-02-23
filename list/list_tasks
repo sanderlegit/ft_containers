@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/18 11:56:11 by averheij      #+#    #+#                  #
-#    Updated: 2021/02/23 15:14:58 by averheij      ########   odam.nl          #
+#    Updated: 2021/02/23 15:42:09 by averheij      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,8 +28,8 @@ size				Return size (public member function )						-written,	tested
 max_size			Return maximum size (public member function )				-written,	tested
 
 	Element access:			(all have const and non const)
-front				Access first element (public member function )		-written
-back				Access last element (public member function )		-written
+front				Access first element (public member function )		-written,	tested
+back				Access last element (public member function )		-written,	tested
 
 	Modifiers:
 assign				Assign new content to container (public member function )

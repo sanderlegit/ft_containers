@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/23 15:19:49 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/23 15:40:53 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,10 @@ T			randomize(void) {
 }
 
 /*-----------------------------------TEST TOOLS-----------------------------------*/
+
+void		print_group_title(std::string str) {
+	std::cout << "\n  #=======" << str << "=======#" <<std::endl;
+}
 
 void		print_title(std::string str) {
 	std::cout << "\n  ----" << str << "----" <<std::endl;
@@ -196,11 +200,13 @@ void		test_range_constructor(data<T> *d, bool empty) {
 	ft::list<T> 	*ft;
 
 	print_title("Range Constructor");
-	size = rand() % 256;
+	if (empty)
+		size = 0;
+	else
+		size = rand() % 256;
 	src = new std::list<T>();
-	if (!empty)
-		for (size_t i = 0; i < size; i++)
-			src->push_back(randomize<T>());
+	for (size_t i = 0; i < size; i++)
+		src->push_back(randomize<T>());
 
 	std = new std::list<T>(src->begin(), src->end());
 	ft = new ft::list<T>(src->begin(), src->end());
@@ -225,15 +231,17 @@ void		test_copy_constructor(data<T> *d, bool empty) {
 	ft::list<T> 	*ft;
 
 	print_title("Copy Constructor");
-	size = rand() % 256;
+	if (empty)
+		size = 0;
+	else
+		size = rand() % 256;
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
-	if (!empty)
-		for (size_t i = 0; i < size; i++) {
-			val = randomize<T>();
-			stdsrc->push_back(val);
-			ftsrc->push_back(val);
-		}
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
 
 	std = new std::list<T>(*stdsrc);
 	ft = new ft::list<T>(*ftsrc);
@@ -271,15 +279,17 @@ void		test_equals_operator(data<T> *d, bool empty) {
 	ft::list<T> 	ft;
 
 	print_title("Operator =");
-	size = rand() % 256;
+	if (empty)
+		size = 0;
+	else
+		size = rand() % 256;
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
-	if (!empty)
-		for (size_t i = 0; i < size; i++) {
-			val = randomize<T>();
-			stdsrc->push_back(val);
-			ftsrc->push_back(val);
-		}
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
 
 	std = *stdsrc;
 	ft = *ftsrc;
@@ -321,7 +331,7 @@ void		test_empty(data<T> *d, bool empty) {
 
 	r1 = std->empty();
 	r2 = ft->empty();
-	std::cout << "testing on:\tnew ft::list<T>(" << size << ", val);" << std::endl;
+	std::cout << "testing on:\tnew ft::list<T>(" << size << ", " << val << ");" << std::endl;
 	print_comp("empty", r1, r2);
 	comp(r1 == r2);
 
@@ -351,7 +361,7 @@ void		test_size(data<T> *d, bool empty) {
 
 	r1 = std->size();
 	r2 = ft->size();
-	std::cout << "testing on:\tnew ft::list<T>(" << size << ", val);" << std::endl;
+	std::cout << "testing on:\tnew ft::list<T>(" << size << ", " << val << ");" << std::endl;
 	print_comp("size", r1, r2);
 	comp(r1 == r2);
 
@@ -371,17 +381,13 @@ void		test_max_size(data<T> *d) {
 
 	print_title("Max Size");
 	val = randomize<T>();
-	//if (empty) {
-		size = 0;
-	//} else {
-		//size = randomize<char>();
-	//}
+	size = 0;
 	std = new std::list<T>(size, val);
 	ft = new ft::list<T>(size, val);
 
 	r1 = std->max_size();
 	r2 = ft->max_size();
-	std::cout << "testing on:\tnew ft::list<T>(" << size << ", val);" << std::endl;
+	std::cout << "testing on:\tnew ft::list<T>(" << size << ", " << val << ");" << std::endl;
 	print_comp("max_size", r1, r2);
 	comp(r1 == r2);
 
@@ -399,6 +405,74 @@ void		test_capacity(data<T> *d) {
 	test_max_size(d);
 }
 
+/*-----------------------------------ELEMENT ACCESS-----------------------------------*/
+
+template<class T>
+void		test_front(data<T> *d, bool empty) {
+	size_t 			size;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	T				r1;
+	T				r2;
+
+	print_title("Front");
+	val = randomize<T>();
+	if (empty) {
+		size = 0;
+	} else {
+		size = rand() % 256;
+	}
+	std = new std::list<T>(size, val);
+	ft = new ft::list<T>(size, val);
+
+	r1 = std->front();
+	r2 = ft->front();
+	std::cout << "testing on:\tnew ft::list<T>(" << size << ", " << val << ");" << std::endl;
+	print_comp("front", r1, r2);
+	comp(r1 == r2);
+
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_back(data<T> *d, bool empty) {
+	size_t 			size;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	T				r1;
+	T				r2;
+
+	print_title("Back");
+	val = randomize<T>();
+	if (empty) {
+		size = 0;
+	} else {
+		size = rand() % 256;
+	}
+	std = new std::list<T>(size, val);
+	ft = new ft::list<T>(size, val);
+
+	r1 = std->back();
+	r2 = ft->back();
+	std::cout << "testing on:\tnew ft::list<T>(" << size << ", " << val << ");" << std::endl;
+	print_comp("back", r1, r2);
+	comp(r1 == r2);
+
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_element_access(data<T> *d) {
+	test_front(d, 0);
+	test_back(d, 0);
+}
+
 /*-----------------------------------MAIN-----------------------------------*/
 
 template<class T>
@@ -407,9 +481,14 @@ void		do_tests(void) {
 
 	d = init_data<T>();
 
+	print_group_title("CONSTRUCTORS");
 	test_constructors(d);
+	print_group_title("OPERATORS");
 	test_operators(d);
+	print_group_title("CAPACITY");
 	test_capacity(d);
+	print_group_title("ELEMENT ACCESS");
+	test_element_access(d);
 
 	std::cout << std::endl << "pass: " << d->pass << "\tfail:\t" << d->fail << std::endl;
 	delete d;
