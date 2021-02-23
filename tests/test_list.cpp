@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/19 14:44:55 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/23 14:45:10 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void		print_title(std::string str) {
 
 template<class T, class R>
 void		print_comp(std::string str, T t, R r) {
-	std::cout << str << "\tstd:";
+	std::cout << str << "()\tstd:";
 
 	std::cout.width(16);
 	std::cout.flags(std::ios::right);
@@ -107,6 +107,8 @@ void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
 	size_t			r5;
 	size_t			r6;
 
+
+	std::cout << "  testing list equality" << std::endl;
 	r1 = std->empty();
 	r2 = ft->empty();
 	print_comp("empty", r1, r2);
@@ -154,26 +156,7 @@ void		test_empty_constructor(data<T> *d) {
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 
-	test_equivalence(d, std, ft);
-
-	delete std;
-	delete ft;
-	incr_score(d);
-}
-
-template<class T>
-void		test_fill_constructor(data<T> *d) {
-	unsigned char	size;
-	T				val;
-	std::list<T> 	*std;
-	ft::list<T> 	*ft;
-
-	print_title("Fill Constructor");
-	size = randomize<char>();
-	val = randomize<T>();
-	std = new std::list<T>(size, val);
-	ft = new ft::list<T>(size, val);
-
+	std::cout << "testing:\tnew ft::list<T>()" << std::endl;
 	equal(std, ft);
 
 	delete std;
@@ -182,7 +165,31 @@ void		test_fill_constructor(data<T> *d) {
 }
 
 template<class T>
-void		test_range_constructor(data<T> *d) {
+void		test_fill_constructor(data<T> *d, bool empty) {
+	unsigned char	size;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+
+	print_title("Fill Constructor");
+	if (empty)
+		size = 0;
+	else
+		size = randomize<char>();
+	val = randomize<T>();
+	std = new std::list<T>(size, val);
+	ft = new ft::list<T>(size, val);
+
+	std::cout << "testing:\tnew ft::list<T>(" << (int)size << ", " << val << ")" << std::endl;
+	equal(std, ft);
+
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_range_constructor(data<T> *d, bool empty) {
 	unsigned char	size;
 	std::list<T> 	*src;
 	std::list<T> 	*std;
@@ -191,14 +198,14 @@ void		test_range_constructor(data<T> *d) {
 	print_title("Range Constructor");
 	size = randomize<char>();
 	src = new std::list<T>();
-	for (size_t i = 0; i < size; i++)
-		src->push_back(randomize<T>());
-
-	//std::cout << "src: size: " << src->size() << std::endl;
+	if (!empty)
+		for (size_t i = 0; i < size; i++)
+			src->push_back(randomize<T>());
 
 	std = new std::list<T>(src->begin(), src->end());
 	ft = new ft::list<T>(src->begin(), src->end());
 
+	std::cout << "testing:\tnew ft::list<T>(src->begin(), src->end())" << std::endl;
 	equal(std, ft);
 
 	delete std;
@@ -208,7 +215,7 @@ void		test_range_constructor(data<T> *d) {
 }
 
 template<class T>
-void		test_copy_constructor(data<T> *d) {
+void		test_copy_constructor(data<T> *d, bool empty) {
 	unsigned char	size;
 	T				val;
 	std::list<T> 	*stdsrc;
@@ -220,17 +227,17 @@ void		test_copy_constructor(data<T> *d) {
 	size = randomize<char>();
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
-	for (size_t i = 0; i < size; i++) {
-		val = randomize<T>();
-		stdsrc->push_back(val);
-		ftsrc->push_back(val);
-		//std::cout << ftsrc->front() << " " << ftsrc->back() << std::endl;
-	}
-	//ftsrc = new ft::list<T>(stdsrc->begin(), stdsrc->end());
+	if (!empty)
+		for (size_t i = 0; i < size; i++) {
+			val = randomize<T>();
+			stdsrc->push_back(val);
+			ftsrc->push_back(val);
+		}
 
 	std = new std::list<T>(*stdsrc);
 	ft = new ft::list<T>(*ftsrc);
 
+	std::cout << "testing:\tnew ft::list<T>(*src)" << std::endl;
 	equal(std, ft);
 
 	delete stdsrc;
@@ -243,11 +250,52 @@ void		test_copy_constructor(data<T> *d) {
 template<class T>
 void		test_constructors(data<T> *d) {
 	test_empty_constructor(d);
-	test_fill_constructor(d);
-	test_range_constructor(d);
-	test_copy_constructor(d);
+	test_fill_constructor(d, 0);
+	test_fill_constructor(d, 1);
+	test_range_constructor(d, 0);
+	test_range_constructor(d, 1);
+	test_copy_constructor(d, 0);
+	test_copy_constructor(d, 1);
 }
 
+/*-----------------------------------OPERATOR TESTS-----------------------------------*/
+
+template<class T>
+void		test_equals_operator(data<T> *d, bool empty) {
+	unsigned char	size;
+	T				val;
+	std::list<T> 	*stdsrc;
+	std::list<T> 	std;
+	ft::list<T> 	*ftsrc;
+	ft::list<T> 	ft;
+
+	print_title("Operator =");
+	size = randomize<char>();
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	if (!empty)
+		for (size_t i = 0; i < size; i++) {
+			val = randomize<T>();
+			stdsrc->push_back(val);
+			ftsrc->push_back(val);
+		}
+
+	std = *stdsrc;
+	ft = *ftsrc;
+
+	std::cout << "testing:\tftlist = src;" << std::endl;
+	equal(&std, &ft);
+
+	delete stdsrc;
+	delete ftsrc;
+	incr_score(d);
+}
+
+template<class T>
+void		test_operators(data<T> *d) {
+	test_equals_operator(d, 0);
+	test_equals_operator(d, 1);
+}
 /*-----------------------------------CAPACITY TESTS-----------------------------------*/
 
 template<class T>
@@ -258,13 +306,14 @@ void		test_empty(data<T> *d) {
 	bool			r1;
 	bool			r2;
 
-	print_title("test empty");
+	print_title("Empty");
 	val = randomize<T>();
 	std = new std::list<T>(5, val);
 	ft = new ft::list<T>(5, val);
 
 	r1 = std->empty();
 	r2 = ft->empty();
+	std::cout << "testing on:\tnew ft::list<T>(5, val);" << std::endl;
 	print_comp("empty", r1, r2);
 	comp(r1 == r2);
 
@@ -277,6 +326,7 @@ void		test_empty(data<T> *d) {
 	}
 	r1 = std->empty();
 	r2 = ft->empty();
+	std::cout << "testing on:\tempty list" << std::endl;
 	print_comp("empty", r1, r2);
 	comp(r1 == r2);
 
@@ -299,9 +349,10 @@ void		do_tests(void) {
 	d = init_data<T>();
 
 	test_constructors(d);
+	test_operators(d);
 	test_capacity(d);
 
-	std::cout << "pass: " << d->pass << "\tfail:\t" << d->fail << std::endl;
+	std::cout << std::endl << "pass: " << d->pass << "\tfail:\t" << d->fail << std::endl;
 	delete d;
 }
 

@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/18 11:56:11 by averheij      #+#    #+#                  #
-#    Updated: 2021/02/19 14:45:19 by averheij      ########   odam.nl          #
+#    Updated: 2021/02/23 14:45:47 by averheij      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,11 +14,11 @@ states 	[proto, partial, written, buggy, tested]
 
 (constructor)		Construct list (public member function )			-written,	tested
 (destructor)		List destructor (public member function )			-written,	tested
-operator=			Assign content (public member function )			-written
+operator=			Assign content (public member function )			-written,	tested
 
 	Iterators:			(all have const and non const)
 begin				Return iterator to beginning (public member function )						-written
-end					Return iterator to end (public member function )							-written,	not convinced
+end					Return iterator to end (public member function )							-written,	not convince
 rbegin				Return reverse iterator to reverse beginning (public member function )		test the other iterators first
 rend				Return reverse iterator to reverse end (public member function )
 

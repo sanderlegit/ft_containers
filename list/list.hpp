@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/19 14:44:27 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/23 14:44:56 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,9 +295,10 @@ namespace ft {
 					pop_front();
 				ptr = x.head;
 				while (ptr) {
-					push_back(ptr->val);
+					push_back(*ptr->data);
 					ptr = ptr->next;
 				}
+				return *this;
 			}
 
 /*-------------------------------------------ITERATORS-------------------------------------------*/
