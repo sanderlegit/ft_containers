@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/23 18:01:34 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/24 14:29:22 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,16 @@ namespace ft {
 	class list { //https://cplusplus.com/reference/list/list/
 
 		public:
-			/*member type				definition notes
-			 *value_type				The first template parameter (T)	
-			 *allocator_type			The second template parameter (Alloc)	
-			 *reference					allocator_type::reference				
-			 *const_reference			allocator_type::const_reference			
-			 *pointer					allocator_type::pointer					
-			 *const_pointer				allocator_type::const_pointer			
-			 *difference_type			a signed integral type, identical to:	
+			/*	member type				definition notes
+			 *	value_type				The first template parameter (T)	
+			 *	allocator_type			The second template parameter (Alloc)	
+			 *	reference				allocator_type::reference				
+			 *	const_reference			allocator_type::const_reference			
+			 *	pointer					allocator_type::pointer					
+			 *	const_pointer			allocator_type::const_pointer			
+			 *	difference_type			a signed integral type, identical to:	
 			 *							iterator_traits<iterator>::difference_type	
-			 *size_type					an unsigned integral type that can 		
+			 *	size_type				an unsigned integral type that can 		
 			 *							represent any non-negative value of 
 			 *							difference_type	*/
 
@@ -84,189 +84,131 @@ namespace ft {
 			typedef Node									node_type;
 
 /*-------------------------------------------ITERATOR CLASS-------------------------------------------*/
-			class const_list_bi_iterator { //https://en.cppreference.com/w/cpp/iterator/iterator
+			template<class value_t, class reference_t, class pointer_t>
+			class ListBiIterator { //https://en.cppreference.com/w/cpp/iterator/iterator
 				public:
+					node_type	*node = NULL;
+
 					typedef std::bidirectional_iterator_tag			iterator_category;
-					typedef Node									node_type;
-					typedef	T										value_type;
-					typedef	const value_type&						const_reference;
-					typedef	const value_type*						const_pointer;
+					//typedef Node									node_type;
+					//typedef	T										value_type;
+					//typedef	value_type&								reference;
+					//typedef	value_type*								pointer;
+					typedef	value_t									value_type;
+					typedef	reference_t								reference;
+					typedef	pointer_t								pointer;
 					typedef	ptrdiff_t								difference_type;
 
-					const_list_bi_iterator(node_type* n = NULL) : node(n) {}
-					const_list_bi_iterator(const const_list_bi_iterator& src) { *this = src; }
-					~const_list_bi_iterator(void) {}
+					ListBiIterator(node_type* n = NULL) : node(n) {}
+					ListBiIterator(const ListBiIterator& src) { *this = src; }
+					~ListBiIterator(void) {}
 
-					const_list_bi_iterator&		operator=(const const_list_bi_iterator& rhs) {
+					ListBiIterator&		operator=(const ListBiIterator& rhs) {
 						node = rhs.node;
 						return *this;
 					}
 
-					const_list_bi_iterator		operator++(int n) {		//i++
-						const_list_bi_iterator	ret(*this);
+
+					ListBiIterator		operator++(int n) {		//i++
+						ListBiIterator	ret(*this);
 						++(*this);
 						return ret;
 					}
 
-					const_list_bi_iterator		operator--(int n) {		//i--
-						const_list_bi_iterator	ret(*this);
+					ListBiIterator		operator--(int n) {		//i--
+						ListBiIterator	ret(*this);
 						--(*this);
 						return ret;
 					}
 
-					const_list_bi_iterator&		operator++() { node = node->next; return *this; } //++i
-					const_list_bi_iterator&		operator--() { node = node->prev; return *this; } //--i
+					ListBiIterator&		operator++() {			//++i
+						node = node->next;
+						return *this;
+					}
 
-					bool					operator==(const const_list_bi_iterator& rhs) const { return node == rhs.node; }
-					bool					operator!=(const const_list_bi_iterator& rhs) const { return node != rhs.node; }
+					ListBiIterator&		operator--() {			//--i
+						node = node->prev;
+						return *this;
+					}
+
+					bool					operator==(const ListBiIterator& rhs) const { return node == rhs.node; }
+					bool					operator!=(const ListBiIterator& rhs) const { return node != rhs.node; }
 					pointer					operator->() const { return node->data; }
 					reference 				operator*() const { return *node->data; }
 
-					node_type	*node = NULL;
+					operator ListBiIterator<const value_t, const reference, const pointer>() { /* pass butter; */ return node; }		//TODO what is my purpose
+
 			};
 
-			class list_bi_iterator { //https://en.cppreference.com/w/cpp/iterator/iterator
+			template<class value_t, class reference_t, class pointer_t>
+			class ReverseListBiIterator : public ListBiIterator<value_t, reference_t, pointer_t> { //https://en.cppreference.com/w/cpp/iterator/iterator
 				public:
+					node_type	*node = NULL;
+
 					typedef std::bidirectional_iterator_tag			iterator_category;
-					typedef Node									node_type;
-					typedef	T										value_type;
-					typedef	value_type&								reference;
-					typedef	value_type*								pointer;
+					//typedef Node									node_type;
+					//typedef	T										value_type;
+					//typedef	value_type&								reference;
+					//typedef	value_type*								pointer;
+					typedef	value_t									value_type;
+					typedef	reference_t								reference;
+					typedef	pointer_t								pointer;
 					typedef	ptrdiff_t								difference_type;
 
-					list_bi_iterator(node_type* n = NULL) : node(n) {}
-					list_bi_iterator(const list_bi_iterator& src) { *this = src; }
-					~list_bi_iterator(void) {}
+					ReverseListBiIterator(node_type* n = NULL) : node(n) {}
+					ReverseListBiIterator(const ReverseListBiIterator& src) { *this = src; }
+					~ReverseListBiIterator(void) {}
 
-					list_bi_iterator&		operator=(const list_bi_iterator& rhs) {
+					ReverseListBiIterator&		operator=(const ReverseListBiIterator& rhs) {
 						node = rhs.node;
 						return *this;
 					}
 
 
-					list_bi_iterator		operator++(int n) {		//i++
-						list_bi_iterator	ret(*this);
+					ReverseListBiIterator		operator++(int n) {		//i++
+						ReverseListBiIterator	ret(*this);
 						++(*this);
 						return ret;
 					}
 
-					list_bi_iterator		operator--(int n) {		//i--
-						list_bi_iterator	ret(*this);
+					ReverseListBiIterator		operator--(int n) {		//i--
+						ReverseListBiIterator	ret(*this);
 						--(*this);
 						return ret;
 					}
 
-					list_bi_iterator&		operator++() { node = node->next; return *this; } //++i
-					list_bi_iterator&		operator--() { node = node->prev; return *this; } //--i
-
-					bool					operator==(const list_bi_iterator& rhs) const { return node == rhs.node; }
-					bool					operator!=(const list_bi_iterator& rhs) const { return node != rhs.node; }
-					pointer					operator->() const { return node->data; }
-					reference 				operator*() const { return *node->data; }
-
-					operator const_list_bi_iterator() { /* pass butter; */ return node; }		//TODO what is my purpose
-
-					node_type	*node = NULL;
-			};
-
-			class reverse_const_list_bi_iterator { //https://en.cppreference.com/w/cpp/iterator/iterator
-				public:
-					typedef std::bidirectional_iterator_tag			iterator_category;
-					typedef Node									node_type;
-					typedef	T										value_type;
-					typedef	const value_type&						const_reference;
-					typedef	const value_type*						const_pointer;
-					typedef	ptrdiff_t								difference_type;
-
-					reverse_const_list_bi_iterator(node_type* n = NULL) : node(n) {}
-					reverse_const_list_bi_iterator(const const_list_bi_iterator& src) { *this = src; }
-					~reverse_const_list_bi_iterator(void) {}
-
-					reverse_const_list_bi_iterator&		operator=(const reverse_const_list_bi_iterator& rhs) {
-						node = rhs.node;
+					ReverseListBiIterator&		operator++() {			//++i
+						node = node->prev;
 						return *this;
 					}
 
-					reverse_const_list_bi_iterator		operator++(int n) {		//i++
-						reverse_const_list_bi_iterator	ret(*this);
-						++(*this);
-						return ret;
-					}
-
-					reverse_const_list_bi_iterator		operator--(int n) {		//i--
-						reverse_const_list_bi_iterator	ret(*this);
-						--(*this);
-						return ret;
-					}
-
-					reverse_const_list_bi_iterator&		operator++() { node = node->prev; return *this; } //++i
-					reverse_const_list_bi_iterator&		operator--() { node = node->next; return *this; } //--i
-
-					bool					operator==(const reverse_const_list_bi_iterator& rhs) const { return node == rhs.node; }
-					bool					operator!=(const reverse_const_list_bi_iterator& rhs) const { return node != rhs.node; }
-					pointer					operator->() const { return node->data; }
-					reference 				operator*() const { return *node->data; }
-
-					node_type	*node = NULL;
-			};
-
-			class reverse_list_bi_iterator { //https://en.cppreference.com/w/cpp/iterator/iterator
-				public:
-					typedef std::bidirectional_iterator_tag			iterator_category;
-					typedef Node									node_type;
-					typedef	T										value_type;
-					typedef	value_type&								reference;
-					typedef	value_type*								pointer;
-					typedef	ptrdiff_t								difference_type;
-
-					reverse_list_bi_iterator(node_type* n = NULL) : node(n) {}
-					reverse_list_bi_iterator(const reverse_list_bi_iterator& src) { *this = src; }
-					~reverse_list_bi_iterator(void) {}
-
-					reverse_list_bi_iterator&		operator=(const reverse_list_bi_iterator& rhs) {
-						node = rhs.node;
+					ReverseListBiIterator&		operator--() {			//--i
+						node = node->next;
 						return *this;
 					}
 
-
-					reverse_list_bi_iterator		operator++(int n) {		//i++
-						reverse_list_bi_iterator	ret(*this);
-						++(*this);
-						return ret;
-					}
-
-					reverse_list_bi_iterator		operator--(int n) {		//i--
-						reverse_list_bi_iterator	ret(*this);
-						--(*this);
-						return ret;
-					}
-
-					reverse_list_bi_iterator&		operator++() { node = node->prev; return *this; } //++i
-					reverse_list_bi_iterator&		operator--() { node = node->next; return *this; } //--i
-
-					bool					operator==(const reverse_list_bi_iterator& rhs) const { return node == rhs.node; }
-					bool					operator!=(const reverse_list_bi_iterator& rhs) const { return node != rhs.node; }
+					bool					operator==(const ReverseListBiIterator& rhs) const { return node == rhs.node; }
+					bool					operator!=(const ReverseListBiIterator& rhs) const { return node != rhs.node; }
 					pointer					operator->() const { return node->data; }
 					reference 				operator*() const { return *node->data; }
 
-					operator reverse_const_list_bi_iterator() { /* pass butter; */ return node; }		//TODO what is my purpose
+					operator ReverseListBiIterator<const value_type, const reference, const pointer>() { /* pass butter; */ return node; }		//TODO what is my purpose
 
-					node_type	*node = NULL;
 			};
 
 		public:
-			/*member type				definition notes
-			 *iterator					a bidirectional iterator to value_type	
-			 *const_iterator			a bidirectional iterator to const value_type	
-			 *reverse_iterator			reverse_iterator<iterator>	
-			 *const_reverse_iterator	reverse_iterator<const_iterator>	
-			 *Node						class used for nodes	*/
+			/*	member type					definition notes
+			 *	iterator					a bidirectional iterator to value_type	
+			 *	const_iterator				a bidirectional iterator to const value_type	
+			 *	reverse_iterator			reverse_iterator<iterator>	
+			 *	const_reverse_iterator		reverse_iterator<const_iterator>	
+			 *	Node						class used for nodes	*/
 
 			//TODO
-			typedef	list_bi_iterator				iterator;
-			typedef	const_list_bi_iterator			const_iterator;
-			typedef	reverse_list_bi_iterator		reverse_iterator;
-			typedef	reverse_const_list_bi_iterator	const_reverse_iterator;
+			typedef	ListBiIterator<T, T&, T*>							iterator;
+			typedef	ListBiIterator<const T, T&, T*>						const_iterator;
+			typedef	ReverseListBiIterator<T, T&, T*>					reverse_iterator;
+			typedef	ReverseListBiIterator<const T, const T&, const T*>	const_reverse_iterator;
 
 		private:
 			size_type					_size;
@@ -315,22 +257,22 @@ namespace ft {
 			}
 
 			template<typename InputIterator>
-				void	list_fill(InputIterator first, InputIterator last) {
+			void	list_fill(InputIterator first, InputIterator last) {
+				//std::cout << first.node << " " << last.node << std::endl;
+				//std::cout << (first.node != last.node) << std::endl;
+				//std::cout << (first != last) << std::endl;
+
+				while (first != last) {
+					//std::cout << *first << std::endl;
+					push_back(*first);
+					first++;
 					//std::cout << first.node << " " << last.node << std::endl;
 					//std::cout << (first.node != last.node) << std::endl;
 					//std::cout << (first != last) << std::endl;
-
-					while (first != last) {
-						//std::cout << *first << std::endl;
-						push_back(*first);
-						first++;
-						//std::cout << first.node << " " << last.node << std::endl;
-						//std::cout << (first.node != last.node) << std::endl;
-						//std::cout << (first != last) << std::endl;
-					}
-					//std::cout << "head: " << *head->data << std::endl;
-					//std::cout << "tail: " << *tail->data << std::endl;
 				}
+				//std::cout << "head: " << *head->data << std::endl;
+				//std::cout << "tail: " << *tail->data << std::endl;
+			}
 
 			template<typename InputIterator>
 			void	list_paradox_constructor(InputIterator first, InputIterator last, std::__false_type) {
@@ -410,16 +352,16 @@ namespace ft {
 					return iterator(NULL);
 			}
 
-			const_iterator			end() const {	//TODO check that this is desired behaviour, not just seg fault
+			const_iterator			end() const {	//TODO check that this is expected behaviour i.e. that stl does not just seg fault
 				if (tail)
 					return const_iterator(tail->next);
 				else
-					return const_iterator(NULL);
+					return const_iterator(tail);
 			}
 
-			/* Returns a reverse iterator pointing to the last element in the container (i.e., its reverse beginning).
-			 * Reverse iterators iterate backwards: increasing them moves them towards the beginning of the container.
-			 * rbegin points to the element right before the one that would be pointed to by member end.	*/
+			/*	Returns a reverse iterator pointing to the last element in the container (i.e., its reverse beginning).
+			 *	Reverse iterators iterate backwards: increasing them moves them towards the beginning of the container.
+			 *	rbegin points to the element right before the one that would be pointed to by member end.	*/
 
 			reverse_iterator		rbegin() {
 				return reverse_iterator(tail);
@@ -427,6 +369,23 @@ namespace ft {
 
 			const_reverse_iterator	rbegin() const {
 				return const_reverse_iterator(tail);
+			}
+
+			/*	 Returns a reverse iterator pointing to the theoretical element preceding the 
+			 *	 first element in the list container (which is considered its reverse end).	*/
+
+			reverse_iterator				rend() {
+				if (head)
+					return reverse_iterator(head->prev);
+				else
+					return reverse_iterator(NULL);
+			}
+
+			const_reverse_iterator			rend() const {	//TODO check that this is expected behaviour i.e. that stl does not just seg fault
+				if (head)
+					return const_reverse_iterator(head->prev);
+				else
+					return const_reverse_iterator(tail);
 			}
 
 /*-------------------------------------------CAPACITY-------------------------------------------*/
@@ -544,17 +503,11 @@ namespace ft {
 		private:
 
 			node_type*				new_node(const value_type& val, node_type *next = NULL, node_type *prev = NULL) {
-				//node		*l;
-
-				//l = alloc.allocate(sizeof(node));
-				//alloc.construct(l, val, next, prev);
-				//return l;
 				value_type	*tmp;
 
 				tmp = alloc.allocate(1);
 				alloc.construct(tmp, val);
 				return new Node(tmp, next, prev);
-				//return new node(val, next, prev);
 			}
 	};
 

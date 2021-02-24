@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/23 18:05:45 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/24 13:17:52 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -454,29 +454,31 @@ void		test_begin(data<T> *d, bool empty) {
 	//iter == iter
 	r3 = (ft_iter == *ft_iter_2);
 	r4 = (std_iter == *std_iter_2);
-	print_comp("iter == iter", r3, r4);
+	print_comp("iter == iter_2", r3, r4);
 	comp(r3 == r4);
 	//iter != iter
 	r3 = (ft_iter != *ft_iter_2);
 	r4 = (std_iter != *std_iter_2);
-	print_comp("iter != iter", r3, r4);
+	print_comp("iter != iter_2", r3, r4);
 	comp(r3 == r4);
 
 	ft_iter++;
 	std_iter++;
+	std::cout << "  iter++" << std::endl;
 
 	//iter == iter
 	r3 = (ft_iter == *ft_iter_2);
 	r4 = (std_iter == *std_iter_2);
-	print_comp("iter == iter", r3, r4);
+	print_comp("iter == iter_2", r3, r4);
 	comp(r3 == r4);
 	//iter != iter
 	r3 = (ft_iter != *ft_iter_2);
 	r4 = (std_iter != *std_iter_2);
-	print_comp("iter != iter", r3, r4);
+	print_comp("iter != iter_2", r3, r4);
 	comp(r3 == r4);
 
 	//iter->		//only testable with classes?
+	//convert of const to non const
 
 	delete std_iter_2;
 	delete ft_iter_2;
@@ -607,6 +609,7 @@ void		test_rbegin(data<T> *d, bool empty) {
 
 	ft_iter++;
 	std_iter++;
+	std::cout << "  iter++" << std::endl;
 
 	//iter == iter
 	r3 = (ft_iter == *ft_iter_2);

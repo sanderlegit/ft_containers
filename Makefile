@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/15 16:29:54 by averheij      #+#    #+#                  #
-#    Updated: 2021/02/23 16:51:47 by averheij      ########   odam.nl          #
+#    Updated: 2021/02/24 13:11:41 by averheij      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,19 +34,12 @@ all: $(CONTAINERS)
 %.o: %.cpp
 	$(CXX) $(CFLAGS) -c $< -o $@ $(INCL)
 
-#tests/test_%.o: tests/test_%.cpp
-	#$(CXX) -c $< -o $@ $(INCL)
-
 $(CONTAINERS): $(OFILES)
 ifeq ($(MAIN), 1)
-	#$(CXX) $(CFLAGS) main.cpp -o test_$@ $(INCL)
+	$(CXX) $(CFLAGS) main.cpp -o test_$@ $(INCL)
 else
-	#$(CXX) $(CFLAGS) tests/test_$@.cpp -o test_$@ $(INCL)
 	$(CXX) $(FTFLAGS) $(CFLAGS) tests/test_$@.o -o test_$@ $(INCL)
 endif
-
-#map:
-	#$(CXX) $(CFLAGS) -I ./map test_$@.cpp ./map/Map.cpp -o test_$@ -I . -I $(ITER_INC) -I $(UTIL_INC) -I $(MISC_INC) $(INCL) -D FT=$(FT)
 
 clean:
 	rm -rf $(OFILES)
