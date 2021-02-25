@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   list.hpp                                           :+:    :+:            */
+/*   list.hpp                                           :+:      :+:    :+:   */
 /*                                                     +:+                    */
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/24 14:29:22 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/25 15:02:03 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ namespace ft {
 			template<class value_t, class reference_t, class pointer_t>
 			class ListBiIterator { //https://en.cppreference.com/w/cpp/iterator/iterator
 				public:
-					node_type	*node = NULL;
+					node_type	*node;
 
 					typedef std::bidirectional_iterator_tag			iterator_category;
 					//typedef Node									node_type;
@@ -143,7 +143,7 @@ namespace ft {
 			template<class value_t, class reference_t, class pointer_t>
 			class ReverseListBiIterator : public ListBiIterator<value_t, reference_t, pointer_t> { //https://en.cppreference.com/w/cpp/iterator/iterator
 				public:
-					node_type	*node = NULL;
+					node_type	*node;
 
 					typedef std::bidirectional_iterator_tag			iterator_category;
 					//typedef Node									node_type;
@@ -250,14 +250,15 @@ namespace ft {
 
 		private:
 			template<typename Integer>
-			void	list_paradox_constructor(Integer n, Integer val, std::__true_type) {
+			//void	list_paradox_constructor(Integer n, Integer val, std::true_type) {
+			void	list_fill_value(Integer n, Integer val) {
 				for (size_type i = 0; i != n; i++) {
 					push_back(val);
 				}
 			}
 
 			template<typename InputIterator>
-			void	list_fill(InputIterator first, InputIterator last) {
+			void	list_fill_range(InputIterator first, InputIterator last) {
 				//std::cout << first.node << " " << last.node << std::endl;
 				//std::cout << (first.node != last.node) << std::endl;
 				//std::cout << (first != last) << std::endl;
@@ -274,23 +275,53 @@ namespace ft {
 				//std::cout << "tail: " << *tail->data << std::endl;
 			}
 
-			template<typename InputIterator>
-			void	list_paradox_constructor(InputIterator first, InputIterator last, std::__false_type) {
-				list_fill(first, last);
+			template<typename Ambiguous>
+			//void	list_paradox_constructor(InputIterator first, InputIterator last, std::false_type) {
+			void	list_paradox_constructor(Ambiguous a1, Ambiguous a2, bool result) {
+				if (result)
+					list_fill_range(a1, a2);
+				else
+					list_fill_value(a1, a2);
 			}
 
 		public:
+
+			template<bool B>
+			struct enable_if {};
+
+			template<>
+			struct enable_if<true> {
+				typedef T type;
+			};
+
+			template<typename not_an_iterator>
+			struct is_iterator {
+				static const bool		result = false;
+			};
+
+			template<>
+			struct is_iterator<std::bidirectional_iterator_tag> {
+				static const bool		result = true;
+			};
+
 			template <class InputIterator>
-			list(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
+			list(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
+					typename enable_if<is_iterator<typename InputIterator::iterator_category>::result>::type* = NULL)
 			  					: alloc(alloc), _size(0), head(NULL), tail(NULL) {
-				list_paradox_constructor(first, last, typename std::__is_integer<InputIterator>::__type());
+				//std::cout << is_iterator<typename InputIterator::iterator_category>::result << std::endl;
+				//list_paradox_constructor(first, last, is_iterator<typename InputIterator::iterator_category>::result);
+				//list_fill(first, last);
+				while (first != last) {
+					push_back(*first);
+					first++;
+				}
 			}
 
 			//list(const list& x) : alloc(allocator_type()), _size(0), head(NULL), tail(NULL) {
 			list(const list& x) : _size(0), head(NULL), tail(NULL) {
 				//std::cout << "copy " << x.size() <<std::endl;
 				//std::cout <<  x.front() << " " << x.back() << " " << std::endl;
-				list_fill(x.begin(), x.end());
+				list_fill_range(x.begin(), x.end());
 			}
 
 			/*	This destroys all container elements, and deallocates all the

@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         ::::::::             #
-#    Makefile                                           :+:    :+:             #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                      +:+                     #
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/15 16:29:54 by averheij      #+#    #+#                  #
-#    Updated: 2021/02/24 13:11:41 by averheij      ########   odam.nl          #
+#    Updated: 2021/02/25 14:49:28 by dries            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ ifeq ($(G), 1)
 endif
 FTFLAGS		=	-Wall -Wextra -Werror
 CFLAGS		=	-pedantic -std=c++98 $(DFLAGS)
-CXX			=	g++
+CXX			=	clang++
 
 
 all: $(CONTAINERS)
