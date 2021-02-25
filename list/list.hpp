@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/25 15:02:03 by dries            ###   ########.fr       */
+/*   Updated: 2021/02/25 17:45:47 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,13 @@ namespace ft {
 
 /*-------------------------------------------NODE CLASS-------------------------------------------*/
 		private:
+			template<typename value_t>
 			class Node {
 				public:
-					typedef	T								value_type;
+					typedef	value_t							value_type;
 					typedef	value_type*						pointer;
 
-					Node(void) : next(NULL), prev(NULL) {}
+					Node(void) : data(NULL), next(NULL), prev(NULL) {}
 					Node(pointer data_, Node *next_ = NULL, Node* prev_ = NULL) : data(data_), next(next_), prev(prev_) {}
 
 					~Node(void) {}
@@ -75,19 +76,21 @@ namespace ft {
 						return *this;
 					}
 
+					operator Node<const value_type>() { /* pass butter; */ return data; }		//TODO what is my purpose
+
 					pointer		data;
 					Node		*next;
 					Node		*prev;
 			};
 
 		public:
-			typedef Node									node_type;
+			typedef Node<T>									node_type;
 
 /*-------------------------------------------ITERATOR CLASS-------------------------------------------*/
-			template<class value_t, class reference_t, class pointer_t>
+			template<class node_t, class value_t, class reference_t, class pointer_t>
 			class ListBiIterator { //https://en.cppreference.com/w/cpp/iterator/iterator
 				public:
-					node_type	*node;
+					node_t	*node;
 
 					typedef std::bidirectional_iterator_tag			iterator_category;
 					//typedef Node									node_type;
@@ -99,7 +102,7 @@ namespace ft {
 					typedef	pointer_t								pointer;
 					typedef	ptrdiff_t								difference_type;
 
-					ListBiIterator(node_type* n = NULL) : node(n) {}
+					ListBiIterator(node_t* n = NULL) : node(n) {}
 					ListBiIterator(const ListBiIterator& src) { *this = src; }
 					~ListBiIterator(void) {}
 
@@ -136,14 +139,14 @@ namespace ft {
 					pointer					operator->() const { return node->data; }
 					reference 				operator*() const { return *node->data; }
 
-					operator ListBiIterator<const value_t, const reference, const pointer>() { /* pass butter; */ return node; }		//TODO what is my purpose
+					operator ListBiIterator<node_t, const value_t, const reference, const pointer>() { /* pass butter; */ return node; }		//TODO what is my purpose
 
 			};
 
-			template<class value_t, class reference_t, class pointer_t>
-			class ReverseListBiIterator : public ListBiIterator<value_t, reference_t, pointer_t> { //https://en.cppreference.com/w/cpp/iterator/iterator
+			template<class node_t, class value_t, class reference_t, class pointer_t>
+			class ReverseListBiIterator : public ListBiIterator<node_t, value_t, reference_t, pointer_t> { //https://en.cppreference.com/w/cpp/iterator/iterator
 				public:
-					node_type	*node;
+					node_t	*node;
 
 					typedef std::bidirectional_iterator_tag			iterator_category;
 					//typedef Node									node_type;
@@ -155,7 +158,7 @@ namespace ft {
 					typedef	pointer_t								pointer;
 					typedef	ptrdiff_t								difference_type;
 
-					ReverseListBiIterator(node_type* n = NULL) : node(n) {}
+					ReverseListBiIterator(node_t* n = NULL) : node(n) {}
 					ReverseListBiIterator(const ReverseListBiIterator& src) { *this = src; }
 					~ReverseListBiIterator(void) {}
 
@@ -192,7 +195,7 @@ namespace ft {
 					pointer					operator->() const { return node->data; }
 					reference 				operator*() const { return *node->data; }
 
-					operator ReverseListBiIterator<const value_type, const reference, const pointer>() { /* pass butter; */ return node; }		//TODO what is my purpose
+					operator ReverseListBiIterator<node_t, const value_type, const reference, const pointer>() { /* pass butter; */ return node; }		//TODO what is my purpose
 
 			};
 
@@ -205,16 +208,17 @@ namespace ft {
 			 *	Node						class used for nodes	*/
 
 			//TODO
-			typedef	ListBiIterator<T, T&, T*>							iterator;
-			typedef	ListBiIterator<const T, T&, T*>						const_iterator;
-			typedef	ReverseListBiIterator<T, T&, T*>					reverse_iterator;
-			typedef	ReverseListBiIterator<const T, const T&, const T*>	const_reverse_iterator;
+			typedef	ListBiIterator<node_type, T, T&, T*>							iterator;
+			typedef	ListBiIterator<node_type, const T, const T&, const T*>			const_iterator;
+			typedef	ReverseListBiIterator<node_type, T, T&, T*>					reverse_iterator;
+			typedef	ReverseListBiIterator<node_type, const T, const T&, const T*>	const_reverse_iterator;
 
 		private:
 			size_type					_size;
 			Alloc						alloc;
 			node_type*					head;
 			node_type*					tail;
+			node_type*					base;
 
 /*-------------------------------------------CANON-------------------------------------------*/
 		public:
@@ -239,52 +243,14 @@ namespace ft {
 			 *		The storage for the elements is allocated using this internal allocator.  */
 
 			explicit list(const allocator_type& alloc = allocator_type())
-								: _size(0), alloc(alloc),  head(NULL), tail(NULL) {}
+								: _size(0), alloc(alloc),  head(NULL), tail(NULL), base(new node_type()) {}
 
 			explicit list(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
-								: _size(0), alloc(alloc), head(NULL), tail(NULL) {
+								: _size(0), alloc(alloc), head(NULL), tail(NULL), base(new node_type()) {
 				for (size_type i = 0; i != n; i++) {
 					push_back(val);
 				}
 			}
-
-		private:
-			template<typename Integer>
-			//void	list_paradox_constructor(Integer n, Integer val, std::true_type) {
-			void	list_fill_value(Integer n, Integer val) {
-				for (size_type i = 0; i != n; i++) {
-					push_back(val);
-				}
-			}
-
-			template<typename InputIterator>
-			void	list_fill_range(InputIterator first, InputIterator last) {
-				//std::cout << first.node << " " << last.node << std::endl;
-				//std::cout << (first.node != last.node) << std::endl;
-				//std::cout << (first != last) << std::endl;
-
-				while (first != last) {
-					//std::cout << *first << std::endl;
-					push_back(*first);
-					first++;
-					//std::cout << first.node << " " << last.node << std::endl;
-					//std::cout << (first.node != last.node) << std::endl;
-					//std::cout << (first != last) << std::endl;
-				}
-				//std::cout << "head: " << *head->data << std::endl;
-				//std::cout << "tail: " << *tail->data << std::endl;
-			}
-
-			template<typename Ambiguous>
-			//void	list_paradox_constructor(InputIterator first, InputIterator last, std::false_type) {
-			void	list_paradox_constructor(Ambiguous a1, Ambiguous a2, bool result) {
-				if (result)
-					list_fill_range(a1, a2);
-				else
-					list_fill_value(a1, a2);
-			}
-
-		public:
 
 			template<bool B>
 			struct enable_if {};
@@ -304,39 +270,49 @@ namespace ft {
 				static const bool		result = true;
 			};
 
+		private:
+			template<typename InputIterator>
+				void	list_fill_range(InputIterator first, InputIterator last) {
+					while (first != last) {
+						push_back(*first);
+						first++;
+					}
+				}
+
+		public:
 			template <class InputIterator>
 			list(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
 					typename enable_if<is_iterator<typename InputIterator::iterator_category>::result>::type* = NULL)
-			  					: alloc(alloc), _size(0), head(NULL), tail(NULL) {
-				//std::cout << is_iterator<typename InputIterator::iterator_category>::result << std::endl;
-				//list_paradox_constructor(first, last, is_iterator<typename InputIterator::iterator_category>::result);
-				//list_fill(first, last);
-				while (first != last) {
-					push_back(*first);
-					first++;
-				}
+			  					: alloc(alloc), _size(0), head(NULL), tail(NULL), base(new node_type()) {
+				//while (first != last) {
+					//push_back(*first);
+					//first++;
+				//}
+				list_fill_range(first, last);
 			}
+			list(const list& x) : _size(0), head(NULL), tail(NULL), base(new node_type()) {
+				//list_fill_range(x.begin(), x.end());
 
-			//list(const list& x) : alloc(allocator_type()), _size(0), head(NULL), tail(NULL) {
-			list(const list& x) : _size(0), head(NULL), tail(NULL) {
-				//std::cout << "copy " << x.size() <<std::endl;
-				//std::cout <<  x.front() << " " << x.back() << " " << std::endl;
-				list_fill_range(x.begin(), x.end());
+				const_iterator		iter;
+				const_iterator		end;
+
+				//list_fill_range(x.begin(), x.end());
+				iter = x.begin();
+				end = x.end();
+				while (!x.empty() && iter != end) {
+					push_back(*iter);
+					iter++;
+				}
+				//return *this;
+				//*this = x;
 			}
 
 			/*	This destroys all container elements, and deallocates all the
 			 *	storage capacity allocated by the list container using its allocator.  */
 
 			~list(void) {
-				while (!empty()) {
-					//std::cout << "empty:" << empty();
-					//std::cout << " size:" << size();
-					//if (!empty())
-						//std::cout << " tail:" << back();
-					//std::cout << std::endl;
+				while (!empty())
 					pop_back();
-
-				}
 			}
 
 			/*	Copies all the elements from x into the container.
@@ -346,14 +322,19 @@ namespace ft {
 			 *	assigned to or destroyed.  */
 
 			list&				operator=(const list& x) {
-				node_type		*ptr;
+				const_iterator		iter;
+				const_iterator		end;
 
 				while (!empty())
 					pop_front();
-				ptr = x.head;
-				while (ptr) {
-					push_back(*ptr->data);
-					ptr = ptr->next;
+				delete base;
+				base = new node_type();
+				//list_fill_range(x.begin(), x.end());
+				iter = x.begin();
+				end = x.end();
+				while (!x.empty() && iter != end) {
+					push_back(*iter);
+					iter++;
 				}
 				return *this;
 			}
@@ -377,17 +358,17 @@ namespace ft {
 			 *	If the container is empty, this function returns the same as list::begin.	*/
 
 			iterator				end() {
-				if (tail)
-					return iterator(tail->next);
-				else
-					return iterator(NULL);
+				//node_type*		ptr;
+
+				//ptr = &base;
+				return iterator(base);
 			}
 
 			const_iterator			end() const {	//TODO check that this is expected behaviour i.e. that stl does not just seg fault
-				if (tail)
-					return const_iterator(tail->next);
-				else
-					return const_iterator(tail);
+				//const node_type*		ptr;
+
+				//ptr = &base;
+				return const_iterator(base);
 			}
 
 			/*	Returns a reverse iterator pointing to the last element in the container (i.e., its reverse beginning).
@@ -406,17 +387,11 @@ namespace ft {
 			 *	 first element in the list container (which is considered its reverse end).	*/
 
 			reverse_iterator				rend() {
-				if (head)
-					return reverse_iterator(head->prev);
-				else
-					return reverse_iterator(NULL);
+				return reverse_iterator(base);
 			}
 
 			const_reverse_iterator			rend() const {	//TODO check that this is expected behaviour i.e. that stl does not just seg fault
-				if (head)
-					return const_reverse_iterator(head->prev);
-				else
-					return const_reverse_iterator(tail);
+				return const_reverse_iterator(base);
 			}
 
 /*-------------------------------------------CAPACITY-------------------------------------------*/
@@ -467,15 +442,16 @@ namespace ft {
 			 *	This effectively increases the container size by one. */
 
 			void				push_front(const value_type& val) {
-				node_type		*l;
-
 				if (head) {
-					l = new_node(val, head, NULL);
-					head->prev = l;
-					head = l;
+					head->prev = new_node(val, head, base);
+					head = head->prev;
+					head->prev = base;
+					base->next = head;
 				} else {
-					head = new_node(val, NULL, NULL);
+					head = new_node(val, base, base);
 					tail = head;
+					base->next = head;
+					base->prev = tail;
 				}
 				_size++;
 			}
@@ -490,7 +466,10 @@ namespace ft {
 					tmp = head;
 					head = head->next;
 					if (head)
-						head->prev = NULL;
+						head->prev = base;
+					else
+						base->prev = NULL;
+					base->next = head;
 					_size--;
 					alloc.destroy(tmp->data);
 					alloc.deallocate(tmp->data, 1);
@@ -504,11 +483,15 @@ namespace ft {
 
 			void				push_back(const value_type& val) {
 				if (tail) {
-					tail->next = new_node(val, NULL, tail);
+					tail->next = new_node(val, base, tail);
 					tail = tail->next;
+					tail->next = base;
+					base->prev = tail;
 				} else {
-					head = new_node(val, NULL, NULL);
+					head = new_node(val, base, base);
 					tail = head;
+					base->next = head;
+					base->prev = tail;
 				}
 				_size++;
 			}
@@ -523,7 +506,10 @@ namespace ft {
 					tmp = tail;
 					tail = tail->prev;
 					if (tail)
-						tail->next = NULL;
+						tail->next = base;
+					else
+						base->next = NULL;
+					base->prev = tail;
 					_size--;
 					alloc.destroy(tmp->data);
 					alloc.deallocate(tmp->data, 1);
@@ -538,7 +524,7 @@ namespace ft {
 
 				tmp = alloc.allocate(1);
 				alloc.construct(tmp, val);
-				return new Node(tmp, next, prev);
+				return new node_type(tmp, next, prev);
 			}
 	};
 

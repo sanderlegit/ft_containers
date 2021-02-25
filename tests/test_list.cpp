@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   test_list.cpp                                      :+:    :+:            */
+/*   test_list.cpp                                      :+:      :+:    :+:   */
 /*                                                     +:+                    */
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/24 13:17:52 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/25 17:52:24 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -309,7 +309,7 @@ void		test_equals_operator(data<T> *d, bool empty) {
 	ft::list<T> 	*ftsrc;
 	ft::list<T> 	ft;
 
-	print_title("Operator =");
+	print_title("operator=");
 	if (empty)
 		size = 0;
 	else
@@ -357,7 +357,7 @@ void		test_begin(data<T> *d, bool empty) {
 	bool													r3;
 	bool													r4;
 
-	print_title("Begin");
+	print_title("begin");
 	if (empty) {
 		size = 0;
 	} else {
@@ -502,7 +502,7 @@ void		test_rbegin(data<T> *d, bool empty) {
 	bool													r3;
 	bool													r4;
 
-	print_title("Begin");
+	print_title("rbegin");
 	if (empty) {
 		size = 0;
 	} else {
@@ -632,12 +632,309 @@ void		test_rbegin(data<T> *d, bool empty) {
 }
 
 template<class T>
+void		test_end(data<T> *d, bool empty) {
+	size_t 													size;
+	T														val;
+	std::list<T> 											*std;
+	ft::list<T> 											*ft;
+	typename std::list<T, std::allocator<T> >::iterator		std_iter;
+	typename ft::list<T, std::allocator<T> >::iterator		ft_iter;
+	typename std::list<T, std::allocator<T> >::iterator		*std_iter_2;
+	typename ft::list<T, std::allocator<T> >::iterator		*ft_iter_2;
+	T														r1;
+	T														r2;
+	bool													r3;
+	bool													r4;
+
+	print_title("end");
+	if (empty) {
+		size = 0;
+	} else {
+		size = rand() % 256;
+	}
+	//val = randomize<T>();
+	//std = new std::list<T>(size, val);
+	//ft = new ft::list<T>(size, val);
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+
+	std_iter = std->end();
+	ft_iter = ft->end();
+	//std::cout << "testing on:\tnew ft::list<T>(" << size << ", " << val << ");" << std::endl;
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	ft_iter--;
+	std_iter--;
+	std::cout << "  iter--" << std::endl;
+
+	//iter--
+	r1 = *std_iter--;
+	r2 = *ft_iter--;
+	print_comp("iter-- old", r1, r2);
+	comp(r1 == r2);
+	r1 = *std_iter;
+	r2 = *ft_iter;
+	print_comp("iter-- new", r1, r2);
+	comp(r1 == r2);
+
+	//--iter
+	r1 = *--std_iter;
+	r2 = *--ft_iter;
+	print_comp("--iter old", r1, r2);
+	comp(r1 == r2);
+	r1 = *std_iter;
+	r2 = *ft_iter;
+	print_comp("--iter new", r1, r2);
+	comp(r1 == r2);
+
+	r1 = *std_iter;
+	r2 = *ft_iter;
+	print_comp("*iter", r1, r2);
+	comp(r1 == r2);
+
+	//iter++
+	r1 = *std_iter++;
+	r2 = *ft_iter++;
+	print_comp("iter++ old", r1, r2);
+	comp(r1 == r2);
+	r1 = *std_iter;
+	r2 = *ft_iter;
+	print_comp("iter++ new", r1, r2);
+	comp(r1 == r2);
+
+	//++iter
+	r1 = *++std_iter;
+	r2 = *++ft_iter;
+	print_comp("++iter old", r1, r2);
+	comp(r1 == r2);
+	r1 = *std_iter;
+	r2 = *ft_iter;
+	print_comp("++iter new", r1, r2);
+	comp(r1 == r2);
+
+	//empty constructor
+	std_iter_2 = new typename std::list<T, std::allocator<T> >::iterator();
+	ft_iter_2 = new typename ft::list<T, std::allocator<T> >::iterator();
+
+	//operator=
+	*std_iter_2 = std_iter;
+	*ft_iter_2 = ft_iter;
+	r1 = **std_iter_2;
+	r2 = *std_iter;
+	print_comp_labels("std_iter = iter", "lhs", "rhs", r1, r2);
+	r1 = **ft_iter_2;
+	r2 = *ft_iter;
+	print_comp_labels("ft_iter = iter", "lhs", "rhs", r1, r2);
+	comp(r1 == r2);
+	delete std_iter_2;
+	delete ft_iter_2;
+
+	//copy constructor
+	std_iter_2 = new typename std::list<T, std::allocator<T> >::iterator(std_iter);
+	ft_iter_2 = new typename ft::list<T, std::allocator<T> >::iterator(ft_iter);
+	r1 = **std_iter_2;
+	r2 = *std_iter;
+	print_comp_labels("ft_iter(iter)", "lhs", "rhs", r1, r2);
+	r1 = **ft_iter_2;
+	r2 = *ft_iter;
+	print_comp_labels("std_iter(iter)", "lhs", "rhs", r1, r2);
+	comp(r1 == r2);
+
+	//iter == iter
+	r3 = (ft_iter == *ft_iter_2);
+	r4 = (std_iter == *std_iter_2);
+	print_comp("iter == iter_2", r3, r4);
+	comp(r3 == r4);
+	//iter != iter
+	r3 = (ft_iter != *ft_iter_2);
+	r4 = (std_iter != *std_iter_2);
+	print_comp("iter != iter_2", r3, r4);
+	comp(r3 == r4);
+
+	ft_iter--;
+	std_iter--;
+	std::cout << "  iter--" << std::endl;
+
+	//iter == iter
+	r3 = (ft_iter == *ft_iter_2);
+	r4 = (std_iter == *std_iter_2);
+	print_comp("iter == iter_2", r3, r4);
+	comp(r3 == r4);
+	//iter != iter
+	r3 = (ft_iter != *ft_iter_2);
+	r4 = (std_iter != *std_iter_2);
+	print_comp("iter != iter_2", r3, r4);
+	comp(r3 == r4);
+
+	//iter->		//only testable with classes?
+	//convert of const to non const
+
+	delete std_iter_2;
+	delete ft_iter_2;
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_rend(data<T> *d, bool empty) {
+	size_t 													size;
+	T														val;
+	std::list<T> 											*std;
+	ft::list<T> 											*ft;
+	typename std::list<T, std::allocator<T> >::reverse_iterator		std_iter;
+	typename ft::list<T, std::allocator<T> >::reverse_iterator		ft_iter;
+	typename std::list<T, std::allocator<T> >::reverse_iterator		*std_iter_2;
+	typename ft::list<T, std::allocator<T> >::reverse_iterator		*ft_iter_2;
+	T														r1;
+	T														r2;
+	bool													r3;
+	bool													r4;
+
+	print_title("rend");
+	if (empty) {
+		size = 0;
+	} else {
+		size = rand() % 256;
+	}
+	//val = randomize<T>();
+	//std = new std::list<T>(size, val);
+	//ft = new ft::list<T>(size, val);
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+
+	std_iter = std->rend();
+	ft_iter = ft->rend();
+	//std::cout << "testing on:\tnew ft::list<T>(" << size << ", " << val << ");" << std::endl;
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	ft_iter--;
+	std_iter--;
+	std::cout << "  iter--" << std::endl;
+
+	//iter--
+	r1 = *std_iter--;
+	r2 = *ft_iter--;
+	print_comp("iter-- old", r1, r2);
+	comp(r1 == r2);
+	r1 = *std_iter;
+	r2 = *ft_iter;
+	print_comp("iter-- new", r1, r2);
+	comp(r1 == r2);
+
+	//--iter
+	r1 = *--std_iter;
+	r2 = *--ft_iter;
+	print_comp("--iter old", r1, r2);
+	comp(r1 == r2);
+	r1 = *std_iter;
+	r2 = *ft_iter;
+	print_comp("--iter new", r1, r2);
+	comp(r1 == r2);
+
+	r1 = *std_iter;
+	r2 = *ft_iter;
+	print_comp("*iter", r1, r2);
+	comp(r1 == r2);
+
+	//iter++
+	r1 = *std_iter++;
+	r2 = *ft_iter++;
+	print_comp("iter++ old", r1, r2);
+	comp(r1 == r2);
+	r1 = *std_iter;
+	r2 = *ft_iter;
+	print_comp("iter++ new", r1, r2);
+	comp(r1 == r2);
+
+	//++iter
+	r1 = *++std_iter;
+	r2 = *++ft_iter;
+	print_comp("++iter old", r1, r2);
+	comp(r1 == r2);
+	r1 = *std_iter;
+	r2 = *ft_iter;
+	print_comp("++iter new", r1, r2);
+	comp(r1 == r2);
+
+	//empty constructor
+	std_iter_2 = new typename std::list<T, std::allocator<T> >::reverse_iterator();
+	ft_iter_2 = new typename ft::list<T, std::allocator<T> >::reverse_iterator();
+
+	//operator=
+	*std_iter_2 = std_iter;
+	*ft_iter_2 = ft_iter;
+	r1 = **std_iter_2;
+	r2 = *std_iter;
+	print_comp_labels("std_iter = iter", "lhs", "rhs", r1, r2);
+	r1 = **ft_iter_2;
+	r2 = *ft_iter;
+	print_comp_labels("ft_iter = iter", "lhs", "rhs", r1, r2);
+	comp(r1 == r2);
+	delete std_iter_2;
+	delete ft_iter_2;
+
+	//copy constructor
+	std_iter_2 = new typename std::list<T, std::allocator<T> >::reverse_iterator(std_iter);
+	ft_iter_2 = new typename ft::list<T, std::allocator<T> >::reverse_iterator(ft_iter);
+	r1 = **std_iter_2;
+	r2 = *std_iter;
+	print_comp_labels("ft_iter(iter)", "lhs", "rhs", r1, r2);
+	r1 = **ft_iter_2;
+	r2 = *ft_iter;
+	print_comp_labels("std_iter(iter)", "lhs", "rhs", r1, r2);
+	comp(r1 == r2);
+
+	//iter == iter
+	r3 = (ft_iter == *ft_iter_2);
+	r4 = (std_iter == *std_iter_2);
+	print_comp("iter == iter", r3, r4);
+	comp(r3 == r4);
+	//iter != iter
+	r3 = (ft_iter != *ft_iter_2);
+	r4 = (std_iter != *std_iter_2);
+	print_comp("iter != iter", r3, r4);
+	comp(r3 == r4);
+
+	ft_iter--;
+	std_iter--;
+	std::cout << "  iter--" << std::endl;
+
+	//iter == iter
+	r3 = (ft_iter == *ft_iter_2);
+	r4 = (std_iter == *std_iter_2);
+	print_comp("iter == iter", r3, r4);
+	comp(r3 == r4);
+	//iter != iter
+	r3 = (ft_iter != *ft_iter_2);
+	r4 = (std_iter != *std_iter_2);
+	print_comp("iter != iter", r3, r4);
+	comp(r3 == r4);
+
+	//iter->		//only testable with classes?
+
+	delete std_iter_2;
+	delete ft_iter_2;
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
 void		test_iterators(data<T> *d) {
 	test_begin(d, 0);
 	//test_begin_const(d, 0);
-	//test_end(d);
+	test_end(d, 0);
 	test_rbegin(d, 0);
-	//test_rend(d);
+	test_rend(d, 0);
 	//test_iterator_class
 }
 
@@ -652,7 +949,7 @@ void		test_empty(data<T> *d, bool empty) {
 	bool			r1;
 	bool			r2;
 
-	print_title("Empty");
+	print_title("empty");
 	val = randomize<T>();
 	if (empty) {
 		size = 0;
@@ -682,7 +979,7 @@ void		test_size(data<T> *d, bool empty) {
 	size_t			r1;
 	size_t			r2;
 
-	print_title("Size");
+	print_title("size");
 	val = randomize<T>();
 	if (empty) {
 		size = 0;
@@ -712,7 +1009,7 @@ void		test_max_size(data<T> *d) {
 	size_t			r1;
 	size_t			r2;
 
-	print_title("Max Size");
+	print_title("max_size");
 	val = randomize<T>();
 	size = 0;
 	std = new std::list<T>(size, val);
@@ -749,7 +1046,7 @@ void		test_front(data<T> *d, bool empty) {
 	T				r1;
 	T				r2;
 
-	print_title("Front");
+	print_title("front");
 	val = randomize<T>();
 	if (empty) {
 		size = 0;
@@ -779,7 +1076,7 @@ void		test_back(data<T> *d, bool empty) {
 	T				r1;
 	T				r2;
 
-	print_title("Back");
+	print_title("back");
 	val = randomize<T>();
 	if (empty) {
 		size = 0;
@@ -809,7 +1106,7 @@ void		test_front_const(data<T> *d, bool empty) {
 	T				r1;
 	T				r2;
 
-	print_title("Const Front");
+	print_title("const front");
 	val = randomize<T>();
 	if (empty) {
 		size = 0;
@@ -842,7 +1139,7 @@ void		test_back_const(data<T> *d, bool empty) {
 	T				r1;
 	T				r2;
 
-	print_title("Const Back");
+	print_title("const back");
 	val = randomize<T>();
 	if (empty) {
 		size = 0;

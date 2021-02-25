@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         ::::::::             #
-#    list_tasks                                         :+:    :+:             #
+#    list_tasks                                         :+:      :+:    :+:    #
 #                                                      +:+                     #
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/18 11:56:11 by averheij      #+#    #+#                  #
-#    Updated: 2021/02/24 15:04:30 by averheij      ########   odam.nl          #
+#    Updated: 2021/02/25 17:54:41 by dries            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,10 +17,10 @@ states 	[proto, partial, written, buggy, tested]
 operator=			Assign content (public member function )			-written,	tested
 
 	Iterators:				(all have const and non const)
-begin				Return iterator to beginning (public member function )						-written,	needs double check
-end					Return iterator to end (public member function )							-written
-rbegin				Return reverse iterator to reverse beginning (public member function )		-written,	needs double check
-rend				Return reverse iterator to reverse end (public member function )
+begin				Return iterator to beginning (public member function )						-written,	tested			no test written for const versions!!!
+end					Return iterator to end (public member function )							-written,	tested			no assignments!!
+rbegin				Return reverse iterator to reverse beginning (public member function )		-written,	tested			no -> checks (needs classes)
+rend				Return reverse iterator to reverse end (public member function )			-written,	tested
 
 	Capacity:
 empty				Test whether container is empty (public member function )	-written,	tested
@@ -55,3 +55,7 @@ reverse				Reverse the order of elements (public member function )
 	Non-member function overloads:
 relational operators (list)		Relational operators for list (function )
 swap (list)						Exchanges the contents of two lists (function template )
+
+
+fixed so that base points at head and tail, and vice versa
+	need exhaustive tests for end, rend
