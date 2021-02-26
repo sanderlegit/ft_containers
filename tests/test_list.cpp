@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/25 17:52:24 by dries            ###   ########.fr       */
+/*   Updated: 2021/02/26 15:16:19 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,11 @@ T			randomize(void) {
 /*-----------------------------------TEST TOOLS-----------------------------------*/
 
 void		print_group_title(std::string str) {
-	std::cout << "\n  #=======" << str << "=======#" <<std::endl;
+	std::cout << "\n          #=======" << str << "=======#" <<std::endl;
 }
 
 void		print_title(std::string str) {
-	std::cout << "\n  ----" << str << "----" <<std::endl;
+	std::cout << "\n             ----" << str << "----" <<std::endl;
 }
 
 template<class T, class R>
@@ -163,16 +163,23 @@ void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
 
 		std::cout << "  iterating through..." << std::endl;
 		while (!std->empty() && !ft->empty()) {
+			r1 = std->empty();
+			r2 = ft->empty();
 			r3 = std->front();
 			r4 = ft->front();
 			r5 = std->size();
 			r6 = ft->size();
 			std->pop_front();
 			ft->pop_front();
+			comp(r1 == r2);
 			comp(r3 == r4);
 			comp(r5 == r6);
 		}
-		print_comp("front()", r3, r4);
+		r1 = std->empty();
+		r2 = ft->empty();
+		r5 = std->size();
+		r6 = ft->size();
+		print_comp("empty()", r1, r2);
 		print_comp("size()", r5, r6);
 	}
 }
@@ -1035,7 +1042,7 @@ void		test_capacity(data<T> *d) {
 	test_max_size(d);
 }
 
-/*-----------------------------------ELEMENT ACCESS-----------------------------------*/
+/*-----------------------------------ELEMENT ACCESS TESTS-----------------------------------*/
 
 template<class T>
 void		test_front(data<T> *d, bool empty) {
@@ -1171,6 +1178,354 @@ void		test_element_access(data<T> *d) {
 	test_back_const(d, 0);
 }
 
+/*-----------------------------------MODIFIER TESTS-----------------------------------*/
+
+template<class T>
+void		test_push_front(data<T> *d, bool empty) {
+	unsigned char	size;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	bool			r1;
+	bool			r2;
+	T				r3;
+	T				r4;
+	size_t			r5;
+	size_t			r6;
+
+	print_title("push_front");
+	//if (empty)
+		//size = 0;
+	//else
+	size = rand() % 256;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	std::cout << "testing on:\tempty list" << std::endl;
+	std::cout << "  push_front " << (int)size << " elements e.g." << std::endl;
+	val = randomize<T>();
+	std->push_front(val);
+	ft->push_front(val);
+	r1 = std->empty();
+	r2 = ft->empty();
+	r3 = std->front();
+	r4 = ft->front();
+	r5 = std->size();
+	r6 = ft->size();
+	print_comp("empty()", r3, r4);
+	comp(r1 == r2);
+	print_comp("front()", r3, r4);
+	comp(r3 == r4);
+	print_comp("size()", r5, r6);
+	comp(r5 == r6);
+
+	std::cout << "  finshing the other " << (int)size - 1 << " elements..." << std::endl;
+	for (size_t i = 1; i < size; i++) {
+		val = randomize<T>();
+		std->push_front(val);
+		ft->push_front(val);
+		r1 = std->empty();
+		r2 = ft->empty();
+		r3 = std->front();
+		r4 = ft->front();
+		r5 = std->size();
+		r6 = ft->size();
+		comp(r1 == r2);
+		comp(r3 == r4);
+		comp(r5 == r6);
+	}
+	r1 = std->empty();
+	r2 = ft->empty();
+	r5 = std->size();
+	r6 = ft->size();
+	print_comp("empty()", r1, r2);
+	print_comp("size()", r5, r6);
+
+	equal(std, ft);
+
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_push_back(data<T> *d, bool empty) {
+	unsigned char	size;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	bool			r1;
+	bool			r2;
+	T				r3;
+	T				r4;
+	size_t			r5;
+	size_t			r6;
+
+	print_title("push_back");
+	//if (empty)
+		//size = 0;
+	//else
+	size = rand() % 256;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	std::cout << "testing on:\tempty list" << std::endl;
+	std::cout << "  push_back " << (int)size << " elements e.g." << std::endl;
+	val = randomize<T>();
+	std->push_back(val);
+	ft->push_back(val);
+	r1 = std->empty();
+	r2 = ft->empty();
+	r3 = std->back();
+	r4 = ft->back();
+	r5 = std->size();
+	r6 = ft->size();
+	print_comp("empty()", r3, r4);
+	comp(r1 == r2);
+	print_comp("back()", r3, r4);
+	comp(r3 == r4);
+	print_comp("size()", r5, r6);
+	comp(r5 == r6);
+
+	std::cout << "  finshing the other " << (int)size - 1 << " elements..." << std::endl;
+	for (size_t i = 1; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+		r1 = std->empty();
+		r2 = ft->empty();
+		r3 = std->back();
+		r4 = ft->back();
+		r5 = std->size();
+		r6 = ft->size();
+		comp(r1 == r2);
+		comp(r3 == r4);
+		comp(r5 == r6);
+	}
+	r1 = std->empty();
+	r2 = ft->empty();
+	r5 = std->size();
+	r6 = ft->size();
+	print_comp("empty()", r1, r2);
+	print_comp("size()", r5, r6);
+
+	equal(std, ft);
+
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_pop_front(data<T> *d, bool empty) {
+	unsigned char	size;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	bool			r1;
+	bool			r2;
+	T				r3;
+	T				r4;
+	size_t			r5;
+	size_t			r6;
+
+	print_title("pop_front");
+	if (empty)
+		size = 0;
+	else
+		size = rand() % 256;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_front(val);
+		ft->push_front(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+
+	std::cout << "  clearing list using pop_front()" << std::endl;
+	r1 = std->empty();
+	r2 = ft->empty();
+	print_comp("empty()", r1, r2);
+	comp(r1 == r2);
+	if (!r1 && !r2) {
+		r3 = std->front();
+		r4 = ft->front();
+		r5 = std->size();
+		r6 = ft->size();
+		std->pop_front();
+		ft->pop_front();
+		print_comp("front()", r3, r4);
+		comp(r3 == r4);
+		print_comp("size()", r5, r6);
+		comp(r5 == r6);
+		std::cout << "  iterating through..." << std::endl;
+		while (!std->empty() && !ft->empty()) {
+			r1 = std->empty();
+			r2 = ft->empty();
+			r3 = std->front();
+			r4 = ft->front();
+			r5 = std->size();
+			r6 = ft->size();
+			std->pop_front();
+			ft->pop_front();
+			comp(r1 == r2);
+			comp(r3 == r4);
+			comp(r5 == r6);
+		}
+		r1 = std->empty();
+		r2 = ft->empty();
+		r5 = std->size();
+		r6 = ft->size();
+		print_comp("empty()", r1, r2);
+		print_comp("size()", r5, r6);
+	}
+
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_pop_back(data<T> *d, bool empty) {
+	unsigned char	size;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	bool			r1;
+	bool			r2;
+	T				r3;
+	T				r4;
+	size_t			r5;
+	size_t			r6;
+
+	print_title("pop_back");
+	if (empty)
+		size = 0;
+	else
+		size = rand() % 256;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+
+	std::cout << "  clearing list using pop_back()" << std::endl;
+	r1 = std->empty();
+	r2 = ft->empty();
+	print_comp("empty()", r1, r2);
+	comp(r1 == r2);
+	if (!r1 && !r2) {
+		r3 = std->back();
+		r4 = ft->back();
+		r5 = std->size();
+		r6 = ft->size();
+		std->pop_back();
+		ft->pop_back();
+		print_comp("back()", r3, r4);
+		comp(r3 == r4);
+		print_comp("size()", r5, r6);
+		comp(r5 == r6);
+		std::cout << "  iterating through..." << std::endl;
+		while (!std->empty() && !ft->empty()) {
+			r1 = std->empty();
+			r2 = ft->empty();
+			r3 = std->back();
+			r4 = ft->back();
+			r5 = std->size();
+			r6 = ft->size();
+			std->pop_back();
+			ft->pop_back();
+			comp(r1 == r2);
+			comp(r3 == r4);
+			comp(r5 == r6);
+		}
+		r1 = std->empty();
+		r2 = ft->empty();
+		r5 = std->size();
+		r6 = ft->size();
+		print_comp("empty()", r1, r2);
+		print_comp("size()", r5, r6);
+	}
+
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_assign_fill(data<T> *d, bool empty) {
+	unsigned char	size;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+
+	print_title("assign [fill]");
+	if (empty)
+		size = 0;
+	else
+		size = rand() % 256;
+	val = randomize<T>();
+	std = new std::list<T>(size, val);
+	ft = new ft::list<T>(size, val);
+	std::cout << "testing on:\tnew ft::list<T>(" << (int)size << ", " << val << ")" << std::endl;
+
+	size = rand() % 256;
+	val = randomize<T>();
+	std::cout << "  list.assign(" << (int)size << ", " << val << ")" << std::endl;
+	std->assign(size, val);
+	ft->assign(size, val);
+	equal(std, ft);
+
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_assign_range(data<T> *d, bool empty) {
+	unsigned char	size;
+	std::list<T> 	*src;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+
+	print_title("assign [range]");
+	if (empty)
+		size = 0;
+	else
+		size = rand() % 256;
+	src = new std::list<T>();
+	for (size_t i = 0; i < size; i++)
+		src->push_back(randomize<T>());
+
+	std = new std::list<T>(src->begin(), src->end());
+	ft = new ft::list<T>(src->begin(), src->end());
+
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "  list.assign(src.begin(), src.end())" << std::endl;
+	std->assign(src->begin(), src->end());
+	ft->assign(src->begin(), src->end());
+	equal(std, ft);
+
+	delete std;
+	delete ft;
+	delete src;
+	incr_score(d);
+}
+
+template<class T>
+void		test_modifiers(data<T> *d) {
+	test_push_front(d, 0);
+	test_push_back(d, 0);
+	test_pop_front(d, 0);
+	test_pop_back(d, 0);
+	test_assign_fill(d, 0);
+	test_assign_fill(d, 1);
+	test_assign_range(d, 0);
+	test_assign_range(d, 1);
+}
+
 /*-----------------------------------MAIN-----------------------------------*/
 
 template<class T>
@@ -1189,6 +1544,8 @@ void		do_tests(void) {
 	test_capacity(d);
 	print_group_title("ELEMENT ACCESS");
 	test_element_access(d);
+	print_group_title("MODIFIERS");
+	test_modifiers(d);
 
 	std::cout << std::endl << "pass: " << d->pass << "\tfail:\t" << d->fail << std::endl;
 	delete d;

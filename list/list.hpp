@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/25 17:45:47 by dries            ###   ########.fr       */
+/*   Updated: 2021/02/26 15:13:48 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,41 +270,39 @@ namespace ft {
 				static const bool		result = true;
 			};
 
-		private:
-			template<typename InputIterator>
-				void	list_fill_range(InputIterator first, InputIterator last) {
-					while (first != last) {
-						push_back(*first);
-						first++;
-					}
-				}
+		//private:
+			//template<typename InputIterator>
+				//void	list_fill_range(InputIterator first, InputIterator last) {
+					//while (first != last) {
+						//push_back(*first);
+						//first++;
+					//}
+				//}
 
-		public:
+		//public:
 			template <class InputIterator>
 			list(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
 					typename enable_if<is_iterator<typename InputIterator::iterator_category>::result>::type* = NULL)
 			  					: alloc(alloc), _size(0), head(NULL), tail(NULL), base(new node_type()) {
-				//while (first != last) {
-					//push_back(*first);
-					//first++;
-				//}
-				list_fill_range(first, last);
+				while (first != last) {
+					push_back(*first);
+					first++;
+				}
+				//list_fill_range(first, last);
 			}
+
 			list(const list& x) : _size(0), head(NULL), tail(NULL), base(new node_type()) {
 				//list_fill_range(x.begin(), x.end());
 
 				const_iterator		iter;
 				const_iterator		end;
 
-				//list_fill_range(x.begin(), x.end());
 				iter = x.begin();
 				end = x.end();
 				while (!x.empty() && iter != end) {
 					push_back(*iter);
 					iter++;
 				}
-				//return *this;
-				//*this = x;
 			}
 
 			/*	This destroys all container elements, and deallocates all the
@@ -436,6 +434,40 @@ namespace ft {
 			}
 
 /*-------------------------------------------MODIFIERS-------------------------------------------*/
+
+			/* In the range version (1), the new contents are elements constructed from each of
+			 * the elements in the range between first and last, in the same order.
+			 * In the fill version (2), the new contents are n elements, each initialized to a
+			 * copy of val.
+			 * Any storage needed for the assigned elements is allocated using the internal allocator.
+			 * Any elements held in the container before the call are destroyed and replaced by
+			 * newly constructed elements (no assignments of elements take place).	*/
+
+			template <class InputIterator>
+			void assign (InputIterator first, InputIterator last) {
+				while (!empty())
+					pop_front();
+				delete base;
+				base = new node_type();
+				head = NULL;
+				tail = NULL;
+				while (first != last) {
+					push_back(*first);
+					first++;
+				}
+			}
+
+			void assign (size_type n, const value_type& val) {
+				while (!empty())
+					pop_front();
+				delete base;
+				base = new node_type();
+				head = NULL;
+				tail = NULL;
+				for (size_type i = 0; i != n; i++) {
+					push_back(val);
+				}
+			}
 
 			/*	Inserts a new element at the beginning of the list, right before its current first element. 
 			 *	The content of val is copied (or moved) to the inserted element.
