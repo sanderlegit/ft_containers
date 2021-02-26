@@ -1,29 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.cpp                                           :+:    :+:            */
+/*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                     +:+                    */
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/17 13:09:54 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/24 15:14:08 by averheij      ########   odam.nl         */
+/*   Updated: 2021/02/26 16:53:50 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "list/list.hpp"
 #include <list>
 #include <iostream>
-
-//int		main(void) {
-	//char str[] = "hello";
-
-	//ft::list<char>  list(str, str + sizeof(str));
-
-	//while (list.size()) {
-		//std::cout << list.front() << std::endl;
-		//list.pop_front();
-	//}
-//}
 
 int		main(void) {
 	std::list<int>			*l1 = new std::list<int>();
@@ -76,7 +65,6 @@ int		main(void) {
 	std::cout << std::endl;
 
 	std_iter2 = l1->end();
-
 
 	//create for loops that iterate from end to begin
 	//	add a default node that is pointed at by head->prev and end->next (and vice versa) as a start point for end and rend

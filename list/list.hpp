@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/26 15:13:48 by dries            ###   ########.fr       */
+/*   Updated: 2021/02/26 17:19:50 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,6 @@ namespace ft {
 						return *this;
 					}
 
-					operator Node<const value_type>() { /* pass butter; */ return data; }		//TODO what is my purpose
-
 					pointer		data;
 					Node		*next;
 					Node		*prev;
@@ -139,7 +137,7 @@ namespace ft {
 					pointer					operator->() const { return node->data; }
 					reference 				operator*() const { return *node->data; }
 
-					operator ListBiIterator<node_t, const value_t, const reference, const pointer>() { /* pass butter; */ return node; }		//TODO what is my purpose
+					operator ListBiIterator<node_t, const value_t, const reference, const pointer>() { /* pass butter; */ return node; }
 
 			};
 
@@ -192,10 +190,12 @@ namespace ft {
 
 					bool					operator==(const ReverseListBiIterator& rhs) const { return node == rhs.node; }
 					bool					operator!=(const ReverseListBiIterator& rhs) const { return node != rhs.node; }
+					bool					operator==(const node_t& rhs) const { return node == rhs; }
+					bool					operator!=(const node_t& rhs) const { return node != rhs; }
 					pointer					operator->() const { return node->data; }
 					reference 				operator*() const { return *node->data; }
 
-					operator ReverseListBiIterator<node_t, const value_type, const reference, const pointer>() { /* pass butter; */ return node; }		//TODO what is my purpose
+					operator ReverseListBiIterator<node_t, const value_type, const reference, const pointer>() { /* pass butter; */ return node; }
 
 			};
 
@@ -435,16 +435,16 @@ namespace ft {
 
 /*-------------------------------------------MODIFIERS-------------------------------------------*/
 
-			/* In the range version (1), the new contents are elements constructed from each of
-			 * the elements in the range between first and last, in the same order.
-			 * In the fill version (2), the new contents are n elements, each initialized to a
-			 * copy of val.
-			 * Any storage needed for the assigned elements is allocated using the internal allocator.
-			 * Any elements held in the container before the call are destroyed and replaced by
-			 * newly constructed elements (no assignments of elements take place).	*/
+			/*	In the range version (1), the new contents are elements constructed from each of
+			 *	the elements in the range between first and last, in the same order.
+			 *	In the fill version (2), the new contents are n elements, each initialized to a
+			 *	copy of val.
+			 *	Any storage needed for the assigned elements is allocated using the internal allocator.
+			 *	Any elements held in the container before the call are destroyed and replaced by
+			 *	newly constructed elements (no assignments of elements take place).	*/
 
 			template <class InputIterator>
-			void assign (InputIterator first, InputIterator last) {
+			void				assign (InputIterator first, InputIterator last) {
 				while (!empty())
 					pop_front();
 				delete base;
@@ -457,7 +457,7 @@ namespace ft {
 				}
 			}
 
-			void assign (size_type n, const value_type& val) {
+			void				assign (size_type n, const value_type& val) {
 				while (!empty())
 					pop_front();
 				delete base;
@@ -528,8 +528,8 @@ namespace ft {
 				_size++;
 			}
 
-			/* Removes the last element in the list container, effectively reducing the container size by one.
-			 * This destroys the removed element.  */
+			/*	Removes the last element in the list container, effectively reducing the container size by one.
+			 *	This destroys the removed element.  */
 
 			void				pop_back() {
 				node_type		*tmp;
@@ -547,6 +547,55 @@ namespace ft {
 					alloc.deallocate(tmp->data, 1);
 					delete tmp;
 				}
+			}
+
+			/*	The container is extended by inserting new elements before the element at the
+			 *	specified position.
+			 *	This effectively increases the list size by the amount of elements inserted.	*/
+
+			iterator		insert (iterator position, const value_type& val) {
+				node_type		*ptr;
+				node_type		*tmp;
+
+				ptr = head;
+				while (*ptr != position)
+					ptr = ptr->next;
+				tmp = new_node(val, ptr->next, ptr);
+				ptr->next->prev = tmp;
+				ptr->next = tmp;
+				return ++position;
+			}
+
+			void			insert (iterator position, size_type n, const value_type& val) {
+				node_type		*ptr;
+				node_type		*tmp;
+
+				ptr = head;
+				while (*ptr != position)
+					ptr = ptr->next;
+				for (size_type i = 0; i != n; ++i) {
+					tmp = new_node(val, ptr->next, ptr);
+					ptr->next->prev = tmp;
+					ptr->next = tmp;
+				}
+				return ++position;
+			}
+
+			template <class InputIterator>
+			void			insert (iterator position, InputIterator first, InputIterator last) {
+				node_type		*ptr;
+				node_type		*tmp;
+
+				ptr = head;
+				while (*ptr != position)
+					ptr = ptr->next;
+				for (; first != last; ++first) {
+					tmp = new_node(*first, ptr->next, ptr);
+					ptr->next->prev = tmp;
+					ptr->next = tmp;
+					ptr = ptr->next;
+				}
+				return ++position;
 			}
 
 		private:

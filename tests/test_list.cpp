@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/26 15:16:19 by dries            ###   ########.fr       */
+/*   Updated: 2021/02/26 17:23:51 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -368,7 +368,7 @@ void		test_begin(data<T> *d, bool empty) {
 	if (empty) {
 		size = 0;
 	} else {
-		size = rand() % 256;
+		size = rand() % 253 + 3;
 	}
 	//val = randomize<T>();
 	//std = new std::list<T>(size, val);
@@ -513,7 +513,7 @@ void		test_rbegin(data<T> *d, bool empty) {
 	if (empty) {
 		size = 0;
 	} else {
-		size = rand() % 256;
+		size = rand() % 253 + 3;
 	}
 	//val = randomize<T>();
 	//std = new std::list<T>(size, val);
@@ -657,7 +657,7 @@ void		test_end(data<T> *d, bool empty) {
 	if (empty) {
 		size = 0;
 	} else {
-		size = rand() % 256;
+		size = rand() % 253 + 3;
 	}
 	//val = randomize<T>();
 	//std = new std::list<T>(size, val);
@@ -806,7 +806,7 @@ void		test_rend(data<T> *d, bool empty) {
 	if (empty) {
 		size = 0;
 	} else {
-		size = rand() % 256;
+		size = rand() % 253 + 3;
 	}
 	//val = randomize<T>();
 	//std = new std::list<T>(size, val);
@@ -1524,6 +1524,7 @@ void		test_modifiers(data<T> *d) {
 	test_assign_fill(d, 1);
 	test_assign_range(d, 0);
 	test_assign_range(d, 1);
+	//test_insert_
 }
 
 /*-----------------------------------MAIN-----------------------------------*/
