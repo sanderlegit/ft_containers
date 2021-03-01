@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/26 17:23:51 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/01 17:01:39 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
 			r6 = ft->size();
 			std->pop_front();
 			ft->pop_front();
+			print_comp("front()", r3, r4);
 			comp(r1 == r2);
 			comp(r3 == r4);
 			comp(r5 == r6);
@@ -1515,6 +1516,79 @@ void		test_assign_range(data<T> *d, bool empty) {
 }
 
 template<class T>
+void		test_insert_fill(data<T> *d, bool empty) {
+	unsigned char	size;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+
+	print_title("insert [fill]");
+	if (empty)
+		size = 0;
+	else
+		size = rand() % 256;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+
+	size = rand() % 256;
+	val = randomize<T>();
+	std::cout << "  list.insert(list->begin(), " << (int)size << ", " << val << ")" << std::endl;
+	std->insert(std->begin(), size, val);
+	ft->debug();
+	ft->insert(ft->begin(), size, val);
+	ft->debug();
+	equal(std, ft);
+	incr_score(d);
+
+	if (empty)
+		size = 0;
+	else
+		size = rand() % 256;
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+
+	size = rand() % 256;
+	val = randomize<T>();
+	std::cout << "  list.insert(++list->begin(), " << (int)size << ", " << val << ")" << std::endl;
+	std->insert(++std->begin(), size, val);
+	ft->insert(++ft->begin(), size, val);
+	equal(std, ft);
+	incr_score(d);
+
+	if (empty)
+		size = 0;
+	else
+		size = rand() % 256;
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+
+	size = rand() % 256;
+	val = randomize<T>();
+	std::cout << "  list.insert(--list->end(), " << (int)size << ", " << val << ")" << std::endl;
+	std->insert(--std->end(), size, val);
+	ft->insert(--ft->end(), size, val);
+	equal(std, ft);
+
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
 void		test_modifiers(data<T> *d) {
 	test_push_front(d, 0);
 	test_push_back(d, 0);
@@ -1524,7 +1598,17 @@ void		test_modifiers(data<T> *d) {
 	test_assign_fill(d, 1);
 	test_assign_range(d, 0);
 	test_assign_range(d, 1);
-	//test_insert_
+	//test_insert_single(d, 0);
+	//test_insert_single(d, 1);
+	test_insert_fill(d, 0);
+	//test_insert_fill(d, 1);
+	//test_insert_range(d, 0);
+	//test_insert_range(d, 1);
+	//TODO test, insert begin->end range, and then 
+	//		selects a random range to insert from src
+	//		another range that includes begin but not end
+	//		another range that include end but not begin
+
 }
 
 /*-----------------------------------MAIN-----------------------------------*/

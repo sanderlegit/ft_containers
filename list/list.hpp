@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/02/26 17:19:50 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/01 18:17:41 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,8 @@ namespace ft {
 
 					bool					operator==(const ListBiIterator& rhs) const { return node == rhs.node; }
 					bool					operator!=(const ListBiIterator& rhs) const { return node != rhs.node; }
+					//bool					operator==(const node_t& rhs) const { return node == &rhs; }
+					//bool					operator!=(const node_t& rhs) const { return node != &rhs; }
 					pointer					operator->() const { return node->data; }
 					reference 				operator*() const { return *node->data; }
 
@@ -190,8 +192,8 @@ namespace ft {
 
 					bool					operator==(const ReverseListBiIterator& rhs) const { return node == rhs.node; }
 					bool					operator!=(const ReverseListBiIterator& rhs) const { return node != rhs.node; }
-					bool					operator==(const node_t& rhs) const { return node == rhs; }
-					bool					operator!=(const node_t& rhs) const { return node != rhs; }
+					//bool					operator==(const node_t& rhs) const { return node == &rhs; }
+					//bool					operator!=(const node_t& rhs) const { return node != &rhs; }
 					pointer					operator->() const { return node->data; }
 					reference 				operator*() const { return *node->data; }
 
@@ -495,12 +497,16 @@ namespace ft {
 				node_type		*tmp;
 
 				if (head) {
+					perror("doc");
 					tmp = head;
+					std::cout << "deleting node " << tmp << " " <<  tmp->data << " " << *tmp->data << " " << tmp->next << std::endl;
 					head = head->next;
-					if (head)
+					if (_size != 1) {
 						head->prev = base;
-					else
+					} else {
 						base->prev = NULL;
+						tail = NULL;
+					}
 					base->next = head;
 					_size--;
 					alloc.destroy(tmp->data);
@@ -537,10 +543,12 @@ namespace ft {
 				if (tail) {
 					tmp = tail;
 					tail = tail->prev;
-					if (tail)
+					if (_size != 1)
 						tail->next = base;
-					else
+					else {
 						base->next = NULL;
+						head = NULL;
+					}
 					base->prev = tail;
 					_size--;
 					alloc.destroy(tmp->data);
@@ -558,9 +566,10 @@ namespace ft {
 				node_type		*tmp;
 
 				ptr = head;
-				while (*ptr != position)
+				while (position != *ptr)
 					ptr = ptr->next;
 				tmp = new_node(val, ptr->next, ptr);
+				_size++;
 				ptr->next->prev = tmp;
 				ptr->next = tmp;
 				return ++position;
@@ -568,17 +577,36 @@ namespace ft {
 
 			void			insert (iterator position, size_type n, const value_type& val) {
 				node_type		*ptr;
+				//node_type		*local_head;
 				node_type		*tmp;
 
 				ptr = head;
-				while (*ptr != position)
+				while (position.node != ptr)
 					ptr = ptr->next;
 				for (size_type i = 0; i != n; ++i) {
-					tmp = new_node(val, ptr->next, ptr);
-					ptr->next->prev = tmp;
-					ptr->next = tmp;
+					//tmp = new_node(val, ptr->next, ptr);
+					//_size++;
+					//ptr->next->prev = tmp;
+					//ptr->next = tmp;
+					tmp = new_node(val, ptr, ptr->prev);
+					std::cout << "\tinserting node" << std::endl;
+
+					std::cout << "prev: " << tmp->prev;
+					std::cout << "\ttmp: " << tmp;
+					std::cout << "\tnext: " << tmp->next;
+					std::cout << "\tdata: " << tmp->data;
+					if (tmp->data)
+						std::cout << "\tval: " << *tmp->data;
+					std::cout << std::endl;
+					_size++;
+					ptr->prev->next = tmp;
+					ptr->prev = tmp;
+					if (i == 0 && ptr == head) {
+						head = tmp;
+						base->next = head;
+					}
+					debug();
 				}
-				return ++position;
 			}
 
 			template <class InputIterator>
@@ -587,15 +615,41 @@ namespace ft {
 				node_type		*tmp;
 
 				ptr = head;
-				while (*ptr != position)
+				while (position.node != *ptr)
 					ptr = ptr->next;
 				for (; first != last; ++first) {
 					tmp = new_node(*first, ptr->next, ptr);
+					_size++;
 					ptr->next->prev = tmp;
 					ptr->next = tmp;
 					ptr = ptr->next;
 				}
-				return ++position;
+			}
+
+			void			debug (void) {
+				node_type		*ptr;
+
+				std::cout << "\tdebug" << std::endl;
+				std::cout << "base: " << base;
+				std::cout << "\tbase->next: " << base->next;
+				std::cout << "\thead: " << head;
+				std::cout << std::endl;
+				for (node_type *i = head; i != base; i = i->next) {
+					std::cout << "prev: " << i->prev;
+					std::cout << "\ti: " << i;
+					std::cout << "\tnext: " << i->next;
+					std::cout << "\tdata: " << i->data;
+					if (i->data)
+						std::cout << "\tval: " << *i->data;
+					std::cout << std::endl;
+					if (i->next == i) {
+						std::cout << "infinite loop!" << std::endl;
+						break;
+					}
+				}
+				std::cout << "base->prev: " << base->prev;
+				std::cout << "\ttail: " << tail;
+				std::cout << std::endl;
 			}
 
 		private:
