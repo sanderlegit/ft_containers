@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/02 14:06:53 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/02 17:36:25 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -566,6 +566,35 @@ namespace ft {
 				}
 			}
 
+			/*	Removes from the list container either a single element (position) or a range
+			 *	of elements ([first,last)).  
+			 *	This effectively reduces the container size by the number of elements removed,
+			 *	which are destroyed.	*/
+
+			iterator erase (iterator position) {
+				node_type		*ptr;
+
+				ptr = base;
+				while (position.node != ptr)
+					ptr = ptr->next;
+				++position;
+				delete_node(ptr);
+				//std::cout << "position:" << std::endl;
+				//debug_node(position.node);
+				return position;
+			}
+
+			iterator erase (iterator first, iterator last) {
+				node_type		*del;
+
+				while (first != last) {
+					del = first.node;
+					++first;
+					delete_node(del);
+				}
+				return last;
+			}
+
 		private:
 			/*	print out a single notes member variables	*/
 
@@ -636,6 +665,37 @@ namespace ft {
 					base->next = head;
 				}
 				return ptr->next;
+			}
+
+			void					delete_node(node_type *del) {
+				//node_type *prev = del->prev;
+				//node_type *next = del->next;
+				//std::cout << "\tdel:" << std::endl;
+				//debug_node(del);
+				//std::cout << "\tprev:" << std::endl;
+				//debug_node(prev);
+				//std::cout << "\tnetx:" <<  std::endl;
+				//debug_node(next);
+
+				if (del == head) {
+					head = del->next;
+					base->next = head;
+				}
+				if (del == tail) {
+					tail = del->prev;
+					base->prev = tail;
+				}
+				del->next->prev = del->prev;
+				del->prev->next = del->next;
+				_size--;
+				alloc.destroy(del->data);
+				alloc.deallocate(del->data, 1);
+				delete del;
+
+				//std::cout << "\tprev:" << std::endl;
+				//debug_node(prev);
+				//std::cout << "\tnext:" << std::endl;
+				//debug_node(next);
 			}
 	};
 

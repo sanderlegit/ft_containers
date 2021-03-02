@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/18 11:56:11 by averheij      #+#    #+#                  #
-#    Updated: 2021/03/02 14:03:09 by dries            ###   ########.fr        #
+#    Updated: 2021/03/02 17:43:25 by dries            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ pop_front			Delete first element (public member function )					-written,tested
 push_back			Add element at the end (public member function )				-written,tested
 pop_back			Delete last element (public member function )					-written,tested
 insert				Insert elements (public member function )						-written,tested
-erase				Erase elements (public member function )
+erase				Erase elements (public member function )						-written,tested		(maybe double check tomorrow)
 swap				Swap content (public member function )
 resize				Change size (public member function )
 clear				Clear content (public member function )
@@ -55,3 +55,6 @@ reverse				Reverse the order of elements (public member function )
 	Non-member function overloads:
 relational operators (list)		Relational operators for list (function )
 swap (list)						Exchanges the contents of two lists (function template )
+
+
+a null iterator is given if .begin is called on an empty list, is this expected behaviour?

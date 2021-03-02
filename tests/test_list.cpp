@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/02 13:57:28 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/02 17:36:42 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2011,6 +2011,162 @@ void		test_insert_range(data<T> *d) {
 }
 
 template<class T>
+void		test_erase_single(data<T> *d) {
+	
+	unsigned char	size;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	typename std::list<T>::iterator	r1;
+	typename ft::list<T>::iterator	r2;
+
+	print_title("erase [single]");
+	size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "  list.erase(list->begin())" << std::endl;
+	r1 = std->erase(std->begin());
+	r2 = ft->erase(ft->begin());
+	print_comp("ret:", *r1, *r2);
+	comp(*r1 == *r2);
+	equal(std, ft);
+	incr_score(d);
+
+	size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "  list.erase(++list->begin())" << std::endl;
+	r1 = std->erase(++std->begin());
+	r2 = ft->erase(++ft->begin());
+	print_comp("ret:", *r1, *r2);
+	comp(*r1 == *r2);
+	equal(std, ft);
+	incr_score(d);
+
+	size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "  list.erase(--list->end())" << std::endl;
+	equal(std, ft);
+	incr_score(d);
+
+	delete std;
+	delete ft;
+}
+
+template<class T>
+void		test_erase_range(data<T> *d) {
+	
+	unsigned char	size;
+	unsigned char	offset;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	typename std::list<T>::iterator	r1;
+	typename ft::list<T>::iterator	r2;
+
+	print_title("erase [range]");
+	size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "  list.erase(list->begin(), list->end())" << std::endl;
+	r1 = std->erase(std->begin(), std->end());
+	r2 = ft->erase(ft->begin(), ft->end());
+	equal(std, ft);
+	incr_score(d);
+
+	size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	offset = rand() % ((size / 2) - 2);
+	r1 = std->end();
+	r2 = ft->end();
+	for (int i = 0; i < offset; ++i) {
+		--r1;
+		--r2;
+	}
+	std::cout << "  list.erase(++list->begin(), list->end() - " << (int)offset << ")" << std::endl;
+	r1 = std->erase(++std->begin(), r1);
+	r2 = ft->erase(++ft->begin(), r2);
+	print_comp("ret:", *r1, *r2);
+	comp(*r1 == *r2);
+	equal(std, ft);
+	incr_score(d);
+
+	size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "  list.erase(list->begin(), list->begin())" << std::endl;
+	r1 = std->erase(std->begin(), std->begin());
+	r2 = ft->erase(ft->begin(), ft->begin());
+	print_comp("ret:", *r1, *r2);
+	comp(*r1 == *r2);
+	equal(std, ft);
+	incr_score(d);
+
+	size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	offset = rand() % ((size / 2) - 2);
+	r1 = std->begin();
+	r2 = ft->begin();
+	for (int i = 0; i < offset; ++i) {
+		++r1;
+		++r2;
+	}
+	std::cout << "  list.erase(list->begin() + " << (int)offset << ", list->end())" << std::endl;
+	r1 = std->erase(r1, std->end());
+	r2 = ft->erase(r2, ft->end());
+	equal(std, ft);
+	incr_score(d);
+
+	delete std;
+	delete ft;
+}
+
+template<class T>
 void		test_modifiers(data<T> *d) {
 	test_push_front(d, 0);
 	test_push_back(d, 0);
@@ -2023,6 +2179,8 @@ void		test_modifiers(data<T> *d) {
 	test_insert_single(d);
 	test_insert_fill(d);
 	test_insert_range(d);
+	test_erase_single(d);
+	test_erase_range(d);
 }
 
 /*-----------------------------------MAIN-----------------------------------*/
