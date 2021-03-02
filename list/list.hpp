@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/01 18:17:41 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/02 13:58:56 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -497,9 +497,7 @@ namespace ft {
 				node_type		*tmp;
 
 				if (head) {
-					perror("doc");
 					tmp = head;
-					std::cout << "deleting node " << tmp << " " <<  tmp->data << " " << *tmp->data << " " << tmp->next << std::endl;
 					head = head->next;
 					if (_size != 1) {
 						head->prev = base;
@@ -565,47 +563,26 @@ namespace ft {
 				node_type		*ptr;
 				node_type		*tmp;
 
-				ptr = head;
-				while (position != *ptr)
+				ptr = base;
+				while (position.node != ptr->next)
 					ptr = ptr->next;
-				tmp = new_node(val, ptr->next, ptr);
-				_size++;
-				ptr->next->prev = tmp;
-				ptr->next = tmp;
-				return ++position;
+				return iterator(insert_new_node(ptr, val));
+				//if (ptr != base)
+					//return ++position;
+				//else
+					//return end();
 			}
 
 			void			insert (iterator position, size_type n, const value_type& val) {
 				node_type		*ptr;
-				//node_type		*local_head;
 				node_type		*tmp;
 
-				ptr = head;
-				while (position.node != ptr)
+				ptr = base;
+				while (position.node != ptr->next)
 					ptr = ptr->next;
 				for (size_type i = 0; i != n; ++i) {
-					//tmp = new_node(val, ptr->next, ptr);
-					//_size++;
-					//ptr->next->prev = tmp;
-					//ptr->next = tmp;
-					tmp = new_node(val, ptr, ptr->prev);
-					std::cout << "\tinserting node" << std::endl;
-
-					std::cout << "prev: " << tmp->prev;
-					std::cout << "\ttmp: " << tmp;
-					std::cout << "\tnext: " << tmp->next;
-					std::cout << "\tdata: " << tmp->data;
-					if (tmp->data)
-						std::cout << "\tval: " << *tmp->data;
-					std::cout << std::endl;
-					_size++;
-					ptr->prev->next = tmp;
-					ptr->prev = tmp;
-					if (i == 0 && ptr == head) {
-						head = tmp;
-						base->next = head;
-					}
-					debug();
+					insert_new_node(ptr, val);
+					ptr = ptr->next;
 				}
 			}
 
@@ -614,16 +591,30 @@ namespace ft {
 				node_type		*ptr;
 				node_type		*tmp;
 
-				ptr = head;
-				while (position.node != *ptr)
+				ptr = base;
+				while (position.node != ptr->next)
 					ptr = ptr->next;
 				for (; first != last; ++first) {
-					tmp = new_node(*first, ptr->next, ptr);
-					_size++;
-					ptr->next->prev = tmp;
-					ptr->next = tmp;
+					if (first.node == NULL)
+						break;
+					insert_new_node(ptr, *first);
+					//tmp = new_node(*first, ptr->next, ptr);
+					//_size++;
+					//ptr->next->prev = tmp;
+					//ptr->next = tmp;
 					ptr = ptr->next;
 				}
+			}
+
+		private:
+			static void			debug_node(node_type *n) {
+					std::cout << "prev: " << n->prev;
+					std::cout << "\ti: " << n;
+					std::cout << "\tnext: " << n->next;
+					std::cout << "\tdata: " << n->data;
+					if (n->data)
+						std::cout << "\tval: " << *n->data;
+					std::cout << std::endl;
 			}
 
 			void			debug (void) {
@@ -635,13 +626,7 @@ namespace ft {
 				std::cout << "\thead: " << head;
 				std::cout << std::endl;
 				for (node_type *i = head; i != base; i = i->next) {
-					std::cout << "prev: " << i->prev;
-					std::cout << "\ti: " << i;
-					std::cout << "\tnext: " << i->next;
-					std::cout << "\tdata: " << i->data;
-					if (i->data)
-						std::cout << "\tval: " << *i->data;
-					std::cout << std::endl;
+					debug_node(i);
 					if (i->next == i) {
 						std::cout << "infinite loop!" << std::endl;
 						break;
@@ -653,6 +638,8 @@ namespace ft {
 			}
 
 		private:
+			/*	creates a new node, with given arguements (val, next, prev)
+			 *	returns: node_type* new node	*/
 
 			node_type*				new_node(const value_type& val, node_type *next = NULL, node_type *prev = NULL) {
 				value_type	*tmp;
@@ -660,6 +647,30 @@ namespace ft {
 				tmp = alloc.allocate(1);
 				alloc.construct(tmp, val);
 				return new node_type(tmp, next, prev);
+			}
+
+			/*	inserts a new node following the node passed as ptr, with given value
+			 *	returns: node_type* to node inserted	*/
+
+			node_type*				insert_new_node(node_type* ptr, const value_type& val) {
+				node_type*		node;
+
+				_size++;
+				if (ptr->next) {		//If no next, ptr is base & list is uninitialized
+					node = new_node(val, ptr->next, ptr);
+					ptr->next->prev = node;
+				}
+				else {
+					node = new_node(val, base, ptr);
+					tail = node;
+					base->prev = node;
+				}
+				ptr->next = node;
+				if (ptr == base) {
+					head = node;
+					base->next = head;
+				}
+				return ptr->next;
 			}
 	};
 
