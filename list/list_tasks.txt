@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/18 11:56:11 by averheij      #+#    #+#                  #
-#    Updated: 2021/03/02 13:59:45 by dries            ###   ########.fr        #
+#    Updated: 2021/03/02 14:03:09 by dries            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,3 @@ reverse				Reverse the order of elements (public member function )
 	Non-member function overloads:
 relational operators (list)		Relational operators for list (function )
 swap (list)						Exchanges the contents of two lists (function template )
-
-
-size 0 insert fills
