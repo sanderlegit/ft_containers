@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/02 13:58:56 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/02 14:06:53 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,6 @@ namespace ft {
 					node_t	*node;
 
 					typedef std::bidirectional_iterator_tag			iterator_category;
-					//typedef Node									node_type;
-					//typedef	T										value_type;
-					//typedef	value_type&								reference;
-					//typedef	value_type*								pointer;
 					typedef	value_t									value_type;
 					typedef	reference_t								reference;
 					typedef	pointer_t								pointer;
@@ -134,8 +130,6 @@ namespace ft {
 
 					bool					operator==(const ListBiIterator& rhs) const { return node == rhs.node; }
 					bool					operator!=(const ListBiIterator& rhs) const { return node != rhs.node; }
-					//bool					operator==(const node_t& rhs) const { return node == &rhs; }
-					//bool					operator!=(const node_t& rhs) const { return node != &rhs; }
 					pointer					operator->() const { return node->data; }
 					reference 				operator*() const { return *node->data; }
 
@@ -149,10 +143,6 @@ namespace ft {
 					node_t	*node;
 
 					typedef std::bidirectional_iterator_tag			iterator_category;
-					//typedef Node									node_type;
-					//typedef	T										value_type;
-					//typedef	value_type&								reference;
-					//typedef	value_type*								pointer;
 					typedef	value_t									value_type;
 					typedef	reference_t								reference;
 					typedef	pointer_t								pointer;
@@ -192,8 +182,6 @@ namespace ft {
 
 					bool					operator==(const ReverseListBiIterator& rhs) const { return node == rhs.node; }
 					bool					operator!=(const ReverseListBiIterator& rhs) const { return node != rhs.node; }
-					//bool					operator==(const node_t& rhs) const { return node == &rhs; }
-					//bool					operator!=(const node_t& rhs) const { return node != &rhs; }
 					pointer					operator->() const { return node->data; }
 					reference 				operator*() const { return *node->data; }
 
@@ -272,16 +260,6 @@ namespace ft {
 				static const bool		result = true;
 			};
 
-		//private:
-			//template<typename InputIterator>
-				//void	list_fill_range(InputIterator first, InputIterator last) {
-					//while (first != last) {
-						//push_back(*first);
-						//first++;
-					//}
-				//}
-
-		//public:
 			template <class InputIterator>
 			list(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
 					typename enable_if<is_iterator<typename InputIterator::iterator_category>::result>::type* = NULL)
@@ -290,12 +268,9 @@ namespace ft {
 					push_back(*first);
 					first++;
 				}
-				//list_fill_range(first, last);
 			}
 
 			list(const list& x) : _size(0), head(NULL), tail(NULL), base(new node_type()) {
-				//list_fill_range(x.begin(), x.end());
-
 				const_iterator		iter;
 				const_iterator		end;
 
@@ -329,7 +304,6 @@ namespace ft {
 					pop_front();
 				delete base;
 				base = new node_type();
-				//list_fill_range(x.begin(), x.end());
 				iter = x.begin();
 				end = x.end();
 				while (!x.empty() && iter != end) {
@@ -358,16 +332,10 @@ namespace ft {
 			 *	If the container is empty, this function returns the same as list::begin.	*/
 
 			iterator				end() {
-				//node_type*		ptr;
-
-				//ptr = &base;
 				return iterator(base);
 			}
 
 			const_iterator			end() const {	//TODO check that this is expected behaviour i.e. that stl does not just seg fault
-				//const node_type*		ptr;
-
-				//ptr = &base;
 				return const_iterator(base);
 			}
 
@@ -567,10 +535,6 @@ namespace ft {
 				while (position.node != ptr->next)
 					ptr = ptr->next;
 				return iterator(insert_new_node(ptr, val));
-				//if (ptr != base)
-					//return ++position;
-				//else
-					//return end();
 			}
 
 			void			insert (iterator position, size_type n, const value_type& val) {
@@ -598,15 +562,13 @@ namespace ft {
 					if (first.node == NULL)
 						break;
 					insert_new_node(ptr, *first);
-					//tmp = new_node(*first, ptr->next, ptr);
-					//_size++;
-					//ptr->next->prev = tmp;
-					//ptr->next = tmp;
 					ptr = ptr->next;
 				}
 			}
 
 		private:
+			/*	print out a single notes member variables	*/
+
 			static void			debug_node(node_type *n) {
 					std::cout << "prev: " << n->prev;
 					std::cout << "\ti: " << n;
@@ -616,6 +578,9 @@ namespace ft {
 						std::cout << "\tval: " << *n->data;
 					std::cout << std::endl;
 			}
+
+			/*	print out the whole list using debug_node
+			 *	incl base|head|tail	*/
 
 			void			debug (void) {
 				node_type		*ptr;
