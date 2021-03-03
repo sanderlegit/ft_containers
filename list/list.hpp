@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/02 17:36:25 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/03 14:53:06 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -593,6 +593,29 @@ namespace ft {
 					delete_node(del);
 				}
 				return last;
+			}
+
+			/*	Exchanges the content of the container by the content of x, which is another 
+			 *	list of the same type. Sizes may differ.
+			 *	All iterators, references and pointers remain valid for the swapped objects.	*/
+
+
+			void			swap (list& x) {
+				node_type*		swp;
+				size_type		swp_size;
+
+				swp_size = x._size;
+				x._size = _size;
+				_size = swp_size;
+				swp = x.head;
+				x.head = head;
+				head = swp;
+				swp = x.tail;
+				x.tail = tail;
+				tail = swp;
+				swp = x.base;
+				x.base = base;
+				base = swp;
 			}
 
 		private:

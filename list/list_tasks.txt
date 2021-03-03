@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/18 11:56:11 by averheij      #+#    #+#                  #
-#    Updated: 2021/03/02 17:43:25 by dries            ###   ########.fr        #
+#    Updated: 2021/03/03 15:03:16 by dries            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ push_back			Add element at the end (public member function )				-written,tested
 pop_back			Delete last element (public member function )					-written,tested
 insert				Insert elements (public member function )						-written,tested
 erase				Erase elements (public member function )						-written,tested		(maybe double check tomorrow)
-swap				Swap content (public member function )
+swap				Swap content (public member function )							-written,tested
 resize				Change size (public member function )
 clear				Clear content (public member function )
 

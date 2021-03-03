@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/03 14:33:12 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/03 15:01:33 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2169,6 +2169,97 @@ void		test_erase_range(data<T> *d) {
 }
 
 template<class T>
+void		test_swap(data<T> *d)  {
+	unsigned char	size;
+	T				val;
+	std::list<T> 	*stdsrc;
+	ft::list<T> 	*ftsrc;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	typename ft::list<T>::iterator	fti;
+	typename std::list<T>::iterator	stdi;
+
+	print_title("swap");
+	size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	size = rand() % 253 + 3;
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
+	std::cout << "  storing iterator: i = ++list->begin()" << std::endl;
+	stdi = ++stdsrc->begin();
+	fti = ++ftsrc->begin();
+	std::cout << "swapping with:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "  list.swap(list2)" << std::endl;
+	std->swap(*stdsrc);
+	ft->swap(*ftsrc);
+	std::cout << "  checking iterator still valid" << std::endl;
+	print_comp("*i", *stdi, *fti);
+	comp(*stdi == *fti);
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	incr_score(d);
+	delete stdsrc;
+	delete ftsrc;
+	delete std;
+	delete ft;
+
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	std::cout << "testing on:\tempty list" << std::endl;
+	val = randomize<T>();
+	stdsrc = new std::list<T>(1, val);
+	ftsrc = new ft::list<T>(1, val);
+	std::cout << "  storing iterator: i = ++list->begin()" << std::endl;
+	stdi = stdsrc->begin();
+	fti = ftsrc->begin();
+	std::cout << "swapping with:\trandom filled list size:" << (int)1 << "" << std::endl;
+	std::cout << "  list.swap(list2)" << std::endl;
+	std->swap(*stdsrc);
+	ft->swap(*ftsrc);
+	std::cout << "  checking iterator still valid" << std::endl;
+	print_comp("*i", *stdi, *fti);
+	comp(*stdi == *fti);
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	incr_score(d);
+	delete stdsrc;
+	delete ftsrc;
+	delete std;
+	delete ft;
+
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	std::cout << "testing on:\tempty list" << std::endl;
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	std::cout << "swapping with:\tempty list" << std::endl;
+	std::cout << "  list.swap(list2)" << std::endl;
+	std->swap(*stdsrc);
+	ft->swap(*ftsrc);
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	incr_score(d);
+	delete stdsrc;
+	delete ftsrc;
+	delete std;
+	delete ft;
+
+}
+
+
+template<class T>
 void		test_modifiers(data<T> *d) {
 	test_push_front(d, 0);
 	test_push_back(d, 0);
@@ -2183,6 +2274,7 @@ void		test_modifiers(data<T> *d) {
 	test_insert_range(d);
 	test_erase_single(d);
 	test_erase_range(d);
+	test_swap(d);
 }
 
 /*-----------------------------------MAIN-----------------------------------*/
