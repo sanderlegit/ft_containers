@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/18 11:56:11 by averheij      #+#    #+#                  #
-#    Updated: 2021/03/03 16:51:35 by dries            ###   ########.fr        #
+#    Updated: 2021/03/03 16:57:33 by dries            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ insert				Insert elements (public member function )						-written,tested
 erase				Erase elements (public member function )						-written,tested		(maybe double check tomorrow)
 swap				Swap content (public member function )							-written,tested
 resize				Change size (public member function )							-written,tested
-clear				Clear content (public member function )
+clear				Clear content (public member function )							-written,tested
 
 	Operations:
 splice				Transfer elements from list to list (public member function )
