@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/02 17:36:42 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/03 14:33:12 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2109,6 +2109,7 @@ void		test_erase_range(data<T> *d) {
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
 	offset = rand() % ((size / 2) - 2);
+	offset++;
 	r1 = std->end();
 	r2 = ft->end();
 	for (int i = 0; i < offset; ++i) {
@@ -2150,6 +2151,7 @@ void		test_erase_range(data<T> *d) {
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
 	offset = rand() % ((size / 2) - 2);
+	offset++;
 	r1 = std->begin();
 	r2 = ft->begin();
 	for (int i = 0; i < offset; ++i) {
