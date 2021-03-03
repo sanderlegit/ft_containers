@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/03 14:53:06 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/03 16:51:54 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -527,7 +527,7 @@ namespace ft {
 			 *	specified position.
 			 *	This effectively increases the list size by the amount of elements inserted.	*/
 
-			iterator		insert (iterator position, const value_type& val) {
+			iterator			insert (iterator position, const value_type& val) {
 				node_type		*ptr;
 				node_type		*tmp;
 
@@ -537,7 +537,7 @@ namespace ft {
 				return iterator(insert_new_node(ptr, val));
 			}
 
-			void			insert (iterator position, size_type n, const value_type& val) {
+			void				insert (iterator position, size_type n, const value_type& val) {
 				node_type		*ptr;
 				node_type		*tmp;
 
@@ -551,7 +551,7 @@ namespace ft {
 			}
 
 			template <class InputIterator>
-			void			insert (iterator position, InputIterator first, InputIterator last) {
+			void				insert (iterator position, InputIterator first, InputIterator last) {
 				node_type		*ptr;
 				node_type		*tmp;
 
@@ -571,7 +571,7 @@ namespace ft {
 			 *	This effectively reduces the container size by the number of elements removed,
 			 *	which are destroyed.	*/
 
-			iterator erase (iterator position) {
+			iterator			erase (iterator position) {
 				node_type		*ptr;
 
 				ptr = base;
@@ -584,7 +584,7 @@ namespace ft {
 				return position;
 			}
 
-			iterator erase (iterator first, iterator last) {
+			iterator			erase (iterator first, iterator last) {
 				node_type		*del;
 
 				while (first != last) {
@@ -600,7 +600,7 @@ namespace ft {
 			 *	All iterators, references and pointers remain valid for the swapped objects.	*/
 
 
-			void			swap (list& x) {
+			void				swap (list& x) {
 				node_type*		swp;
 				size_type		swp_size;
 
@@ -616,6 +616,23 @@ namespace ft {
 				swp = x.base;
 				x.base = base;
 				base = swp;
+			}
+
+			/*	Resizes the container so that it contains n elements.
+			 *	If n is smaller than the current container size, the content is reduced to its
+			 *	first n elements, removing those beyond (and destroying them).
+			 *	If n is greater than the current container size, the content is expanded by
+			 *	inserting at the end as many elements as needed to reach a size of n. If val is
+			 *	specified, the new elements are initialized as copies of val, otherwise, they
+			 *	are value-initialized.	*/
+
+			void				resize (size_type n, value_type val = value_type()) {
+				if (n == _size)
+					return;
+				while (n > _size)
+					push_back(val);
+				while (n < _size)
+					pop_back();
 			}
 
 		private:
