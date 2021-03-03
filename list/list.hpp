@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/03 16:55:15 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/03 17:29:05 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -641,6 +641,24 @@ namespace ft {
 					pop_back();
 			}
 
+/*-------------------------------------------OPERATIONS-------------------------------------------*/
+
+			/*	Transfers elements from x into the container, inserting them at position.
+			 *	This effectively inserts those elements into the container and removes them from x, 
+			 *	altering the sizes of both containers. The operation does not involve the construction 
+			 *	or destruction of any element. They are transferred, no matter whether x is an lvalue 
+			 *	or an rvalue, or whether the value_type supports move-construction or not.
+			 *	The first version (1) transfers all the elements of x into the container.
+			 *	The second version (2) transfers only the element pointed by i from x into the container.
+			 *	The third version (3) transfers the range [first,last) from x into the container.	*/
+
+			void				splice (iterator position, list& x);
+
+			void				splice (iterator position, list& x, iterator i);
+
+			void				splice (iterator position, list& x, iterator first, iterator last);
+
+/*-------------------------------------------OTHER-------------------------------------------*/
 		private:
 			/*	print out a single notes member variables	*/
 
