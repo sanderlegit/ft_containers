@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/03 16:52:18 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/03 16:56:33 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2285,8 +2285,11 @@ void		test_resize(data<T> *d, bool empty) {
 	ft->resize(size, val);
 	equal(std, ft);
 	incr_score(d);
-	if (empty)
+	if (empty) {
+		delete ft;
+		delete std;
 		return;
+	}
 
 	std = new std::list<T>();
 	ft = new ft::list<T>();
@@ -2346,6 +2349,38 @@ void		test_resize(data<T> *d, bool empty) {
 }
 
 template<class T>
+void		test_clear(data<T> *d, bool empty) {
+	
+	int 			size;
+	T				val;
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+
+	print_title("clear");
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	if (empty)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	val = randomize<T>();
+	std::cout << "  list.clear()" << std::endl;
+	std->clear();
+	ft->clear();
+	equal(std, ft);
+	incr_score(d);
+
+	delete ft;
+	delete std;
+}
+
+template<class T>
 void		test_modifiers(data<T> *d) {
 	test_push_front(d, 0);
 	test_push_back(d, 0);
@@ -2363,7 +2398,8 @@ void		test_modifiers(data<T> *d) {
 	test_swap(d);
 	test_resize(d, 0);
 	test_resize(d, 1);
-
+	test_clear(d, 0);
+	test_clear(d, 1);
 }
 
 /*-----------------------------------MAIN-----------------------------------*/

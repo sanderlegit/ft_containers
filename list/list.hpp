@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/03 16:51:54 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/03 16:55:15 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,6 +288,7 @@ namespace ft {
 			~list(void) {
 				while (!empty())
 					pop_back();
+				delete base;
 			}
 
 			/*	Copies all the elements from x into the container.
@@ -632,6 +633,11 @@ namespace ft {
 				while (n > _size)
 					push_back(val);
 				while (n < _size)
+					pop_back();
+			}
+
+			void				clear (void) {
+				while (_size)
 					pop_back();
 			}
 
