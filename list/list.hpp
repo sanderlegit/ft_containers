@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/04 14:11:23 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/04 16:02:26 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -660,82 +660,76 @@ namespace ft {
 				if (x._size == 0)
 					return;
 				local_tail = iton(position);
-				//local_head = base;
-				//while (position.node != local_head->next)
-					//local_head = local_head->next;
 				if ((local_tail == base || local_tail == NULL) && head == NULL) {	//uninitialized
-					//perror("tail is null");
 					local_head = base;
 					local_tail = base;
-				//} else if (local_tail == base)
-					//local_head = base->prev;
 				} else
 					local_head = local_tail->prev;
-				//debug_node("l_head", local_head);
-				//debug_node("l_tail", local_tail);
-				//debug_node("x.head", x.head);
 				local_head->next = x.head;
 				x.head->prev = local_head;
 				x.head = NULL;
 				x.base->next = NULL;
-				//debug_node("x.head", local_head->next);
-				//debug_node("x.tail", x.tail);
 				local_tail->prev = x.tail;
 				x.tail->next = local_tail;
 				x.tail = NULL;
 				x.base->prev = NULL;
-				//debug_node("x.tail", local_tail->prev);
-				//debug_node("l_head", local_head);
-				//debug_node("l_tail", local_tail);
-				if (head)
-					debug_node("head", head);
-				if (tail)
-					debug_node("tail", tail);
-				if (base)
-					debug_node("base", base);
 				if (_size == 0) {	//local_head = base, local_tail = base
 					head = local_head->next;
 					tail = local_tail->prev;
 				}
 				if (local_tail == head)
 					head = local_head->next;
-				//if (local_head == tail)
-					//tail = local_head->next;
-
+				if (local_head == tail)
+					tail = local_tail->prev;
 				_size += x._size;
 				x._size = 0;
 			}
 
-			//void				splice (iterator position, list& x) {
-				//node_type*	local_head;
-				//node_type*	local_tail;
+			void				splice (iterator position, list& x, iterator i) {
+				node_type*	local_head;
+				node_type*	local_tail;
+				node_type*	splice_me;
 
-				//if (x._size == 0)
-					//return;
-				//local_head = iton(position);
-				////local_head = base;
-				////while (position.node != local_head->next)
-					////local_head = local_head->next;
-				//if (local_head == NULL) {
-					//local_head = base;
-					//local_tail = base;
-				//} else
-					//local_tail = local_head->next;
-				//local_head->next = x.head;
-				//x.head->prev = local_head;
-				//x.base->next = NULL;
-				//local_tail->prev = x.tail;
-				//x.tail->next = local_tail;
-				//x.base->prev = NULL;
-				//if (_size == 0) {
-					//head = local_head->next;
-					//tail = local_tail->prev;
-				//}
-				//_size += x._size;
-				//x._size = 0;
-			//}
-
-			void				splice (iterator position, list& x, iterator i);
+				splice_me = x.base;
+				while (i.node != splice_me)
+					splice_me = splice_me->next;
+				local_tail = iton(position);
+				if ((local_tail == base || local_tail == NULL) && head == NULL) {	//uninitialized
+					local_head = base;
+					local_tail = base;
+				} else
+					local_head = local_tail->prev;
+				//remove from x
+				splice_me->prev->next = splice_me->next;
+				splice_me->next->prev = splice_me->prev;
+				--x._size;
+				if (splice_me == x.head && x._size > 0)
+					x.head = splice_me->next;
+				else if (x._size == 0) {
+					x.head = NULL;
+					x.base->next = NULL;
+				}
+				if (splice_me == x.tail && x._size > 0)
+					x.tail = splice_me->prev;
+				else if (x._size == 0) {
+					x.tail = NULL;
+					x.base->prev = NULL;
+				}
+				//add to this
+				local_head->next = splice_me;
+				splice_me->prev = local_head;
+				local_tail->prev = splice_me;
+				splice_me->next = local_tail;
+				if (_size == 0) {	//local_head = base, local_tail = base
+					head = local_head->next;
+					tail = local_tail->prev;
+				}
+				if (local_tail == head)
+					head = local_head->next;
+				if (local_head == tail)
+					tail = local_tail->prev;
+				++_size;
+			}
 
 			void				splice (iterator position, list& x, iterator first, iterator last);
 
@@ -766,17 +760,27 @@ namespace ft {
 
 				std::cout << "\tdebug" << std::endl;
 				std::cout << "base: " << base;
-				std::cout << "\tbase->next: " << base->next;
+				std::cout << "\tbnxt: " << base->next;
 				std::cout << "\thead: " << head;
 				std::cout << std::endl;
 				for (node_type *i = head; i != base; i = i->next) {
-					debug_node(i);
+					if (!i) {
+						std::cout << "NULL" << std::endl;
+						return;
+					}
+					std::cout << "prev: " << i->prev;
+					std::cout << "\tnode: " << i;
+					std::cout << "\tnext: " << i->next;
+					std::cout << "\tdata: " << i->data;
+					if (i->data)
+						std::cout << "\tval: " << *i->data;
+					std::cout << std::endl;
 					if (i->next == i) {
 						std::cout << "infinite loop!" << std::endl;
 						break;
 					}
 				}
-				std::cout << "base->prev: " << base->prev;
+				std::cout << "bprv: " << base->prev;
 				std::cout << "\ttail: " << tail;
 				std::cout << std::endl;
 			}
@@ -825,6 +829,10 @@ namespace ft {
 					head = node;
 					base->next = head;
 				}
+				if (ptr == tail || _size == 1)
+					tail = node;
+				if (ptr == base || _size == 1)
+					head = node;
 				return ptr->next;
 			}
 

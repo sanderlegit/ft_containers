@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/04 14:07:08 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/04 15:58:35 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,12 +154,17 @@ void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
 		r4 = ft->front();
 		r5 = std->size();
 		r6 = ft->size();
+		print_comp("front()", r3, r4);
+		comp(r3 == r4);
+		r3 = std->back();
+		r4 = ft->back();
 		std->pop_front();
 		ft->pop_front();
-		print_comp("front()", r3, r4);
+		print_comp("back()", r3, r4);
 		comp(r3 == r4);
 		print_comp("size()", r5, r6);
 		comp(r5 == r6);
+
 
 		std::cout << "  iterating through..." << std::endl;
 		while (!std->empty() && !ft->empty()) {
@@ -2110,7 +2115,7 @@ void		test_erase_range(data<T> *d) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	offset = rand() % ((size / 2) - 2);
+	offset = rand() % ((size / 2) - 1);
 	offset++;
 	r1 = std->end();
 	r2 = ft->end();
@@ -2152,7 +2157,7 @@ void		test_erase_range(data<T> *d) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	offset = rand() % ((size / 2) - 2);
+	offset = rand() % ((size / 2) - 1);
 	offset++;
 	r1 = std->begin();
 	r2 = ft->begin();
@@ -2432,13 +2437,13 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 	else
 		size = rand() % 253 + 3;
 	val = randomize<T>();
-	stdsrc = new std::list<T>(size, val);
-	ftsrc = new ft::list<T>(size, val);
-	//for (size_t i = 0; i < size; i++) {
-		//val = randomize<T>();
-		//stdsrc->push_back(val);
-		//ftsrc->push_back(val);
-	//}
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
 	std::cout << "slice from:\trandom filled list size:" << (int)size << "" << std::endl;
 	std::cout << "testing:\tlist.slice(list.begin(), list2)" << std::endl;
 	std->splice(std->begin(), *stdsrc);
@@ -2464,13 +2469,13 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 	else
 		size = rand() % 253 + 3;
 	val = randomize<T>();
-	stdsrc = new std::list<T>(size, val);
-	ftsrc = new ft::list<T>(size, val);
-	//for (size_t i = 0; i < size; i++) {
-		//val = randomize<T>();
-		//stdsrc->push_back(val);
-		//ftsrc->push_back(val);
-	//}
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
 	std::cout << "slice from:\trandom filled list size:" << (int)size << "" << std::endl;
 	std::cout << "testing:\tlist.slice(list.end(), list2)" << std::endl;
 	std->splice(std->end(), *stdsrc);
@@ -2548,6 +2553,243 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 	delete ftsrc;
 	delete ft;
 }
+template<class T>
+void		test_splice_single(data<T> *d, bool emptydest, bool emptysrc) {
+	unsigned char	size;
+	T				val;
+	std::list<T> 	*stdsrc;
+	std::list<T> 	*std;
+	ft::list<T> 	*ftsrc;
+	ft::list<T> 	*ft;
+
+	if (emptydest)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	if (emptysrc)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	val = randomize<T>();
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
+	std::cout << "slice from:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing:\tlist.slice(list.begin(), list2, list2.begin())" << std::endl;
+	std->splice(std->begin(), *stdsrc, stdsrc->begin());
+	ft->splice(ft->begin(), *ftsrc, ftsrc->begin());
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	incr_score(d);
+
+	if (emptydest)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	if (emptysrc)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	val = randomize<T>();
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
+	std::cout << "slice from:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing:\tlist.slice(list.end(), list2, list2.begin())" << std::endl;
+	std->splice(std->end(), *stdsrc, stdsrc->begin());
+	ft->splice(ft->end(), *ftsrc, ftsrc->begin());
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	incr_score(d);
+
+	if (emptydest) {
+		delete stdsrc;
+		delete std;
+		delete ftsrc;
+		delete ft;
+		return;
+	}
+
+	if (emptydest)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	size = 1;
+	val = randomize<T>();
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
+	std::cout << "slice from:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing:\tlist.slice(list.begin(), list2, list2.begin())" << std::endl;
+	std->splice(std->begin(), *stdsrc, stdsrc->begin());
+	ft->splice(ft->begin(), *ftsrc, ftsrc->begin());
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	incr_score(d);
+
+	size = 1;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	if (emptydest)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	val = randomize<T>();
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
+	std::cout << "slice from:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing:\tlist.slice(list.begin(), list2, list2.begin())" << std::endl;
+	std->splice(std->begin(), *stdsrc, stdsrc->begin());
+	ft->splice(ft->begin(), *ftsrc, ftsrc->begin());
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	incr_score(d);
+
+	size = 1;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	if (emptydest)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	val = randomize<T>();
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
+	std::cout << "slice from:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing:\tlist.slice(list.end(), list2, list2.begin())" << std::endl;
+	std->splice(std->end(), *stdsrc, stdsrc->begin());
+	ft->splice(ft->end(), *ftsrc, ftsrc->begin());
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	incr_score(d);
+
+	if (emptydest)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	if (emptysrc)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	val = randomize<T>();
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
+	std::cout << "slice from:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing:\tlist.slice(list.begin(), list2, ++list2.begin())" << std::endl;
+	std->splice(std->begin(), *stdsrc, ++stdsrc->begin());
+	ft->splice(ft->begin(), *ftsrc, ++ftsrc->begin());
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	incr_score(d);
+
+	if (emptydest)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	if (emptysrc)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	val = randomize<T>();
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
+	std::cout << "slice from:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing:\tlist.slice(list.begin(), list2, --list2.end())" << std::endl;
+	std->splice(std->begin(), *stdsrc, --stdsrc->end());
+	ft->splice(ft->begin(), *ftsrc, --ftsrc->end());
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	incr_score(d);
+
+	delete stdsrc;
+	delete std;
+	delete ftsrc;
+	delete ft;
+}
 
 template<class T>
 void		test_operations(data<T> *d) {
@@ -2556,7 +2798,8 @@ void		test_operations(data<T> *d) {
 	test_slice_entire(d, 0, 1);
 	test_slice_entire(d, 1, 0);
 	test_slice_entire(d, 1, 1);
-	//test_splice_single(d);
+	print_title("slice [single]");
+	test_splice_single(d, 0, 0);
 	//test_splice_range(d);
 }
 
