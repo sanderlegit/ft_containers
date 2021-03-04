@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/03 17:29:05 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/04 12:34:45 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -575,9 +575,10 @@ namespace ft {
 			iterator			erase (iterator position) {
 				node_type		*ptr;
 
-				ptr = base;
-				while (position.node != ptr)
-					ptr = ptr->next;
+				//ptr = base;
+				//while (position.node != ptr)
+					//ptr = ptr->next;
+				ptr = iton(position);
 				++position;
 				delete_node(ptr);
 				//std::cout << "position:" << std::endl;
@@ -652,7 +653,34 @@ namespace ft {
 			 *	The second version (2) transfers only the element pointed by i from x into the container.
 			 *	The third version (3) transfers the range [first,last) from x into the container.	*/
 
-			void				splice (iterator position, list& x);
+			void				splice (iterator position, list& x) {
+				node_type*	local_head;
+				node_type*	local_tail;
+
+				if (x._size == 0)
+					return;
+				local_head = iton(position);
+				//local_head = base;
+				//while (position.node != local_head->next)
+					//local_head = local_head->next;
+				if (local_head == NULL) {
+					local_head = base;
+					local_tail = base;
+				} else
+					local_tail = local_head->next;
+				local_head->next = x.head;
+				x.head->prev = local_head;
+				x.base->next = NULL;
+				local_tail->prev = x.tail;
+				x.tail->next = local_tail;
+				x.base->prev = NULL;
+				if (_size == 0) {
+					head = local_head->next;
+					tail = local_tail->prev;
+				}
+				_size += x._size;
+				x._size = 0;
+			}
 
 			void				splice (iterator position, list& x, iterator i);
 
@@ -696,6 +724,17 @@ namespace ft {
 			}
 
 		private:
+			/*	returns a node_type* ptr to the element indicated by the iterator	*/
+
+			node_type*				iton(iterator i) const {
+				node_type*		ptr;
+
+				ptr = base;
+				while (i.node != ptr)
+					ptr = ptr->next;
+				return ptr;
+			}
+
 			/*	creates a new node, with given arguements (val, next, prev)
 			 *	returns: node_type* new node	*/
 

@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/03 16:56:33 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/04 12:31:54 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
 			r6 = ft->size();
 			std->pop_front();
 			ft->pop_front();
+			print_comp("front", r3, r4);
 			comp(r1 == r2);
 			comp(r3 == r4);
 			comp(r5 == r6);
@@ -2402,6 +2403,129 @@ void		test_modifiers(data<T> *d) {
 	test_clear(d, 1);
 }
 
+/*-----------------------------------OPERATIONS-----------------------------------*/
+
+template<class T>
+void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
+	unsigned char	size;
+	T				val;
+	std::list<T> 	*stdsrc;
+	std::list<T> 	*std;
+	ft::list<T> 	*ftsrc;
+	ft::list<T> 	*ft;
+
+	if (emptydest)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	if (emptysrc)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
+	std::cout << "slice from:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing:\tlist.slice(list.begin(), list2)" << std::endl;
+	std->splice(std->begin(), *stdsrc);
+	ft->splice(ft->begin(), *ftsrc);
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	incr_score(d);
+
+	if (emptydest) {
+		delete stdsrc;
+		delete std;
+		delete ftsrc;
+		delete ft;
+		return;
+	}
+
+	if (emptydest)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	size = rand() % 253 + 3;
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
+	std::cout << "slice from:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing:\tlist.slice(++list.begin(), list2)" << std::endl;
+	std->splice(++std->begin(), *stdsrc);
+	ft->splice(++ft->begin(), *ftsrc);
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	incr_score(d);
+
+	if (emptydest)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	size = 1;
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		stdsrc->push_back(val);
+		ftsrc->push_back(val);
+	}
+	std::cout << "slice from:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing:\tlist.slice(--list.end(), list2)" << std::endl;
+	std->splice(--std->end(), *stdsrc);
+	ft->splice(--ft->end(), *ftsrc);
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	incr_score(d);
+
+	delete stdsrc;
+	delete std;
+	delete ftsrc;
+	delete ft;
+}
+
+template<class T>
+void		test_operations(data<T> *d) {
+	print_title("slice [entire list]");
+	test_slice_entire(d, 0, 0);
+	test_slice_entire(d, 0, 1);
+	test_slice_entire(d, 1, 0);
+	test_slice_entire(d, 1, 1);
+	//test_splice_single(d);
+	//test_splice_range(d);
+}
+
 /*-----------------------------------MAIN-----------------------------------*/
 
 template<class T>
@@ -2422,6 +2546,8 @@ void		do_tests(void) {
 	test_element_access(d);
 	print_group_title("MODIFIERS");
 	test_modifiers(d);
+	print_group_title("OPERATIONS");
+	test_operations(d);
 
 	std::cout << std::endl << "pass: " << d->pass << "\tfail:\t" << d->fail << std::endl;
 	delete d;
