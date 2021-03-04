@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/04 15:58:35 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/04 16:57:25 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2554,7 +2554,7 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 	delete ft;
 }
 template<class T>
-void		test_splice_single(data<T> *d, bool emptydest, bool emptysrc) {
+void		test_splice_single(data<T> *d, bool emptydest) {
 	unsigned char	size;
 	T				val;
 	std::list<T> 	*stdsrc;
@@ -2574,10 +2574,7 @@ void		test_splice_single(data<T> *d, bool emptydest, bool emptysrc) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	if (emptysrc)
-		size = 0;
-	else
-		size = rand() % 253 + 3;
+	size = rand() % 253 + 3;
 	val = randomize<T>();
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
@@ -2606,10 +2603,7 @@ void		test_splice_single(data<T> *d, bool emptydest, bool emptysrc) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	if (emptysrc)
-		size = 0;
-	else
-		size = rand() % 253 + 3;
+	size = rand() % 253 + 3;
 	val = randomize<T>();
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
@@ -2733,10 +2727,7 @@ void		test_splice_single(data<T> *d, bool emptydest, bool emptysrc) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	if (emptysrc)
-		size = 0;
-	else
-		size = rand() % 253 + 3;
+	size = rand() % 253 + 3;
 	val = randomize<T>();
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
@@ -2765,10 +2756,7 @@ void		test_splice_single(data<T> *d, bool emptydest, bool emptysrc) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	if (emptysrc)
-		size = 0;
-	else
-		size = rand() % 253 + 3;
+	size = rand() % 253 + 3;
 	val = randomize<T>();
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
@@ -2799,7 +2787,8 @@ void		test_operations(data<T> *d) {
 	test_slice_entire(d, 1, 0);
 	test_slice_entire(d, 1, 1);
 	print_title("slice [single]");
-	test_splice_single(d, 0, 0);
+	test_splice_single(d, 0);
+	test_splice_single(d, 1);
 	//test_splice_range(d);
 }
 

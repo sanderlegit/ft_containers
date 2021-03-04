@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/04 16:02:26 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/04 16:25:35 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -530,7 +530,6 @@ namespace ft {
 
 			iterator			insert (iterator position, const value_type& val) {
 				node_type		*ptr;
-				node_type		*tmp;
 
 				ptr = base;
 				while (position.node != ptr->next)
@@ -540,7 +539,6 @@ namespace ft {
 
 			void				insert (iterator position, size_type n, const value_type& val) {
 				node_type		*ptr;
-				node_type		*tmp;
 
 				ptr = base;
 				while (position.node != ptr->next)
@@ -554,7 +552,6 @@ namespace ft {
 			template <class InputIterator>
 			void				insert (iterator position, InputIterator first, InputIterator last) {
 				node_type		*ptr;
-				node_type		*tmp;
 
 				ptr = base;
 				while (position.node != ptr->next)
@@ -578,7 +575,8 @@ namespace ft {
 				//ptr = base;
 				//while (position.node != ptr)
 					//ptr = ptr->next;
-				ptr = iton(position);
+				//ptr = iton(position);
+				ptr = position.node;
 				++position;
 				delete_node(ptr);
 				//std::cout << "position:" << std::endl;
@@ -659,7 +657,8 @@ namespace ft {
 
 				if (x._size == 0)
 					return;
-				local_tail = iton(position);
+				//local_tail = iton(position);
+				local_tail = position.node;
 				if ((local_tail == base || local_tail == NULL) && head == NULL) {	//uninitialized
 					local_head = base;
 					local_tail = base;
@@ -690,10 +689,14 @@ namespace ft {
 				node_type*	local_tail;
 				node_type*	splice_me;
 
-				splice_me = x.base;
-				while (i.node != splice_me)
-					splice_me = splice_me->next;
-				local_tail = iton(position);
+				if (x._size == 0)
+					return;
+				//splice_me = x.base;
+				//while (i.node != splice_me)
+					//splice_me = splice_me->next;
+				splice_me = i.node;
+				//local_tail = iton(position);
+				local_tail = position.node;
 				if ((local_tail == base || local_tail == NULL) && head == NULL) {	//uninitialized
 					local_head = base;
 					local_tail = base;
@@ -731,7 +734,55 @@ namespace ft {
 				++_size;
 			}
 
-			void				splice (iterator position, list& x, iterator first, iterator last);
+			//void				splice (iterator position, list& x, iterator first, iterator last) {
+				//node_type*	local_head;
+				//node_type*	local_tail;
+				//node_type*	splice_head;
+				//node_type*	splice_tail;
+
+				//splice_head = x.base;
+				//while (first.node != splice_head)
+					//splice_head = splice_head->next;
+				//splice_tail = x.base;
+				//while (last.node != splice_tail)
+					//splice_tail = splice_tail->next;
+				//local_tail = iton(position);
+				//if ((local_tail == base || local_tail == NULL) && head == NULL) {	//uninitialized
+					//local_head = base;
+					//local_tail = base;
+				//} else
+					//local_head = local_tail->prev;
+				////remove from x
+				//splice_me->prev->next = splice_me->next;
+				//splice_me->next->prev = splice_me->prev;
+				//--x._size;
+				//if (splice_me == x.head && x._size > 0)
+					//x.head = splice_me->next;
+				//else if (x._size == 0) {
+					//x.head = NULL;
+					//x.base->next = NULL;
+				//}
+				//if (splice_me == x.tail && x._size > 0)
+					//x.tail = splice_me->prev;
+				//else if (x._size == 0) {
+					//x.tail = NULL;
+					//x.base->prev = NULL;
+				//}
+				////add to this
+				//local_head->next = splice_me;
+				//splice_me->prev = local_head;
+				//local_tail->prev = splice_me;
+				//splice_me->next = local_tail;
+				//if (_size == 0) {	//local_head = base, local_tail = base
+					//head = local_head->next;
+					//tail = local_tail->prev;
+				//}
+				//if (local_tail == head)
+					//head = local_head->next;
+				//if (local_head == tail)
+					//tail = local_tail->prev;
+				//++_size;
+			//}
 
 /*-------------------------------------------OTHER-------------------------------------------*/
 		private:
@@ -786,17 +837,6 @@ namespace ft {
 			}
 
 		private:
-			/*	returns a node_type* ptr to the element indicated by the iterator	*/
-
-			node_type*				iton(iterator i) const {
-				node_type*		ptr;
-
-				ptr = base;
-				while (i.node != ptr)
-					ptr = ptr->next;
-				return ptr;
-			}
-
 			/*	creates a new node, with given arguements (val, next, prev)
 			 *	returns: node_type* new node	*/
 
