@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/04 12:31:54 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/04 14:07:08 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,8 @@ void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
 			r6 = ft->size();
 			std->pop_front();
 			ft->pop_front();
-			print_comp("front", r3, r4);
+			//print_comp("front", r3, r4);
+			//print_comp("size", r5, r6);
 			comp(r1 == r2);
 			comp(r3 == r4);
 			comp(r5 == r6);
@@ -2430,17 +2431,50 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 		size = 0;
 	else
 		size = rand() % 253 + 3;
-	stdsrc = new std::list<T>();
-	ftsrc = new ft::list<T>();
-	for (size_t i = 0; i < size; i++) {
-		val = randomize<T>();
-		stdsrc->push_back(val);
-		ftsrc->push_back(val);
-	}
+	val = randomize<T>();
+	stdsrc = new std::list<T>(size, val);
+	ftsrc = new ft::list<T>(size, val);
+	//for (size_t i = 0; i < size; i++) {
+		//val = randomize<T>();
+		//stdsrc->push_back(val);
+		//ftsrc->push_back(val);
+	//}
 	std::cout << "slice from:\trandom filled list size:" << (int)size << "" << std::endl;
 	std::cout << "testing:\tlist.slice(list.begin(), list2)" << std::endl;
 	std->splice(std->begin(), *stdsrc);
 	ft->splice(ft->begin(), *ftsrc);
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	incr_score(d);
+
+	if (emptydest)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	for (size_t i = 0; i < size; i++) {
+		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	if (emptysrc)
+		size = 0;
+	else
+		size = rand() % 253 + 3;
+	val = randomize<T>();
+	stdsrc = new std::list<T>(size, val);
+	ftsrc = new ft::list<T>(size, val);
+	//for (size_t i = 0; i < size; i++) {
+		//val = randomize<T>();
+		//stdsrc->push_back(val);
+		//ftsrc->push_back(val);
+	//}
+	std::cout << "slice from:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing:\tlist.slice(list.end(), list2)" << std::endl;
+	std->splice(std->end(), *stdsrc);
+	ft->splice(ft->end(), *ftsrc);
 	equal(std, ft);
 	equal(stdsrc, ftsrc);
 	incr_score(d);

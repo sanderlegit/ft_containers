@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/04 12:34:45 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/04 14:11:23 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -659,28 +659,81 @@ namespace ft {
 
 				if (x._size == 0)
 					return;
-				local_head = iton(position);
+				local_tail = iton(position);
 				//local_head = base;
 				//while (position.node != local_head->next)
 					//local_head = local_head->next;
-				if (local_head == NULL) {
+				if ((local_tail == base || local_tail == NULL) && head == NULL) {	//uninitialized
+					//perror("tail is null");
 					local_head = base;
 					local_tail = base;
+				//} else if (local_tail == base)
+					//local_head = base->prev;
 				} else
-					local_tail = local_head->next;
+					local_head = local_tail->prev;
+				//debug_node("l_head", local_head);
+				//debug_node("l_tail", local_tail);
+				//debug_node("x.head", x.head);
 				local_head->next = x.head;
 				x.head->prev = local_head;
+				x.head = NULL;
 				x.base->next = NULL;
+				//debug_node("x.head", local_head->next);
+				//debug_node("x.tail", x.tail);
 				local_tail->prev = x.tail;
 				x.tail->next = local_tail;
+				x.tail = NULL;
 				x.base->prev = NULL;
-				if (_size == 0) {
+				//debug_node("x.tail", local_tail->prev);
+				//debug_node("l_head", local_head);
+				//debug_node("l_tail", local_tail);
+				if (head)
+					debug_node("head", head);
+				if (tail)
+					debug_node("tail", tail);
+				if (base)
+					debug_node("base", base);
+				if (_size == 0) {	//local_head = base, local_tail = base
 					head = local_head->next;
 					tail = local_tail->prev;
 				}
+				if (local_tail == head)
+					head = local_head->next;
+				//if (local_head == tail)
+					//tail = local_head->next;
+
 				_size += x._size;
 				x._size = 0;
 			}
+
+			//void				splice (iterator position, list& x) {
+				//node_type*	local_head;
+				//node_type*	local_tail;
+
+				//if (x._size == 0)
+					//return;
+				//local_head = iton(position);
+				////local_head = base;
+				////while (position.node != local_head->next)
+					////local_head = local_head->next;
+				//if (local_head == NULL) {
+					//local_head = base;
+					//local_tail = base;
+				//} else
+					//local_tail = local_head->next;
+				//local_head->next = x.head;
+				//x.head->prev = local_head;
+				//x.base->next = NULL;
+				//local_tail->prev = x.tail;
+				//x.tail->next = local_tail;
+				//x.base->prev = NULL;
+				//if (_size == 0) {
+					//head = local_head->next;
+					//tail = local_tail->prev;
+				//}
+				//_size += x._size;
+				//x._size = 0;
+			//}
 
 			void				splice (iterator position, list& x, iterator i);
 
@@ -690,14 +743,19 @@ namespace ft {
 		private:
 			/*	print out a single notes member variables	*/
 
-			static void			debug_node(node_type *n) {
-					std::cout << "prev: " << n->prev;
-					std::cout << "\ti: " << n;
-					std::cout << "\tnext: " << n->next;
-					std::cout << "\tdata: " << n->data;
-					if (n->data)
-						std::cout << "\tval: " << *n->data;
-					std::cout << std::endl;
+			static void			debug_node(std::string name, node_type *n) {
+				std::cout << name;
+				if (!n) {
+					std::cout << "\tNULL" << std::endl;
+					return;
+				}
+				std::cout << "\tprev: " << n->prev;
+				std::cout << "\ti: " << n;
+				std::cout << "\tnext: " << n->next;
+				std::cout << "\tdata: " << n->data;
+				if (n->data)
+					std::cout << "\tval: " << *n->data;
+				std::cout << std::endl;
 			}
 
 			/*	print out the whole list using debug_node
