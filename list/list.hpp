@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/04 16:25:35 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/05 15:52:34 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -735,54 +735,102 @@ namespace ft {
 			}
 
 			//void				splice (iterator position, list& x, iterator first, iterator last) {
-				//node_type*	local_head;
-				//node_type*	local_tail;
-				//node_type*	splice_head;
-				//node_type*	splice_tail;
-
-				//splice_head = x.base;
-				//while (first.node != splice_head)
-					//splice_head = splice_head->next;
-				//splice_tail = x.base;
-				//while (last.node != splice_tail)
-					//splice_tail = splice_tail->next;
-				//local_tail = iton(position);
-				//if ((local_tail == base || local_tail == NULL) && head == NULL) {	//uninitialized
-					//local_head = base;
-					//local_tail = base;
-				//} else
-					//local_head = local_tail->prev;
-				////remove from x
-				//splice_me->prev->next = splice_me->next;
-				//splice_me->next->prev = splice_me->prev;
-				//--x._size;
-				//if (splice_me == x.head && x._size > 0)
-					//x.head = splice_me->next;
-				//else if (x._size == 0) {
-					//x.head = NULL;
-					//x.base->next = NULL;
-				//}
-				//if (splice_me == x.tail && x._size > 0)
-					//x.tail = splice_me->prev;
-				//else if (x._size == 0) {
-					//x.tail = NULL;
-					//x.base->prev = NULL;
-				//}
-				////add to this
-				//local_head->next = splice_me;
-				//splice_me->prev = local_head;
-				//local_tail->prev = splice_me;
-				//splice_me->next = local_tail;
-				//if (_size == 0) {	//local_head = base, local_tail = base
-					//head = local_head->next;
-					//tail = local_tail->prev;
-				//}
-				//if (local_tail == head)
-					//head = local_head->next;
-				//if (local_head == tail)
-					//tail = local_tail->prev;
-				//++_size;
+				//for (; first != last; ++first)
+					//splice(position, x, first);
 			//}
+
+			void				splice (iterator position, list& x, iterator first, iterator last) {
+				node_type*	local_head;
+				node_type*	local_tail;
+				node_type*	splice_head;
+				node_type*	splice_tail;
+				int			i;
+
+				splice_head = x.base;
+				i = 1;
+				while (first.node != splice_head) {
+					splice_head = splice_head->next;
+					--i;
+				}
+				splice_tail = x.base;
+				while (last.node != splice_tail->next) {
+					splice_tail = splice_tail->next;
+					++i;
+				}
+				local_tail = base;
+				while (position.node != local_tail)
+					local_tail = local_tail->next;
+				if ((local_tail == base || local_tail == NULL) && head == NULL) {	//uninitialized
+					local_head = base;
+					local_tail = base;
+				} else
+					local_head = local_tail->prev;
+				//remove from x
+				splice_head->prev->next = splice_tail->next;
+				splice_tail->next->prev = splice_head->prev;
+				x._size -= i;
+				if (splice_head == x.head && x._size > 0)
+					x.head = splice_tail->next;
+				else if (x._size == 0) {
+					x.head = NULL;
+					x.base->next = NULL;
+				}
+				if (splice_tail == x.tail && x._size > 0)
+					x.tail = splice_head->prev;
+				else if (x._size == 0) {
+					x.tail = NULL;
+					x.base->prev = NULL;
+				}
+				//add to this
+				local_head->next = splice_head;
+				splice_head->prev = local_head;
+				local_tail->prev = splice_tail;
+				splice_tail->next = local_tail;
+				if (_size == 0) {	//local_head = base, local_tail = base
+					head = local_head->next;
+					tail = local_tail->prev;
+				}
+				if (local_tail == head)
+					head = local_head->next;
+				if (local_head == tail)
+					tail = local_tail->prev;
+				_size += i;
+				//std::cout << "x" << std::endl;
+				//x.debug();
+				//std::cout << "this" << std::endl;
+				//debug();
+			}
+
+			/*	Removes from the container all the elements that compare equal to val. 
+			 *	This calls the destructor of these objects and reduces the container 
+			 *	size by the number of elements removed.	*/
+
+			void				remove (const value_type& val) {
+				node_type*		ptr;
+				node_type*		next;
+				node_type*		prev;
+
+				//debug();
+				if (_size == 0)
+					return;
+				for (iterator i = begin(); i != end();)
+					if (*i == val) {
+						ptr = base;
+						while (i.node != ptr)
+							ptr = ptr->next;
+						//delete_node(i.node);
+						++i;
+						//debug_node("del", ptr);
+						//prev = ptr->prev;
+						//next = ptr->next;
+						//debug_node("dpr", prev);
+						//debug_node("dnx", next);
+						delete_node(ptr);
+						//debug_node("dpr", prev);
+						//debug_node("dnx", next);
+					} else
+						++i;
+			}
 
 /*-------------------------------------------OTHER-------------------------------------------*/
 		private:
@@ -808,23 +856,28 @@ namespace ft {
 
 			void			debug (void) {
 				node_type		*ptr;
+				int				n;
 
 				std::cout << "\tdebug" << std::endl;
 				std::cout << "base: " << base;
 				std::cout << "\tbnxt: " << base->next;
 				std::cout << "\thead: " << head;
+				std::cout << "\tsize: " << _size;
 				std::cout << std::endl;
+				n = 0;
 				for (node_type *i = head; i != base; i = i->next) {
 					if (!i) {
 						std::cout << "NULL" << std::endl;
-						return;
+						break;
 					}
 					std::cout << "prev: " << i->prev;
 					std::cout << "\tnode: " << i;
 					std::cout << "\tnext: " << i->next;
+					std::cout << "\tno: " << n;
 					std::cout << "\tdata: " << i->data;
 					if (i->data)
 						std::cout << "\tval: " << *i->data;
+					n++;
 					std::cout << std::endl;
 					if (i->next == i) {
 						std::cout << "infinite loop!" << std::endl;

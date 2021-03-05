@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/18 11:56:11 by averheij      #+#    #+#                  #
-#    Updated: 2021/03/03 16:57:33 by dries            ###   ########.fr        #
+#    Updated: 2021/03/05 15:55:19 by dries            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,8 +44,8 @@ resize				Change size (public member function )							-written,tested
 clear				Clear content (public member function )							-written,tested
 
 	Operations:
-splice				Transfer elements from list to list (public member function )
-remove				Remove elements with specific value (public member function )
+splice				Transfer elements from list to list (public member function )	-written,tested
+remove				Remove elements with specific value (public member function )	-written,tested
 remove_if			Remove elements fulfilling condition (public member function template )
 unique				Remove duplicate values (public member function )
 merge				Merge sorted lists (public member function )
