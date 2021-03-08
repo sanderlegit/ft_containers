@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/08 13:20:24 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/08 13:28:43 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,13 @@
 #define YELLOW "\033[33m"
 #define BLUE "\033[34m"
 #define RESET "\033[m"
-#ifndef VERBOSE
-	#define VERBOSE	false
-#endif
+#define VERBOSE	true
+//#ifdef DISPLAY
+	//#define VERBOSE	true
+//#endif
+//#ifndef DISPLAY
+	//#define VERBOSE	false
+//#endif
 
 /*-----------------------------------UTIL-----------------------------------*/
 

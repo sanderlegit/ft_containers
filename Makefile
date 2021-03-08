@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/15 16:29:54 by averheij      #+#    #+#                  #
-#    Updated: 2021/02/25 14:49:28 by dries            ###   ########.fr        #
+#    Updated: 2021/03/08 13:28:29 by dries            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,9 @@ endif
 ifeq ($(G), 1)
 	DFLAGS += -g
 endif
+#ifeq ($(VERBOSE), 1)
+	#DLAGS += -D DISPLAY
+#endif
 FTFLAGS		=	-Wall -Wextra -Werror
 CFLAGS		=	-pedantic -std=c++98 $(DFLAGS)
 CXX			=	clang++
