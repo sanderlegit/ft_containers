@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/08 14:39:36 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/08 16:43:42 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2912,12 +2912,12 @@ void		test_remove(data<T> *d, bool empty, bool noadd) {
 	delete ft;
 }
 
-// a predicate implemented as a function:
-bool single_digit (const int& value) { return (value<50000); }
+template<class T>
+bool single_digit (const T& value) { return (value<50000); }
 
-// a predicate implemented as a class:
+template<class T>
 struct is_odd {
-  bool operator() (const int& value) { return (value%2)==1; }
+  bool operator() (const T& value) { return (value % 2) == 1; }
 };
 
 template<class T>
@@ -2961,8 +2961,8 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 	}
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	std::cout << "testing:\tlist.remove_if(single_digit)" << std::endl;
-	std->remove_if(single_digit);
-	ft->remove_if(single_digit);
+	std->remove_if(single_digit<T>);
+	ft->remove_if(single_digit<T>);
 	equal(std, ft);
 	incr_score(d);
 
@@ -2996,8 +2996,8 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 	}
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	std::cout << "testing:\tlist.remove_if(is_odd())" << std::endl;
-	std->remove_if(is_odd());
-	ft->remove_if(is_odd());
+	std->remove_if(is_odd<T>());
+	ft->remove_if(is_odd<T>());
 	equal(std, ft);
 	incr_score(d);
 
@@ -3042,8 +3042,8 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 	}
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	std::cout << "testing:\tlist.remove_if(single_digit)" << std::endl;
-	std->remove_if(single_digit);
-	ft->remove_if(single_digit);
+	std->remove_if(single_digit<T>);
+	ft->remove_if(single_digit<T>);
 	equal(std, ft);
 	incr_score(d);
 
@@ -3082,8 +3082,8 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 		std::cout << "  inserting " << val << "  " << cnt << " times (incl front/back)" << std::endl;
 	}
 	std::cout << "testing:\tlist.remove_if(is_odd())" << std::endl;
-	std->remove_if(is_odd());
-	ft->remove_if(is_odd());
+	std->remove_if(is_odd<T>());
+	ft->remove_if(is_odd<T>());
 	equal(std, ft);
 	incr_score(d);
 
@@ -3141,9 +3141,176 @@ void		test_unique(data<T> *d, bool empty, bool noadd) {
 	equal(std, ft);
 	incr_score(d);
 
+	if (empty) {
+		delete std;
+		delete ft;
+		return;
+	}
+
+	create_list(std, ft, empty);
+	if (!noadd) {
+		cnt = 0;
+		instances = 10;
+		while (instances > 0) {
+			if (empty) {
+				std->push_front(val);
+				ft->push_front(val);
+				++cnt;
+			} else {
+				val = randomize<T>();
+				stdi = std->begin();
+				fti = ft->begin();
+				i = rand() % std->size();
+				while (i > 0) {
+					stdi++;
+					fti++;
+					--i;
+				}
+				instance_length = rand() % 10;
+				while (instance_length > 0) {
+					--instance_length;
+					++cnt;
+					std->insert(stdi, val);
+					ft->insert(fti, val);
+				}
+			}
+			--instances;
+		}
+		std->push_front(val);
+		std->push_front(val);
+		std->push_back(val);
+		std->push_back(val);
+		ft->push_front(val);
+		ft->push_front(val);
+		ft->push_back(val);
+		ft->push_back(val);
+		cnt+=5;
+		std::cout << "  inserting " << val << "  " << cnt << " times (incl 2x front/back)" << std::endl;
+	}
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "testing:\tlist.unique()" << std::endl;
+	std->unique();
+	ft->unique();
+	equal(std, ft);
+	incr_score(d);
+
 	delete std;
 	delete ft;
 }
+
+template<class T>
+struct is_equal {
+  bool operator() ( T first, T second)
+  { return (first == second); }
+};
+
+template<class T>
+void		test_unique_pred(data<T> *d, bool empty, bool noadd) {
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	typename std::list<T>::iterator	stdi;
+	typename ft::list<T>::iterator	fti;
+	T				val;
+	int				cnt;
+	int				i;
+	int				instances;
+	int				instance_length;
+
+	create_list(std, ft, empty);
+	if (!noadd) {
+		cnt = 0;
+		instances = 10;
+		while (instances > 0) {
+			if (empty) {
+				std->push_front(val);
+				ft->push_front(val);
+				++cnt;
+			} else {
+				val = randomize<T>();
+				stdi = std->begin();
+				fti = ft->begin();
+				i = rand() % std->size();
+				while (i > 0) {
+					stdi++;
+					fti++;
+					--i;
+				}
+				instance_length = rand() % 10;
+				while (instance_length > 0) {
+					--instance_length;
+					++cnt;
+					std->insert(stdi, val);
+					ft->insert(fti, val);
+				}
+			}
+			--instances;
+		}
+		std::cout << "  inserting " << val << "  " << cnt << " times" << std::endl;
+	}
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "testing:\tlist.unique(is_equal())" << std::endl;
+	std->unique(is_equal<T>());
+	ft->unique(is_equal<T>());
+	equal(std, ft);
+	incr_score(d);
+
+	if (empty) {
+		delete std;
+		delete ft;
+		return;
+	}
+
+	create_list(std, ft, empty);
+	if (!noadd) {
+		cnt = 0;
+		instances = 10;
+		while (instances > 0) {
+			if (empty) {
+				std->push_front(val);
+				ft->push_front(val);
+				++cnt;
+			} else {
+				val = randomize<T>();
+				stdi = std->begin();
+				fti = ft->begin();
+				i = rand() % std->size();
+				while (i > 0) {
+					stdi++;
+					fti++;
+					--i;
+				}
+				instance_length = rand() % 10;
+				while (instance_length > 0) {
+					--instance_length;
+					++cnt;
+					std->insert(stdi, val);
+					ft->insert(fti, val);
+				}
+			}
+			--instances;
+		}
+		std->push_front(val);
+		std->push_front(val);
+		std->push_back(val);
+		std->push_back(val);
+		ft->push_front(val);
+		ft->push_front(val);
+		ft->push_back(val);
+		ft->push_back(val);
+		cnt+=4;
+		std::cout << "  inserting " << val << "  " << cnt << " times (incl 2x front/back)" << std::endl;
+	}
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "testing:\tlist.unique(is_equal())" << std::endl;
+	std->unique(is_equal<T>());
+	ft->unique(is_equal<T>());
+	equal(std, ft);
+	incr_score(d);
+
+	delete std;
+	delete ft;
+}
+
 
 
 template<class T>
@@ -3169,11 +3336,16 @@ void		test_operations(data<T> *d) {
 	test_remove_if(d, 0, 1);
 	test_remove_if(d, 1, 0);
 	test_remove_if(d, 1, 1);
-	print_title("unique");
+	print_title("unique [void]");
 	test_unique(d, 0, 0);
 	test_unique(d, 0, 1);
 	test_unique(d, 1, 0);
 	test_unique(d, 1, 1);
+	print_title("unique [pred]");
+	test_unique_pred(d, 0, 0);
+	test_unique_pred(d, 0, 1);
+	test_unique_pred(d, 1, 0);
+	test_unique_pred(d, 1, 1);
 }
 
 /*-----------------------------------MAIN-----------------------------------*/
