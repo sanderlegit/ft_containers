@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/08 12:56:33 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/08 14:54:03 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,30 @@ namespace ft {
 						return *this;
 					}
 
+					ListBiIterator		operator+(const int& rhs) {			//i + x
+						ListBiIterator	ret(*this);
+
+						if (rhs > 0)
+							for (int i = 0; i < rhs; ++i)
+								ret.node = ret.node->next;
+						else if (rhs < 0)
+							for (int i = 0; i > rhs; --i)
+								ret.node = ret.node->next;
+						return ret;
+					}
+
+					ListBiIterator		operator-(const int& rhs) {			//i - x
+						ListBiIterator	ret(*this);
+
+						if (rhs > 0)
+							for (int i = 0; i < rhs; ++i)
+								ret.node = ret.node->prev;
+						else if (rhs < 0)
+							for (int i = 0; i > rhs; --i)
+								ret.node = ret.node->prev;
+						return ret;
+					}
+
 					bool					operator==(const ListBiIterator& rhs) const { return node == rhs.node; }
 					bool					operator!=(const ListBiIterator& rhs) const { return node != rhs.node; }
 					pointer					operator->() const { return node->data; }
@@ -179,6 +203,31 @@ namespace ft {
 						node = node->next;
 						return *this;
 					}
+
+					ReverseListBiIterator		operator+(const int& rhs) {			//i + x
+						ReverseListBiIterator	ret(*this);
+
+						if (rhs > 0)
+							for (int i = 0; i < rhs; ++i)
+								ret.node = ret.node->prev;
+						else if (rhs < 0)
+							for (int i = 0; i > rhs; --i)
+								ret.node = ret.node->prev;
+						return ret;
+					}
+
+					ReverseListBiIterator		operator-(const int& rhs) {			//i - x
+						ReverseListBiIterator	ret(*this);
+
+						if (rhs > 0)
+							for (int i = 0; i < rhs; ++i)
+								ret.node = ret.node->next;
+						else if (rhs < 0)
+							for (int i = 0; i > rhs; --i)
+								ret.node = ret.node->next;
+						return ret;
+					}
+
 
 					bool					operator==(const ReverseListBiIterator& rhs) const { return node == rhs.node; }
 					bool					operator!=(const ReverseListBiIterator& rhs) const { return node != rhs.node; }
@@ -845,10 +894,9 @@ namespace ft {
 				//node_type*		next;
 				//node_type*		prev;
 
-				//debug();
 				if (_size == 0)
 					return;
-				for (iterator i = begin(); i != end();)
+				for (iterator i = begin(); i != end();) {
 					if (pred(*i)) {
 						ptr = base;
 						while (i.node != ptr)
@@ -863,6 +911,52 @@ namespace ft {
 						delete_node(ptr);
 						//debug_node("dpr", prev);
 						//debug_node("dnx", next);
+					} else
+						++i;
+				}
+			}
+
+			/*	The version with no parameters (1), removes all but the first element 
+			 *	from every consecutive group of equal elements in the container.
+			 *	Notice that an element is only removed from the list container if it 
+			 *	compares equal to the element immediately preceding it.
+			 *	The second version (2), takes as argument a specific comparison function 
+			 *	that determine the "uniqueness" of an element. The function will call 
+			 *	binary_pred(*i,*(i-1)) for all pairs of elements 
+			 *	(where i is an iterator to an element, starting from the second) and 
+			 *	remove i from the list if the predicate returns true.
+			 *	The elements removed are destroyed.	*/
+
+			void				unique() {
+				node_type*		ptr;
+
+				if (_size <= 1)
+					return;
+				for (iterator i = ++begin(); i != end();) {
+					if (*i == *(i - 1)) {
+						ptr = base;
+						while (i.node != ptr)
+							ptr = ptr->next;
+						++i;
+						delete_node(ptr);
+					} else
+						++i;
+				}
+			}
+
+			template <class BinaryPredicate>
+			void			unique (BinaryPredicate binary_pred) {
+				node_type*		ptr;
+
+				if (_size <= 1)
+					return;
+				for (iterator i = ++begin(); i != end();)
+					if (binary_pred(*i, *(i - 1))) {
+						ptr = base;
+						while (i.node != ptr)
+							ptr = ptr->next;
+						++i;
+						delete_node(ptr);
 					} else
 						++i;
 			}

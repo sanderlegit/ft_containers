@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/08 13:43:25 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/08 14:39:36 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 #define BLUE "\033[34m"
 #define RESET "\033[m"
 #define VERBOSE	true
+#define VVERBOSE	false
 //#ifdef DISPLAY
 	//#define VERBOSE	true
 //#endif
@@ -182,8 +183,6 @@ void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
 		comp(r3 == r4);
 		print_comp("size()", r5, r6);
 		comp(r5 == r6);
-
-
 		if (VERBOSE)
 			std::cout << "  iterating through..." << std::endl;
 		while (!std->empty() && !ft->empty()) {
@@ -195,8 +194,10 @@ void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
 			r6 = ft->size();
 			std->pop_front();
 			ft->pop_front();
-			//print_comp("front", r3, r4);
-			//print_comp("size", r5, r6);
+			if (VVERBOSE)
+				print_comp("front", r3, r4);
+			if (VVERBOSE)
+				print_comp("size", r5, r6);
 			comp(r1 == r2);
 			comp(r3 == r4);
 			comp(r5 == r6);
@@ -207,7 +208,58 @@ void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
 		r6 = ft->size();
 		print_comp("empty()", r1, r2);
 		print_comp("size()", r5, r6);
+	} else if (!r1 && r2) {
+		r3 = std->front();
+		r5 = std->size();
+		print_comp_labels("front()", "std", "EMPTY!", r3, 0);
+		r3 = std->back();
+		std->pop_front();
+		ft->pop_front();
+		print_comp_labels("back()", "std", "EMPTY!", r3, 0);
+		print_comp_labels("size()", "std", "EMPTY!", r5, 0);
+		if (VERBOSE)
+			std::cout << "  iterating through..." << std::endl;
+		while (!std->empty()) {
+			r1 = std->empty();
+			r3 = std->front();
+			r5 = std->size();
+			std->pop_front();
+			if (VVERBOSE)
+				print_comp_labels("front", "std", "EMPTY!", r3, 0);
+			if (VVERBOSE)
+				print_comp_labels("size", "std", "EMPTY!", r5, 0);
+		}
+		r1 = std->empty();
+		r5 = std->size();
+		print_comp_labels("empty()", "std", "EMPTY!", r1, 0);
+		print_comp_labels("size()", "std", "EMPTY!", r5, 0);
+	} else if (r1 && !r2) {
+		r3 = ft->front();
+		r5 = ft->size();
+		print_comp_labels("front()", "EMPTY!", "ft", 0, r3);
+		r3 = ft->back();
+		ft->pop_front();
+		ft->pop_front();
+		print_comp_labels("back()", "EMPTY!", "ft", 0, r3);
+		print_comp_labels("size()", "EMPTY!", "ft", 0, r5);
+		if (VERBOSE)
+			std::cout << "  iterating through..." << std::endl;
+		while (!ft->empty()) {
+			r1 = ft->empty();
+			r3 = ft->front();
+			r5 = ft->size();
+			ft->pop_front();
+			if (VVERBOSE)
+				print_comp_labels("front", "EMPTY!", "ft", 0, r3);
+			if (VVERBOSE)
+				print_comp_labels("size", "EMPTY!", "ft", 0, r5);
+		}
+		r1 = ft->empty();
+		r5 = ft->size();
+		print_comp_labels("empty()", "EMPTY!", "ft", 0, r1);
+		print_comp_labels("size()", "EMPTY!", "ft", 0, r5);
 	}
+
 }
 #define equal(A, B)	test_equivalence(d, A, B);
 
@@ -2788,6 +2840,7 @@ void		test_remove(data<T> *d, bool empty, bool noadd) {
 		while (tmp > 0) {
 			if (empty) {
 				std->push_front(val);
+				ft->push_front(val);
 			} else {
 				stdi = std->begin();
 				fti = ft->begin();
@@ -2802,7 +2855,7 @@ void		test_remove(data<T> *d, bool empty, bool noadd) {
 			}
 			--tmp;
 		}
-		std::cout << "  inserting " << val << "  " << cnt << " number of times" << std::endl;
+		std::cout << "  inserting " << val << "  " << cnt << " times" << std::endl;
 	}
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	std::cout << "testing:\tlist.remove(" << val << ")" << std::endl;
@@ -2827,6 +2880,7 @@ void		test_remove(data<T> *d, bool empty, bool noadd) {
 		while (tmp > 0) {
 			if (empty) {
 				std->push_front(val);
+				ft->push_front(val);
 			} else {
 				stdi = std->begin();
 				fti = ft->begin();
@@ -2846,7 +2900,7 @@ void		test_remove(data<T> *d, bool empty, bool noadd) {
 		ft->push_front(val);
 		ft->push_back(val);
 		cnt+=2;
-		std::cout << "  inserting " << val << "  " << cnt << " number of times (incl front/back)" << std::endl;
+		std::cout << "  inserting " << val << "  " << cnt << " times (incl front/back)" << std::endl;
 	}
 	std::cout << "testing:\tlist.remove(" << val << ")" << std::endl;
 	std->remove(val);
@@ -2888,6 +2942,7 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 		while (tmp > 0) {
 			if (empty) {
 				std->push_front(val);
+				ft->push_front(val);
 			} else {
 				stdi = std->begin();
 				fti = ft->begin();
@@ -2902,7 +2957,7 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 			}
 			--tmp;
 		}
-		std::cout << "  inserting " << val << "  " << cnt << " number of times" << std::endl;
+		std::cout << "  inserting " << val << "  " << cnt << " times" << std::endl;
 	}
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	std::cout << "testing:\tlist.remove_if(single_digit)" << std::endl;
@@ -2922,6 +2977,7 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 		while (tmp > 0) {
 			if (empty) {
 				std->push_front(val);
+				ft->push_front(val);
 			} else {
 				stdi = std->begin();
 				fti = ft->begin();
@@ -2936,7 +2992,7 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 			}
 			--tmp;
 		}
-		std::cout << "  inserting " << val << "  " << cnt << " number of times" << std::endl;
+		std::cout << "  inserting " << val << "  " << cnt << " times" << std::endl;
 	}
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	std::cout << "testing:\tlist.remove_if(is_odd())" << std::endl;
@@ -2962,6 +3018,7 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 		while (tmp > 0) {
 			if (empty) {
 				std->push_front(val);
+				ft->push_front(val);
 			} else {
 				stdi = std->begin();
 				fti = ft->begin();
@@ -2981,7 +3038,7 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 		ft->push_front(val);
 		ft->push_back(val);
 		cnt+=2;
-		std::cout << "  inserting " << val << "  " << cnt << " number of times (incl front/back)" << std::endl;
+		std::cout << "  inserting " << val << "  " << cnt << " times (incl front/back)" << std::endl;
 	}
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	std::cout << "testing:\tlist.remove_if(single_digit)" << std::endl;
@@ -3002,6 +3059,7 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 		while (tmp > 0) {
 			if (empty) {
 				std->push_front(val);
+				ft->push_front(val);
 			} else {
 				stdi = std->begin();
 				fti = ft->begin();
@@ -3021,11 +3079,65 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 		ft->push_front(val);
 		ft->push_back(val);
 		cnt+=2;
-		std::cout << "  inserting " << val << "  " << cnt << " number of times (incl front/back)" << std::endl;
+		std::cout << "  inserting " << val << "  " << cnt << " times (incl front/back)" << std::endl;
 	}
 	std::cout << "testing:\tlist.remove_if(is_odd())" << std::endl;
 	std->remove_if(is_odd());
 	ft->remove_if(is_odd());
+	equal(std, ft);
+	incr_score(d);
+
+	delete std;
+	delete ft;
+}
+
+template<class T>
+void		test_unique(data<T> *d, bool empty, bool noadd) {
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	typename std::list<T>::iterator	stdi;
+	typename ft::list<T>::iterator	fti;
+	T				val;
+	int				cnt;
+	int				i;
+	int				instances;
+	int				instance_length;
+
+	create_list(std, ft, empty);
+	if (!noadd) {
+		cnt = 0;
+		instances = 10;
+		while (instances > 0) {
+			if (empty) {
+				std->push_front(val);
+				ft->push_front(val);
+				++cnt;
+			} else {
+				val = randomize<T>();
+				stdi = std->begin();
+				fti = ft->begin();
+				i = rand() % std->size();
+				while (i > 0) {
+					stdi++;
+					fti++;
+					--i;
+				}
+				instance_length = rand() % 10;
+				while (instance_length > 0) {
+					--instance_length;
+					++cnt;
+					std->insert(stdi, val);
+					ft->insert(fti, val);
+				}
+			}
+			--instances;
+		}
+		std::cout << "  inserting " << val << "  " << cnt << " times" << std::endl;
+	}
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "testing:\tlist.unique()" << std::endl;
+	std->unique();
+	ft->unique();
 	equal(std, ft);
 	incr_score(d);
 
@@ -3057,6 +3169,11 @@ void		test_operations(data<T> *d) {
 	test_remove_if(d, 0, 1);
 	test_remove_if(d, 1, 0);
 	test_remove_if(d, 1, 1);
+	print_title("unique");
+	test_unique(d, 0, 0);
+	test_unique(d, 0, 1);
+	test_unique(d, 1, 0);
+	test_unique(d, 1, 1);
 }
 
 /*-----------------------------------MAIN-----------------------------------*/
