@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/08 14:54:03 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/08 18:23:52 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -945,7 +945,7 @@ namespace ft {
 			}
 
 			template <class BinaryPredicate>
-			void			unique (BinaryPredicate binary_pred) {
+			void				unique (BinaryPredicate binary_pred) {
 				node_type*		ptr;
 
 				if (_size <= 1)
@@ -959,6 +959,67 @@ namespace ft {
 						delete_node(ptr);
 					} else
 						++i;
+			}
+
+			/*	Merges x into the list by transferring all of its elements into the container 
+			 *	(both containers shall already be ordered).
+			 *	X becomes empty, and inserts them into their ordered position within container 
+			 *	(size += x old size). The elements are !transferred! (no construction or destruction).
+			 *	The resulting order of equivalent elements is stable (i.e., equivalent elements 
+			 *	preserve relative order the call, and existing elements precede those equivalent inserted from x).
+			 *	The function does nothing if (&x == this).	*/
+
+			void				merge (list& x) {
+
+			}
+
+			template <class Compare>
+			void				merge (list& x, Compare comp) {
+
+			}
+
+			/*	Sorts the elements in the list, altering their position within the container.
+			 *	The sorting is performed by applying an algorithm that uses either operator< 
+			 *	(in version (1)) or comp (in version (2)) to compare elements. This comparison 
+			 *	shall produce a strict weak ordering of the elements (i.e., a consistent transitive 
+			 *	comparison, without considering its reflexiveness).
+			 *	The resulting order of equivalent elements is stable: i.e., equivalent elements 
+			 *	preserve the relative order they had before the call.
+			 *	The entire operation does not involve the construction, destruction or copy of any 
+			 *	element object. Elements are moved within the container.	*/
+
+			void				sort() {
+				size_type	unsorted;
+				size_type	highest_sort;
+				node_type	*ptr;
+				node_type	*tmp;
+				iterator	bi;
+
+				unsorted = _size;
+				//debug();
+				while (unsorted > 1) {
+					highest_sort = 0;
+					ptr = head->next;
+					for (size_type i = 1; i != unsorted; ++i) {
+						//debug_node("prev", ptr->prev);
+						//debug_node("ptr", ptr);
+						if (*(ptr->prev->data) > *(ptr->data)) {
+							tmp = ptr->next;
+							//swap(ptr->prev, ptr);
+							swap_adj(ptr);
+							highest_sort = i;
+							ptr = tmp;
+						} else
+							ptr = ptr->next;
+						//debug();
+					}
+					unsorted = highest_sort;
+				}
+			}
+
+			template <class Compare>
+			void				sort (Compare comp) {
+
 			}
 
 /*-------------------------------------------OTHER-------------------------------------------*/
@@ -1009,6 +1070,10 @@ namespace ft {
 					n++;
 					std::cout << std::endl;
 					if (i->next == i) {
+						std::cout << "infinite loop!" << std::endl;
+						break;
+					}
+					if (n > _size) {
 						std::cout << "infinite loop!" << std::endl;
 						break;
 					}
@@ -1088,6 +1153,71 @@ namespace ft {
 				//std::cout << "\tnext:" << std::endl;
 				//debug_node(next);
 			}
+
+			/*	swaps the node pointed at by ptr with the preceeding node	*/
+
+			void					swap_adj(node_type *node) {
+				node_type	*prior;
+
+				prior = node->prev;
+				//debug_node("PREV", prior);
+				//debug_node("PTR", node);
+				prior->next = node->next;
+				node->prev = prior->prev;
+				prior->next->prev = prior;
+				node->prev->next = node;
+				node->next = prior;
+				prior->prev = node;
+				if (prior == head) {
+					head = node;
+					base->next = head;
+				}
+				if (node == tail) {
+					tail = prior;
+					base->prev = tail;
+				}
+				//debug_node("PREV", prior);
+				//debug_node("PTR", node);
+			}
+
+			//void					swap(node_type *n1, node_type *n2) {
+				//node_type	swp;			//HAHAHAH nice try friend, need to change ->next->prev and ->prev->next
+				//node_type	swp2;
+				//node_type	swp3;
+
+				//debug_node("n1o", n1);
+				//debug_node("n2o", n2);
+				//n1->next->prev = n2;	//Fix adj links			//Broken as hell
+				//n1->prev->next = n2;
+				//n2->next->prev = n1;
+				//n2->prev->next = n1;
+				//swp.next = n1->next;	//Swap next and prev
+				//swp.prev = n1->prev;
+				//n1->next = n2->next;
+				//n1->prev = n2->prev;
+				//n2->next = swp.next;
+				//n2->prev = swp.prev;
+				//debug_node("n1n", n1);
+				//debug_node("n2n", n2);
+				//debug_node("n1N", n1->next);
+				//debug_node("n1P", n1->prev);
+				//debug_node("n2N", n2->next);
+				//debug_node("n2P", n2->prev);
+				//if (n1 == head) {
+					//n2 = head;
+					//base->next = head;
+				//} else if (n2 == head) {
+					//n1 = head;
+					//base->next = head;
+				//}
+				//if (n1 == tail) {
+					//n2 = tail;
+					//base->prev = tail;
+				//} else if (n2 == tail) {
+					//n1 = tail;
+					//base->prev = tail;
+				//}
+			//}
 	};
 
 }

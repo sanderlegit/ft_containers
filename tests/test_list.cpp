@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/08 16:43:42 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/08 18:23:27 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -3311,6 +3311,30 @@ void		test_unique_pred(data<T> *d, bool empty, bool noadd) {
 	delete ft;
 }
 
+template<class T>
+void		test_sort(data<T> *d, bool empty) {
+	std::list<T>	*std;
+	ft::list<T>		*ft;
+
+	//create_list_size(std, ft, 5);
+	create_list(std, ft, empty);
+	//std = new std::list<T>();
+	//ft = new ft::list<T>();
+	//for (int i = 0; i < 5; ++i) {
+		//std->push_front(i);
+		//ft->push_front(i);
+	//}
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "testing:\tlist.sort()" << std::endl;
+	std->sort();
+	ft->sort();
+	equal(std, ft);
+	incr_score(d);
+
+	delete std;
+	delete ft;
+}
+
 
 
 template<class T>
@@ -3346,6 +3370,13 @@ void		test_operations(data<T> *d) {
 	test_unique_pred(d, 0, 1);
 	test_unique_pred(d, 1, 0);
 	test_unique_pred(d, 1, 1);
+	print_title("merge [void]");
+	print_title("merge [comp]");
+	print_title("sort [void]");
+	test_sort(d, 0);
+	test_sort(d, 1);
+	print_title("sort [comp]");
+
 }
 
 /*-----------------------------------MAIN-----------------------------------*/
