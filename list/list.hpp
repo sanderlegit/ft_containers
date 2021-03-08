@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/05 15:52:34 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/08 12:56:33 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -807,14 +807,49 @@ namespace ft {
 
 			void				remove (const value_type& val) {
 				node_type*		ptr;
-				node_type*		next;
-				node_type*		prev;
+				//node_type*		next;
+				//node_type*		prev;
 
 				//debug();
 				if (_size == 0)
 					return;
 				for (iterator i = begin(); i != end();)
 					if (*i == val) {
+						ptr = base;
+						while (i.node != ptr)
+							ptr = ptr->next;
+						//delete_node(i.node);
+						++i;
+						//debug_node("del", ptr);
+						//prev = ptr->prev;
+						//next = ptr->next;
+						//debug_node("dpr", prev);
+						//debug_node("dnx", next);
+						delete_node(ptr);
+						//debug_node("dpr", prev);
+						//debug_node("dnx", next);
+					} else
+						++i;
+			}
+
+			/*	Removes from the container all the elements for which Predicate pred 
+			 *	returns true. This calls the destructor of these objects and reduces 
+			 *	the container size by the number of elements removed.  
+			 *	The function calls pred(*i) for each element (where i is an iterator 
+			 *	to that element). Any of the elements in the list for which this returns 
+			 *	true, are removed from the container.	*/
+
+			template <class Predicate>
+			void				remove_if (Predicate pred) {
+				node_type*		ptr;
+				//node_type*		next;
+				//node_type*		prev;
+
+				//debug();
+				if (_size == 0)
+					return;
+				for (iterator i = begin(); i != end();)
+					if (pred(*i)) {
 						ptr = base;
 						while (i.node != ptr)
 							ptr = ptr->next;

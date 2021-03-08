@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/05 15:54:38 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/08 13:20:24 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,16 @@
 
 #include <list>
 #include "list.hpp"
+
+#define WHITE "\033[37;01m"
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define YELLOW "\033[33m"
+#define BLUE "\033[34m"
+#define RESET "\033[m"
+#ifndef VERBOSE
+	#define VERBOSE	false
+#endif
 
 /*-----------------------------------UTIL-----------------------------------*/
 
@@ -61,56 +71,59 @@ T			randomize(void) {
 /*-----------------------------------TEST TOOLS-----------------------------------*/
 
 void		print_group_title(std::string str) {
-	std::cout << "\n          #=======" << str << "=======#" <<std::endl;
+	std::cout << BLUE << "\n##=====================#" << str << "#=====================##" << RESET << std::endl;
 }
 
 void		print_title(std::string str) {
-	std::cout << "             ----" << str << "----" <<std::endl;
+	std::cout << BLUE << "          +--------+-" << str << "-+--------+" << RESET << std::endl;
 }
 
 template<class T, class R>
 void		print_comp(std::string str, T t, R r) {
+	if (VERBOSE) {
+		printf("%-16s", str.c_str());
+		std::cout << "std:";
 
-	printf("%-16s", str.c_str());
-	std::cout << "std:";
+		std::cout.width(16);
+		std::cout.flags(std::ios::right);
+		std::cout << t;
+		std::cout.flags(std::ios::internal);
+		std::cout.width(0);
 
-	std::cout.width(16);
-	std::cout.flags(std::ios::right);
-	std::cout << t;
-	std::cout.flags(std::ios::internal);
-	std::cout.width(0);
+		std::cout << "\tft:";
 
-	std::cout << "\tft:";
-
-	std::cout.width(16);
-	std::cout.flags(std::ios::right);
-	std::cout << r << std::endl;
-	std::cout.flags(std::ios::internal);
-	std::cout.width(0);
+		std::cout.width(16);
+		std::cout.flags(std::ios::right);
+		std::cout << r << std::endl;
+		std::cout.flags(std::ios::internal);
+		std::cout.width(0);
+	}
 }
 
 template<class T, class R>
 void		print_comp_labels(std::string str, std::string l1, std::string l2, T t, R r) {
-	printf("%-16s", str.c_str());
-	l1.append(":");
-	printf("%-4s", l1.c_str());
-	//std::cout << l1 << ":";
+	if (VERBOSE) {
+		printf("%-16s", str.c_str());
+		l1.append(":");
+		printf("%-4s", l1.c_str());
+		//std::cout << l1 << ":";
 
-	std::cout.width(16);
-	std::cout.flags(std::ios::right);
-	std::cout << t;
-	std::cout.flags(std::ios::internal);
-	std::cout.width(0);
+		std::cout.width(16);
+		std::cout.flags(std::ios::right);
+		std::cout << t;
+		std::cout.flags(std::ios::internal);
+		std::cout.width(0);
 
-	l2.append(":");
-	printf("\t%-4s", l2.c_str());
-	//std::cout << "\t" << l2 << ":";
+		l2.append(":");
+		printf("\t%-4s", l2.c_str());
+		//std::cout << "\t" << l2 << ":";
 
-	std::cout.width(15);
-	std::cout.flags(std::ios::right);
-	std::cout << r << std::endl;
-	std::cout.flags(std::ios::internal);
-	std::cout.width(0);
+		std::cout.width(15);
+		std::cout.flags(std::ios::right);
+		std::cout << r << std::endl;
+		std::cout.flags(std::ios::internal);
+		std::cout.width(0);
+	}
 }
 
 template<class T>
@@ -118,10 +131,10 @@ void		incr_score(data<T> *d) {
 	std::cout << "  test:\t";
 	if (d->current_fail == 0) {
 		d->pass++;
-		std::cout << "pass" << std::endl << std::endl;
+		std::cout << GREEN << "pass" << RESET << std::endl << std::endl;
 	} else {
 		d->fail++;
-		std::cout << "fail" << std::endl << std::endl;
+		std::cout << RED << "fail" << RESET << std::endl << std::endl;
 	}
 	d->current_fail = 0;
 }
@@ -143,7 +156,8 @@ void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
 	size_t			r6;
 
 
-	std::cout << "  testing list equality" << std::endl;
+	if (VERBOSE)
+		std::cout << "  testing list equality" << std::endl;
 	r1 = std->empty();
 	r2 = ft->empty();
 	print_comp("empty()", r1, r2);
@@ -166,7 +180,8 @@ void		test_equivalence(data<T> *d, std::list<T> *std, ft::list<T> *ft) {
 		comp(r5 == r6);
 
 
-		std::cout << "  iterating through..." << std::endl;
+		if (VERBOSE)
+			std::cout << "  iterating through..." << std::endl;
 		while (!std->empty() && !ft->empty()) {
 			r1 = std->empty();
 			r2 = ft->empty();
@@ -2839,6 +2854,182 @@ void		test_remove(data<T> *d, bool empty, bool noadd) {
 	delete ft;
 }
 
+// a predicate implemented as a function:
+bool single_digit (const int& value) { return (value<50000); }
+
+// a predicate implemented as a class:
+struct is_odd {
+  bool operator() (const int& value) { return (value%2)==1; }
+};
+
+template<class T>
+void		test_remove_if(data<T> *d, bool empty, bool noadd) {
+	std::list<T> 	*std;
+	ft::list<T> 	*ft;
+	typename std::list<T>::iterator	stdi;
+	typename ft::list<T>::iterator	fti;
+	T				val;
+	int				i;
+	int				cnt;
+	int				tmp;
+
+	create_list(std, ft, empty);
+	val = 50001;
+	while (val >=50000)
+		val = randomize<T>();
+	if (!noadd) {
+		i = 0;
+		cnt = 10;
+		tmp = cnt;
+		while (tmp > 0) {
+			if (empty) {
+				std->push_front(val);
+			} else {
+				stdi = std->begin();
+				fti = ft->begin();
+				i = rand() % std->size();
+				while (i > 0) {
+					stdi++;
+					fti++;
+					--i;
+				}
+				std->insert(stdi, val);
+				ft->insert(fti, val);
+			}
+			--tmp;
+		}
+		std::cout << "  inserting " << val << "  " << cnt << " number of times" << std::endl;
+	}
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "testing:\tlist.remove_if(single_digit)" << std::endl;
+	std->remove_if(single_digit);
+	ft->remove_if(single_digit);
+	equal(std, ft);
+	incr_score(d);
+
+	create_list(std, ft, empty);
+	val = 0;
+	while (val % 2 != 1)
+		val = randomize<T>();
+	if (!noadd) {
+		i = 0;
+		cnt = 10;
+		tmp = cnt;
+		while (tmp > 0) {
+			if (empty) {
+				std->push_front(val);
+			} else {
+				stdi = std->begin();
+				fti = ft->begin();
+				i = rand() % std->size();
+				while (i > 0) {
+					stdi++;
+					fti++;
+					--i;
+				}
+				std->insert(stdi, val);
+				ft->insert(fti, val);
+			}
+			--tmp;
+		}
+		std::cout << "  inserting " << val << "  " << cnt << " number of times" << std::endl;
+	}
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "testing:\tlist.remove_if(is_odd())" << std::endl;
+	std->remove_if(is_odd());
+	ft->remove_if(is_odd());
+	equal(std, ft);
+	incr_score(d);
+
+	if (empty && noadd) {
+		delete std;
+		delete ft;
+		return;
+	}
+
+	create_list(std, ft, empty);
+	val = 50001;
+	while (val >=50000)
+		val = randomize<T>();
+	if (!noadd) {
+		i = 0;
+		cnt = 10;
+		tmp = cnt;
+		while (tmp > 0) {
+			if (empty) {
+				std->push_front(val);
+			} else {
+				stdi = std->begin();
+				fti = ft->begin();
+				i = rand() % std->size();
+				while (i > 0) {
+					stdi++;
+					fti++;
+					--i;
+				}
+				std->insert(stdi, val);
+				ft->insert(fti, val);
+			}
+			--tmp;
+		}
+		std->push_front(val);
+		std->push_back(val);
+		ft->push_front(val);
+		ft->push_back(val);
+		cnt+=2;
+		std::cout << "  inserting " << val << "  " << cnt << " number of times (incl front/back)" << std::endl;
+	}
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "testing:\tlist.remove_if(single_digit)" << std::endl;
+	std->remove_if(single_digit);
+	ft->remove_if(single_digit);
+	equal(std, ft);
+	incr_score(d);
+
+	create_list(std, ft, empty);
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	val = 0;
+	while (val % 2 != 1)
+		val = randomize<T>();
+	if (!noadd) {
+		i = 0;
+		cnt = 10;
+		tmp = cnt;
+		while (tmp > 0) {
+			if (empty) {
+				std->push_front(val);
+			} else {
+				stdi = std->begin();
+				fti = ft->begin();
+				i = rand() % std->size();
+				while (i > 0) {
+					stdi++;
+					fti++;
+					--i;
+				}
+				std->insert(stdi, val);
+				ft->insert(fti, val);
+			}
+			--tmp;
+		}
+		std->push_front(val);
+		std->push_back(val);
+		ft->push_front(val);
+		ft->push_back(val);
+		cnt+=2;
+		std::cout << "  inserting " << val << "  " << cnt << " number of times (incl front/back)" << std::endl;
+	}
+	std::cout << "testing:\tlist.remove_if(is_odd())" << std::endl;
+	std->remove_if(is_odd());
+	ft->remove_if(is_odd());
+	equal(std, ft);
+	incr_score(d);
+
+	delete std;
+	delete ft;
+}
+
+
 template<class T>
 void		test_operations(data<T> *d) {
 	print_title("slice [entire list]");
@@ -2857,6 +3048,11 @@ void		test_operations(data<T> *d) {
 	test_remove(d, 0, 1);
 	test_remove(d, 1, 0);
 	test_remove(d, 1, 1);
+	print_title("remove_if");
+	test_remove_if(d, 0, 0);
+	test_remove_if(d, 0, 1);
+	test_remove_if(d, 1, 0);
+	test_remove_if(d, 1, 1);
 }
 
 /*-----------------------------------MAIN-----------------------------------*/
