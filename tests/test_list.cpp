@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/08 13:28:43 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/08 13:43:25 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -3082,7 +3082,7 @@ void		do_tests(void) {
 	print_group_title("OPERATIONS");
 	test_operations(d);
 
-	std::cout << std::endl << "pass: " << d->pass << "\tfail:\t" << d->fail << std::endl;
+	std::cout << std::endl << GREEN << "pass: " << RESET << d->pass << RED << "\tfail:\t" << RESET << d->fail << std::endl;
 	delete d;
 }
 
