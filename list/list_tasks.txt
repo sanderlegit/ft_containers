@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/18 11:56:11 by averheij      #+#    #+#                  #
-#    Updated: 2021/03/09 15:43:26 by dries            ###   ########.fr        #
+#    Updated: 2021/03/09 16:15:33 by dries            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,13 +50,7 @@ remove_if			Remove elements fulfilling condition (public member function templat
 unique				Remove duplicate values (public member function )							-written,tested
 merge				Merge sorted lists (public member function )								-written,tested
 sort				Sort elements in container (public member function )						-written,tested
-	to check relative order maintain
-		sort with a struct pair, sorting with one side
-			add an overload for <, >, ==
-		add some duplicate elements (sort side), with unique unsorted side
-		check as usual
-	but i probably wont because i know bubble sort is stable
-reverse				Reverse the order of elements (public member function )
+reverse				Reverse the order of elements (public member function )						-written,tested
 
 	Non-member function overloads:
 relational operators (list)		Relational operators for list (function )
@@ -64,4 +58,12 @@ swap (list)						Exchanges the contents of two lists (function template )
 
 
 a null iterator is given if .begin is called on an empty list, is this expected behaviour?
-base is not explicitely deleted in destructor
+
+check sort stability
+	sort with a struct pair, sorting with one side
+		add an overload for <, >, ==
+	add some duplicate elements (sort side), with unique unsorted side
+	check as usual
+but i probably wont because i know bubble sort is stable
+
+do all operations have tests with size 1, size 0??

@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/09 15:38:43 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/09 16:21:51 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -986,6 +986,16 @@ namespace ft {
 				xptr = x.head;
 				//debug();
 				//x.debug();
+				if (_size == 0 && x._size) {
+					head = x.head;
+					tail = x.tail;
+					base->next = head;
+					base->prev = tail;
+					head->prev = base;
+					tail->next = base;
+					_size = x._size;
+					x._size = 0;
+				}
 				while (x._size) {
 					if (lptr != base) {
 						//debug_node("xptr", xptr);
@@ -1031,6 +1041,16 @@ namespace ft {
 				xptr = x.head;
 				//debug();
 				//x.debug();
+				if (_size == 0 && x._size) {
+					head = x.head;
+					tail = x.tail;
+					base->next = head;
+					base->prev = tail;
+					head->prev = base;
+					tail->next = base;
+					_size = x._size;
+					x._size = 0;
+				}
 				while (x._size) {
 					if (lptr != base) {
 						//debug_node("xptr", xptr);
@@ -1132,6 +1152,30 @@ namespace ft {
 					}
 					unsorted = highest_sort;
 				}
+			}
+
+			/*	Reverses the order of the elements in the list container.	*/
+
+			void				reverse() {
+				node_type	*tmp;
+				node_type	*swp;
+				node_type	*ptr;
+
+				if (_size <= 1)
+					return;
+				ptr = tail;
+				while (ptr != base) {
+					tmp = ptr->prev;
+					swp = ptr->next;
+					ptr->next = ptr->prev;
+					ptr->prev = ptr->next;
+					ptr = tmp;
+				}
+				swp = head;
+				head = tail;
+				tail = swp;
+				base->next = head;
+				base->prev = tail;
 			}
 
 /*-------------------------------------------OTHER-------------------------------------------*/

@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/15 16:29:54 by averheij      #+#    #+#                  #
-#    Updated: 2021/03/09 12:48:39 by dries            ###   ########.fr        #
+#    Updated: 2021/03/09 16:16:17 by dries            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ endif
 ifeq ($(G), 1)
 	DFLAGS += -g
 endif
-#ifeq ($(VERBOSE), 1)
+#ifeq ($(VERBOSE), 1)¬
 	#DLAGS += -D DISPLAY
 #endif
 FTFLAGS		=	-Wall -Wextra -Werror

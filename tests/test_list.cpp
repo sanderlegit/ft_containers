@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/09 15:43:59 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/09 16:23:00 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@
 #define YELLOW "\033[33m"
 #define BLUE "\033[34m"
 #define RESET "\033[m"
-#define VERBOSE	true
+//#define VERBOSE	true
+#define VERBOSE	false
+//#define VVERBOSE	true
 #define VVERBOSE	false
 //#ifdef DISPLAY
 	//#define VERBOSE	true
@@ -3327,6 +3329,20 @@ void		test_sort(data<T> *d, bool empty) {
 	equal(std, ft);
 	incr_score(d);
 
+	if (empty) {
+		delete std;
+		delete ft;
+		return;
+	}
+
+	create_list_size(std, ft, 1);
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "testing:\tlist.sort()" << std::endl;
+	std->sort();
+	ft->sort();
+	equal(std, ft);
+	incr_score(d);
+
 	delete std;
 	delete ft;
 }
@@ -3344,6 +3360,20 @@ void		test_sort_compare(data<T> *d, bool empty) {
 	create_list(std, ft, empty);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	std::cout << "testing:\tlist.sort(compare)" << std::endl;
+	std->sort(compare_func<T>);
+	ft->sort(compare_func<T>);
+	equal(std, ft);
+	incr_score(d);
+
+	if (empty) {
+		delete std;
+		delete ft;
+		return;
+	}
+
+	create_list_size(std, ft, 1);
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "testing:\tlist.sort()" << std::endl;
 	std->sort(compare_func<T>);
 	ft->sort(compare_func<T>);
 	equal(std, ft);
@@ -3388,8 +3418,48 @@ void		test_merge(data<T> *d, bool empty) {
 	equal(std, ft);
 	incr_score(d);
 
+	if (empty) {
+		delete std;
+		delete ft;
+		delete stdsrc;
+		delete ftsrc;
+		return;
+	}
+
+	create_list_size(stdsrc, ftsrc, 1);
+	create_list_size(std, ft, 1);
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "merging from:\trandom filled list size:" << stdsrc->size() << "" << std::endl;
+	std::cout << "testing:\tlist.merge(list2)" << std::endl;
+	std->merge(*stdsrc);
+	ft->merge(*ftsrc);
+	equal(std, ft);
+	incr_score(d);
+
+	create_list_size(stdsrc, ftsrc, 0);
+	create_list_size(std, ft, 1);
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "merging from:\trandom filled list size:" << stdsrc->size() << "" << std::endl;
+	std::cout << "testing:\tlist.merge(list2)" << std::endl;
+	std->merge(*stdsrc);
+	ft->merge(*ftsrc);
+	equal(std, ft);
+	incr_score(d);
+
+	create_list_size(stdsrc, ftsrc, 1);
+	create_list_size(std, ft, 0);
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "merging from:\trandom filled list size:" << stdsrc->size() << "" << std::endl;
+	std::cout << "testing:\tlist.merge(list2)" << std::endl;
+	std->merge(*stdsrc);
+	ft->merge(*ftsrc);
+	equal(std, ft);
+	incr_score(d);
+
 	delete std;
 	delete ft;
+	delete stdsrc;
+	delete ftsrc;
 }
 
 template<class T>
@@ -3427,10 +3497,80 @@ void		test_merge_compare(data<T> *d, bool empty) {
 	equal(std, ft);
 	incr_score(d);
 
+	if (empty) {
+		delete std;
+		delete ft;
+		delete stdsrc;
+		delete ftsrc;
+		return;
+	}
+
+	create_list_size(stdsrc, ftsrc, 1);
+	create_list_size(std, ft, 1);
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "merging from:\trandom filled list size:" << stdsrc->size() << "" << std::endl;
+	std::cout << "testing:\tlist.merge(list2, compare_func)" << std::endl;
+	std->merge(*stdsrc, compare_func<T>);
+	ft->merge(*ftsrc, compare_func<T>);
+	equal(std, ft);
+	incr_score(d);
+
+	create_list_size(stdsrc, ftsrc, 0);
+	create_list_size(std, ft, 1);
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "merging from:\trandom filled list size:" << stdsrc->size() << "" << std::endl;
+	std::cout << "testing:\tlist.merge(list2, compare_func)" << std::endl;
+	std->merge(*stdsrc, compare_func<T>);
+	ft->merge(*ftsrc, compare_func<T>);
+	equal(std, ft);
+	incr_score(d);
+
+	create_list_size(stdsrc, ftsrc, 1);
+	create_list_size(std, ft, 0);
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "merging from:\trandom filled list size:" << stdsrc->size() << "" << std::endl;
+	std::cout << "testing:\tlist.merge(list2, compare_func)" << std::endl;
+	std->merge(*stdsrc, compare_func<T>);
+	ft->merge(*ftsrc, compare_func<T>);
+	equal(std, ft);
+	incr_score(d);
+
+	delete std;
+	delete ft;
+	delete stdsrc;
+	delete ftsrc;
+}
+
+template<class T>
+void		test_reverse(data<T> *d, bool empty) {
+	std::list<T>	*std = NULL;
+	ft::list<T>		*ft = NULL;
+
+	create_list(std, ft, empty);
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "testing:\tlist.reverse()" << std::endl;
+	std->reverse();
+	ft->reverse();
+	equal(std, ft);
+	incr_score(d);
+
+	if (empty) {
+		delete std;
+		delete ft;
+		return;
+	}
+
+	create_list_size(std, ft, 1);
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "testing:\tlist.reverse()" << std::endl;
+	std->reverse();
+	ft->reverse();
+	equal(std, ft);
+	incr_score(d);
+
 	delete std;
 	delete ft;
 }
-
 
 
 template<class T>
@@ -3478,7 +3618,9 @@ void		test_operations(data<T> *d) {
 	print_title("sort [comp]");
 	test_sort_compare(d, 0);
 	test_sort_compare(d, 1);
-
+	print_title("reverse");
+	test_reverse(d, 0);
+	test_reverse(d, 1);
 }
 
 /*-----------------------------------MAIN-----------------------------------*/
