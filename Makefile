@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/15 16:29:54 by averheij      #+#    #+#                  #
-#    Updated: 2021/03/08 13:28:29 by dries            ###   ########.fr        #
+#    Updated: 2021/03/09 12:48:39 by dries            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,8 +34,16 @@ CXX			=	clang++
 
 all: $(CONTAINERS)
 
+#test_%.o: test_%.cpp
+	#$(CXX) $(CFLAGS) -c $< -o $@ $(INCL)
+
 %.o: %.cpp
+ifeq ($(FT), 1)
+	$(CXX) $(FTFLAGS) $(CFLAGS) -c $< -o $@ $(INCL)
+else
 	$(CXX) $(CFLAGS) -c $< -o $@ $(INCL)
+endif
+
 
 $(CONTAINERS): $(OFILES)
 ifeq ($(MAIN), 1)

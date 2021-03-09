@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/08 18:23:27 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/09 14:58:23 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,7 +271,7 @@ struct pair {
 
 template<class T>
 pair<T>		create_list_internal(std::list<T> *std, ft::list<T> *ft, bool empty) {
-	int		size;
+	size_t	size;
 	T		val;
 	pair<T>	res;
 
@@ -292,7 +292,7 @@ pair<T>		create_list_internal(std::list<T> *std, ft::list<T> *ft, bool empty) {
 }
 
 template<class T>
-pair<T>		create_list_size_internal(std::list<T> *std, ft::list<T> *ft, int size) {
+pair<T>		create_list_size_internal(std::list<T> *std, ft::list<T> *ft, size_t size) {
 	T		val;
 	pair<T>	res;
 
@@ -318,8 +318,6 @@ template<class T>
 void		test_empty_constructor(data<T> *d) {
 	std::list<T> 	*std;
 	ft::list<T> 	*ft;
-	bool			r1;
-	bool			r2;
 
 	print_title("Empty Constructor");
 	std = new std::list<T>();
@@ -1308,7 +1306,7 @@ void		test_element_access(data<T> *d) {
 /*-----------------------------------MODIFIER TESTS-----------------------------------*/
 
 template<class T>
-void		test_push_front(data<T> *d, bool empty) {
+void		test_push_front(data<T> *d) {
 	unsigned char	size;
 	T				val;
 	std::list<T> 	*std;
@@ -1375,7 +1373,7 @@ void		test_push_front(data<T> *d, bool empty) {
 }
 
 template<class T>
-void		test_push_back(data<T> *d, bool empty) {
+void		test_push_back(data<T> *d) {
 	unsigned char	size;
 	T				val;
 	std::list<T> 	*std;
@@ -2388,7 +2386,7 @@ void		test_swap(data<T> *d)  {
 template<class T>
 void		test_resize(data<T> *d, bool empty) {
 	
-	int 			size;
+	size_t 			size;
 	T				val;
 	std::list<T> 	*std;
 	ft::list<T> 	*ft;
@@ -2478,7 +2476,7 @@ void		test_resize(data<T> *d, bool empty) {
 template<class T>
 void		test_clear(data<T> *d, bool empty) {
 	
-	int 			size;
+	size_t 			size;
 	T				val;
 	std::list<T> 	*std;
 	ft::list<T> 	*ft;
@@ -2509,8 +2507,8 @@ void		test_clear(data<T> *d, bool empty) {
 
 template<class T>
 void		test_modifiers(data<T> *d) {
-	test_push_front(d, 0);
-	test_push_back(d, 0);
+	test_push_front(d);
+	test_push_back(d);
 	test_pop_front(d, 0);
 	test_pop_back(d, 0);
 	test_assign_fill(d, 0);
@@ -2675,12 +2673,10 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 }
 template<class T>
 void		test_splice_single(data<T> *d, bool emptydest) {
-	unsigned char	size;
-	T				val;
-	std::list<T> 	*stdsrc;
-	std::list<T> 	*std;
-	ft::list<T> 	*ftsrc;
-	ft::list<T> 	*ft;
+	std::list<T> 	*stdsrc = NULL;
+	std::list<T> 	*std = NULL;
+	ft::list<T> 	*ftsrc = NULL;
+	ft::list<T> 	*ft = NULL;
 
 	create_list(std, ft, emptydest);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
@@ -2694,7 +2690,7 @@ void		test_splice_single(data<T> *d, bool emptydest) {
 	incr_score(d);
 
 	create_list(std, ft, emptydest);
-	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	create_list(stdsrc, ftsrc, 0);
 	std::cout << "slice from:\trandom filled list size:" << stdsrc->size() << "" << std::endl;
 	std::cout << "testing:\tlist.slice(list.end(), list2, list2.begin())" << std::endl;
@@ -2713,7 +2709,7 @@ void		test_splice_single(data<T> *d, bool emptydest) {
 	}
 
 	create_list(std, ft, 0);
-	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	create_list_size(stdsrc, ftsrc, 1);
 	std::cout << "slice from:\trandom filled list size:" << stdsrc->size() << "" << std::endl;
 	std::cout << "testing:\tlist.slice(list.begin(), list2, list2.begin())" << std::endl;
@@ -2724,7 +2720,7 @@ void		test_splice_single(data<T> *d, bool emptydest) {
 	incr_score(d);
 
 	create_list_size(std, ft, 1);
-	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	create_list(stdsrc, ftsrc, 0);
 	std::cout << "slice from:\trandom filled list size:" << stdsrc->size() << "" << std::endl;
 	std::cout << "testing:\tlist.slice(list.begin(), list2, list2.begin())" << std::endl;
@@ -2735,7 +2731,7 @@ void		test_splice_single(data<T> *d, bool emptydest) {
 	incr_score(d);
 
 	create_list_size(std, ft, 1);
-	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	create_list(stdsrc, ftsrc, 0);
 	std::cout << "slice from:\trandom filled list size:" << stdsrc->size() << "" << std::endl;
 	std::cout << "testing:\tlist.slice(list.end(), list2, list2.begin())" << std::endl;
@@ -2746,7 +2742,7 @@ void		test_splice_single(data<T> *d, bool emptydest) {
 	incr_score(d);
 
 	create_list(std, ft, 0);
-	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	create_list(stdsrc, ftsrc, 0);
 	std::cout << "slice from:\trandom filled list size:" << stdsrc->size() << "" << std::endl;
 	std::cout << "testing:\tlist.slice(list.begin(), list2, ++list2.begin())" << std::endl;
@@ -2757,7 +2753,7 @@ void		test_splice_single(data<T> *d, bool emptydest) {
 	incr_score(d);
 
 	create_list(std, ft, 0);
-	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	create_list(stdsrc, ftsrc, 0);
 	std::cout << "slice from:\trandom filled list size:" << stdsrc->size() << "" << std::endl;
 	std::cout << "testing:\tlist.slice(list.begin(), list2, --list2.end())" << std::endl;
@@ -2775,10 +2771,10 @@ void		test_splice_single(data<T> *d, bool emptydest) {
 
 template<class T>
 void		test_splice_range(data<T> *d, bool empty) {
-	std::list<T> 	*stdsrc;
-	std::list<T> 	*std;
-	ft::list<T> 	*ftsrc;
-	ft::list<T> 	*ft;
+	std::list<T> 	*stdsrc = NULL;
+	std::list<T> 	*std = NULL;
+	ft::list<T> 	*ftsrc = NULL;
+	ft::list<T> 	*ft = NULL;
 
 	create_list(std, ft, empty);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
@@ -2822,8 +2818,8 @@ void		test_splice_range(data<T> *d, bool empty) {
 
 template<class T>
 void		test_remove(data<T> *d, bool empty, bool noadd) {
-	std::list<T> 	*std;
-	ft::list<T> 	*ft;
+	std::list<T> 	*std = NULL;
+	ft::list<T> 	*ft = NULL;
 	typename std::list<T>::iterator	stdi;
 	typename ft::list<T>::iterator	fti;
 	T				val;
@@ -2922,8 +2918,8 @@ struct is_odd {
 
 template<class T>
 void		test_remove_if(data<T> *d, bool empty, bool noadd) {
-	std::list<T> 	*std;
-	ft::list<T> 	*ft;
+	std::list<T> 	*std = NULL;
+	ft::list<T> 	*ft = NULL;
 	typename std::list<T>::iterator	stdi;
 	typename ft::list<T>::iterator	fti;
 	T				val;
@@ -3093,8 +3089,8 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 
 template<class T>
 void		test_unique(data<T> *d, bool empty, bool noadd) {
-	std::list<T> 	*std;
-	ft::list<T> 	*ft;
+	std::list<T> 	*std = NULL;
+	ft::list<T> 	*ft = NULL;
 	typename std::list<T>::iterator	stdi;
 	typename ft::list<T>::iterator	fti;
 	T				val;
@@ -3206,8 +3202,8 @@ struct is_equal {
 
 template<class T>
 void		test_unique_pred(data<T> *d, bool empty, bool noadd) {
-	std::list<T> 	*std;
-	ft::list<T> 	*ft;
+	std::list<T> 	*std = NULL;
+	ft::list<T> 	*ft = NULL;
 	typename std::list<T>::iterator	stdi;
 	typename ft::list<T>::iterator	fti;
 	T				val;
@@ -3313,8 +3309,8 @@ void		test_unique_pred(data<T> *d, bool empty, bool noadd) {
 
 template<class T>
 void		test_sort(data<T> *d, bool empty) {
-	std::list<T>	*std;
-	ft::list<T>		*ft;
+	std::list<T>	*std = NULL;
+	ft::list<T>		*ft = NULL;
 
 	//create_list_size(std, ft, 5);
 	create_list(std, ft, empty);
@@ -3335,6 +3331,27 @@ void		test_sort(data<T> *d, bool empty) {
 	delete ft;
 }
 
+template<class T>
+bool		compare_func ( const T& first, const T& second ) {
+  return ( first < second );
+}
+
+template<class T>
+void		test_sort_compare(data<T> *d, bool empty) {
+	std::list<T>	*std = NULL;
+	ft::list<T>		*ft = NULL;
+
+	create_list(std, ft, empty);
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "testing:\tlist.sort(compare)" << std::endl;
+	std->sort(compare_func<T>);
+	ft->sort(compare_func<T>);
+	equal(std, ft);
+	incr_score(d);
+
+	delete std;
+	delete ft;
+}
 
 
 template<class T>
@@ -3376,6 +3393,8 @@ void		test_operations(data<T> *d) {
 	test_sort(d, 0);
 	test_sort(d, 1);
 	print_title("sort [comp]");
+	test_sort_compare(d, 0);
+	test_sort_compare(d, 1);
 
 }
 

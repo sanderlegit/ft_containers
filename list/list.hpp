@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/08 18:23:52 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/09 14:57:55 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,12 +108,16 @@ namespace ft {
 
 					ListBiIterator		operator++(int n) {		//i++
 						ListBiIterator	ret(*this);
+
+						(void)n;
 						++(*this);
 						return ret;
 					}
 
 					ListBiIterator		operator--(int n) {		//i--
 						ListBiIterator	ret(*this);
+
+						(void)n;
 						--(*this);
 						return ret;
 					}
@@ -184,12 +188,16 @@ namespace ft {
 
 					ReverseListBiIterator		operator++(int n) {		//i++
 						ReverseListBiIterator	ret(*this);
+
+						(void)n;
 						++(*this);
 						return ret;
 					}
 
 					ReverseListBiIterator		operator--(int n) {		//i--
 						ReverseListBiIterator	ret(*this);
+
+						(void)n;
 						--(*this);
 						return ret;
 					}
@@ -312,7 +320,7 @@ namespace ft {
 			template <class InputIterator>
 			list(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
 					typename enable_if<is_iterator<typename InputIterator::iterator_category>::result>::type* = NULL)
-			  					: alloc(alloc), _size(0), head(NULL), tail(NULL), base(new node_type()) {
+			  					: _size(0), alloc(alloc), head(NULL), tail(NULL), base(new node_type()) {
 				while (first != last) {
 					push_back(*first);
 					first++;
@@ -970,13 +978,17 @@ namespace ft {
 			 *	The function does nothing if (&x == this).	*/
 
 			void				merge (list& x) {
+				node_type	*lptr;
+				node_type	*xptr;
+
+				(void)x;
 
 			}
 
-			template <class Compare>
-			void				merge (list& x, Compare comp) {
+			//template <class Compare>
+			//void				merge (list& x, Compare comp) {
 
-			}
+			//}
 
 			/*	Sorts the elements in the list, altering their position within the container.
 			 *	The sorting is performed by applying an algorithm that uses either operator< 
@@ -993,7 +1005,6 @@ namespace ft {
 				size_type	highest_sort;
 				node_type	*ptr;
 				node_type	*tmp;
-				iterator	bi;
 
 				unsorted = _size;
 				//debug();
@@ -1019,7 +1030,32 @@ namespace ft {
 
 			template <class Compare>
 			void				sort (Compare comp) {
+				size_type	unsorted;
+				size_type	highest_sort;
+				node_type	*ptr;
+				node_type	*tmp;
 
+				unsorted = _size;
+				//debug();
+				while (unsorted > 1) {
+					highest_sort = 0;
+					ptr = head->next;
+					for (size_type i = 1; i != unsorted; ++i) {
+						//debug_node("prev", ptr->prev);
+						//debug_node("ptr", ptr);
+						//if (comp(*(ptr->prev->data), *(ptr->data))) {
+						if (comp(*(ptr->data), *(ptr->prev->data))) {
+							tmp = ptr->next;
+							//swap(ptr->prev, ptr);
+							swap_adj(ptr);
+							highest_sort = i;
+							ptr = tmp;
+						} else
+							ptr = ptr->next;
+						//debug();
+					}
+					unsorted = highest_sort;
+				}
 			}
 
 /*-------------------------------------------OTHER-------------------------------------------*/
