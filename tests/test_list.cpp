@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/09 14:58:23 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/09 15:43:59 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ T			randomize(void) {
 	void	*ptr;
 
 	ptr = reinterpret_cast<void*>(&val);
-	memset(ptr, (unsigned char)(rand() % 253 + 3), sizeof(T));
+	memset(ptr, (unsigned char)((rand() % 253) + 3), sizeof(T));
 	return val;
 }
 
@@ -278,7 +278,7 @@ pair<T>		create_list_internal(std::list<T> *std, ft::list<T> *ft, bool empty) {
 	if (empty)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -342,7 +342,7 @@ void		test_fill_constructor(data<T> *d, bool empty) {
 	if (empty)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	val = randomize<T>();
 	std = new std::list<T>(size, val);
 	ft = new ft::list<T>(size, val);
@@ -366,7 +366,7 @@ void		test_range_constructor(data<T> *d, bool empty) {
 	if (empty)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	src = new std::list<T>();
 	for (size_t i = 0; i < size; i++)
 		src->push_back(randomize<T>());
@@ -397,7 +397,7 @@ void		test_copy_constructor(data<T> *d, bool empty) {
 	if (empty)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -445,7 +445,7 @@ void		test_equals_operator(data<T> *d, bool empty) {
 	if (empty)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -493,7 +493,7 @@ void		test_begin(data<T> *d, bool empty) {
 	if (empty) {
 		size = 0;
 	} else {
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	}
 	//val = randomize<T>();
 	//std = new std::list<T>(size, val);
@@ -638,7 +638,7 @@ void		test_rbegin(data<T> *d, bool empty) {
 	if (empty) {
 		size = 0;
 	} else {
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	}
 	//val = randomize<T>();
 	//std = new std::list<T>(size, val);
@@ -782,7 +782,7 @@ void		test_end(data<T> *d, bool empty) {
 	if (empty) {
 		size = 0;
 	} else {
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	}
 	//val = randomize<T>();
 	//std = new std::list<T>(size, val);
@@ -931,7 +931,7 @@ void		test_rend(data<T> *d, bool empty) {
 	if (empty) {
 		size = 0;
 	} else {
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	}
 	//val = randomize<T>();
 	//std = new std::list<T>(size, val);
@@ -1086,7 +1086,7 @@ void		test_empty(data<T> *d, bool empty) {
 	if (empty) {
 		size = 0;
 	} else {
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	}
 	std = new std::list<T>(size, val);
 	ft = new ft::list<T>(size, val);
@@ -1116,7 +1116,7 @@ void		test_size(data<T> *d, bool empty) {
 	if (empty) {
 		size = 0;
 	} else {
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	}
 	std = new std::list<T>(size, val);
 	ft = new ft::list<T>(size, val);
@@ -1183,7 +1183,7 @@ void		test_front(data<T> *d, bool empty) {
 	if (empty) {
 		size = 0;
 	} else {
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	}
 	std = new std::list<T>(size, val);
 	ft = new ft::list<T>(size, val);
@@ -1213,7 +1213,7 @@ void		test_back(data<T> *d, bool empty) {
 	if (empty) {
 		size = 0;
 	} else {
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	}
 	std = new std::list<T>(size, val);
 	ft = new ft::list<T>(size, val);
@@ -1243,7 +1243,7 @@ void		test_front_const(data<T> *d, bool empty) {
 	if (empty) {
 		size = 0;
 	} else {
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	}
 	std = new std::list<T>(size, val);
 	ft = new ft::list<T>(size, val);
@@ -1276,7 +1276,7 @@ void		test_back_const(data<T> *d, bool empty) {
 	if (empty) {
 		size = 0;
 	} else {
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	}
 	std = new std::list<T>(size, val);
 	ft = new ft::list<T>(size, val);
@@ -1322,7 +1322,7 @@ void		test_push_front(data<T> *d) {
 	//if (empty)
 		//size = 0;
 	//else
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	std::cout << "testing on:\tempty list" << std::endl;
@@ -1389,7 +1389,7 @@ void		test_push_back(data<T> *d) {
 	//if (empty)
 		//size = 0;
 	//else
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	std::cout << "testing on:\tempty list" << std::endl;
@@ -1456,7 +1456,7 @@ void		test_pop_front(data<T> *d, bool empty) {
 	if (empty)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -1526,7 +1526,7 @@ void		test_pop_back(data<T> *d, bool empty) {
 	if (empty)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -1590,13 +1590,13 @@ void		test_assign_fill(data<T> *d, bool empty) {
 	if (empty)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	val = randomize<T>();
 	std = new std::list<T>(size, val);
 	ft = new ft::list<T>(size, val);
 	std::cout << "testing on:\tnew ft::list<T>(" << (int)size << ", " << val << ")" << std::endl;
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	val = randomize<T>();
 	std::cout << "  list.assign(" << (int)size << ", " << val << ")" << std::endl;
 	std->assign(size, val);
@@ -1619,7 +1619,7 @@ void		test_assign_range(data<T> *d, bool empty) {
 	if (empty)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	src = new std::list<T>();
 	for (size_t i = 0; i < size; i++)
 		src->push_back(randomize<T>());
@@ -1649,7 +1649,7 @@ void		test_insert_single(data<T> *d) {
 	typename ft::list<T>::iterator	r2;
 
 	print_title("insert [single]");
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -1667,7 +1667,7 @@ void		test_insert_single(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
@@ -1683,7 +1683,7 @@ void		test_insert_single(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
@@ -1699,7 +1699,7 @@ void		test_insert_single(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
@@ -1761,7 +1761,7 @@ void		test_insert_fill(data<T> *d) {
 	ft::list<T> 	*ft;
 
 	print_title("insert [fill]");
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -1770,7 +1770,7 @@ void		test_insert_fill(data<T> *d) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	val = randomize<T>();
 	std::cout << "  list.insert(list->begin(), " << (int)size << ", " << val << ")" << std::endl;
 	std->insert(std->begin(), size, val);
@@ -1778,14 +1778,14 @@ void		test_insert_fill(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	val = randomize<T>();
 	std::cout << "  list.insert(++list->begin(), " << (int)size << ", " << val << ")" << std::endl;
 	std->insert(++std->begin(), size, val);
@@ -1793,14 +1793,14 @@ void		test_insert_fill(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	val = randomize<T>();
 	std::cout << "  list.insert(--list->end(), " << (int)size << ", " << val << ")" << std::endl;
 	std->insert(--std->end(), size, val);
@@ -1808,14 +1808,14 @@ void		test_insert_fill(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	val = randomize<T>();
 	std::cout << "  list.insert(list->end(), " << (int)size << ", " << val << ")" << std::endl;
 	std->insert(std->end(), size, val);
@@ -1830,7 +1830,7 @@ void		test_insert_fill(data<T> *d) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	val = randomize<T>();
 	std::cout << "  list.insert(list->end(), " << (int)size << ", " << val << ")" << std::endl;
 	std->insert(std->end(), size, val);
@@ -1847,7 +1847,7 @@ void		test_insert_fill(data<T> *d) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	val = randomize<T>();
 	std::cout << "  list.insert(list->begin(), " << (int)size << ", " << val << ")" << std::endl;
 	std->insert(std->begin(), size, val);
@@ -1855,7 +1855,7 @@ void		test_insert_fill(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
@@ -1870,7 +1870,7 @@ void		test_insert_fill(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -1933,7 +1933,7 @@ void		test_insert_range(data<T> *d) {
 	ft::list<T> 	*ft;
 
 	print_title("insert [range]");
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -1942,7 +1942,7 @@ void		test_insert_range(data<T> *d) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -1959,14 +1959,14 @@ void		test_insert_range(data<T> *d) {
 	delete stdsrc;
 	delete ftsrc;
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -1983,14 +1983,14 @@ void		test_insert_range(data<T> *d) {
 	delete stdsrc;
 	delete ftsrc;
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2007,14 +2007,14 @@ void		test_insert_range(data<T> *d) {
 	delete stdsrc;
 	delete ftsrc;
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2038,7 +2038,7 @@ void		test_insert_range(data<T> *d) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2064,7 +2064,7 @@ void		test_insert_range(data<T> *d) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2146,7 +2146,7 @@ void		test_erase_single(data<T> *d) {
 	typename ft::list<T>::iterator	r2;
 
 	print_title("erase [single]");
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2163,7 +2163,7 @@ void		test_erase_single(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2180,7 +2180,7 @@ void		test_erase_single(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2209,7 +2209,7 @@ void		test_erase_range(data<T> *d) {
 	typename ft::list<T>::iterator	r2;
 
 	print_title("erase [range]");
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2224,7 +2224,7 @@ void		test_erase_range(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2249,7 +2249,7 @@ void		test_erase_range(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2266,7 +2266,7 @@ void		test_erase_range(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
-	size = rand() % 253 + 10;
+	size = (rand() % 253) + 10;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2305,7 +2305,7 @@ void		test_swap(data<T> *d)  {
 	typename std::list<T>::iterator	stdi;
 
 	print_title("swap");
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2314,7 +2314,7 @@ void		test_swap(data<T> *d)  {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2397,7 +2397,7 @@ void		test_resize(data<T> *d, bool empty) {
 	if (empty)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
@@ -2418,7 +2418,7 @@ void		test_resize(data<T> *d, bool empty) {
 
 	std = new std::list<T>();
 	ft = new ft::list<T>();
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
@@ -2437,7 +2437,7 @@ void		test_resize(data<T> *d, bool empty) {
 
 	std = new std::list<T>();
 	ft = new ft::list<T>();
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
@@ -2454,7 +2454,7 @@ void		test_resize(data<T> *d, bool empty) {
 
 	std = new std::list<T>();
 	ft = new ft::list<T>();
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
@@ -2487,7 +2487,7 @@ void		test_clear(data<T> *d, bool empty) {
 	if (empty)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
@@ -2541,7 +2541,7 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 	if (emptydest)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2553,7 +2553,7 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 	if (emptysrc)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	val = randomize<T>();
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
@@ -2573,7 +2573,7 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 	if (emptydest)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2585,7 +2585,7 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 	if (emptysrc)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	val = randomize<T>();
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
@@ -2613,7 +2613,7 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 	if (emptydest)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2622,7 +2622,7 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	size = rand() % 253 + 3;
+	size = (rand() % 253) + 3;
 	stdsrc = new std::list<T>();
 	ftsrc = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2641,7 +2641,7 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 	if (emptydest)
 		size = 0;
 	else
-		size = rand() % 253 + 3;
+		size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -3353,6 +3353,85 @@ void		test_sort_compare(data<T> *d, bool empty) {
 	delete ft;
 }
 
+template<class T>
+void		test_merge(data<T> *d, bool empty) {
+	std::list<T>	*std = NULL;
+	ft::list<T>		*ft = NULL;
+	std::list<T>	*stdsrc = NULL;
+	ft::list<T>		*ftsrc = NULL;
+	size_t			size;
+
+	if (empty)
+		size = 0;
+	else
+		size = (rand() % 253) + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size;) {
+		if (rand() % 2) {
+			std->push_back(i);
+			ft->push_back(i);
+		} else {
+			stdsrc->push_back(i);
+			ftsrc->push_back(i);
+		}
+		if (rand() % 3)
+			++i;
+	}
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "merging from:\trandom filled list size:" << stdsrc->size() << "" << std::endl;
+	std::cout << "testing:\tlist.merge(list2)" << std::endl;
+	std->merge(*stdsrc);
+	ft->merge(*ftsrc);
+	equal(std, ft);
+	incr_score(d);
+
+	delete std;
+	delete ft;
+}
+
+template<class T>
+void		test_merge_compare(data<T> *d, bool empty) {
+	std::list<T>	*std = NULL;
+	ft::list<T>		*ft = NULL;
+	std::list<T>	*stdsrc = NULL;
+	ft::list<T>		*ftsrc = NULL;
+	size_t			size;
+
+	if (empty)
+		size = 0;
+	else
+		size = (rand() % 253) + 3;
+	std = new std::list<T>();
+	ft = new ft::list<T>();
+	stdsrc = new std::list<T>();
+	ftsrc = new ft::list<T>();
+	for (size_t i = 0; i < size;) {
+		if (rand() % 2) {
+			std->push_back(i);
+			ft->push_back(i);
+		} else {
+			stdsrc->push_back(i);
+			ftsrc->push_back(i);
+		}
+		if (rand() % 3)
+			++i;
+	}
+	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
+	std::cout << "merging from:\trandom filled list size:" << stdsrc->size() << "" << std::endl;
+	std::cout << "testing:\tlist.merge(list2, compare_func)" << std::endl;
+	std->merge(*stdsrc, compare_func<T>);
+	ft->merge(*ftsrc, compare_func<T>);
+	equal(std, ft);
+	incr_score(d);
+
+	delete std;
+	delete ft;
+}
+
+
 
 template<class T>
 void		test_operations(data<T> *d) {
@@ -3388,8 +3467,12 @@ void		test_operations(data<T> *d) {
 	test_unique_pred(d, 1, 0);
 	test_unique_pred(d, 1, 1);
 	print_title("merge [void]");
+	test_merge(d, 0);
+	test_merge(d, 1);
 	print_title("merge [comp]");
-	print_title("sort [void]");
+	test_merge_compare(d, 0);
+	test_merge_compare(d, 1);
+	print_title("sort [void]");		//TODO does not check sort stability
 	test_sort(d, 0);
 	test_sort(d, 1);
 	print_title("sort [comp]");

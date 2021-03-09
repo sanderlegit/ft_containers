@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/09 14:57:55 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/09 15:38:43 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -980,15 +980,91 @@ namespace ft {
 			void				merge (list& x) {
 				node_type	*lptr;
 				node_type	*xptr;
+				node_type	*tmp;
 
-				(void)x;
-
+				lptr = head;
+				xptr = x.head;
+				//debug();
+				//x.debug();
+				while (x._size) {
+					if (lptr != base) {
+						//debug_node("xptr", xptr);
+						//debug_node("lptr", lptr);
+						if (*(xptr->data) < *(lptr->data)) {
+							tmp = xptr->next;
+							lptr->prev->next = xptr;
+							if (lptr == head)
+								head = xptr;
+							xptr->prev = lptr->prev;
+							xptr->next = lptr;
+							lptr->prev = xptr;
+							_size++;
+							x._size--;
+							xptr = tmp;
+						} else
+							lptr = lptr->next;
+					} else {
+						tmp = xptr->next;
+						lptr->prev->next = xptr;
+						tail = xptr;
+						xptr->prev = lptr->prev;
+						xptr->next = lptr;
+						lptr->prev = xptr;
+						_size++;
+						x._size--;
+						xptr = tmp;
+					}
+				}
+				x.head = NULL;
+				x.tail = NULL;
+				x.base->next = NULL;
+				x.base->prev = NULL;
 			}
 
-			//template <class Compare>
-			//void				merge (list& x, Compare comp) {
+			template <class Compare>
+			void				merge (list& x, Compare comp) {
+				node_type	*lptr;
+				node_type	*xptr;
+				node_type	*tmp;
 
-			//}
+				lptr = head;
+				xptr = x.head;
+				//debug();
+				//x.debug();
+				while (x._size) {
+					if (lptr != base) {
+						//debug_node("xptr", xptr);
+						//debug_node("lptr", lptr);
+						if (comp(*(xptr->data), *(lptr->data))) {
+							tmp = xptr->next;
+							lptr->prev->next = xptr;
+							if (lptr == head)
+								head = xptr;
+							xptr->prev = lptr->prev;
+							xptr->next = lptr;
+							lptr->prev = xptr;
+							_size++;
+							x._size--;
+							xptr = tmp;
+						} else
+							lptr = lptr->next;
+					} else {
+						tmp = xptr->next;
+						lptr->prev->next = xptr;
+						tail = xptr;
+						xptr->prev = lptr->prev;
+						xptr->next = lptr;
+						lptr->prev = xptr;
+						_size++;
+						x._size--;
+						xptr = tmp;
+					}
+				}
+				x.head = NULL;
+				x.tail = NULL;
+				x.base->next = NULL;
+				x.base->prev = NULL;
+			}
 
 			/*	Sorts the elements in the list, altering their position within the container.
 			 *	The sorting is performed by applying an algorithm that uses either operator< 
@@ -1014,7 +1090,7 @@ namespace ft {
 					for (size_type i = 1; i != unsorted; ++i) {
 						//debug_node("prev", ptr->prev);
 						//debug_node("ptr", ptr);
-						if (*(ptr->prev->data) > *(ptr->data)) {
+						if (*(ptr->data) < *(ptr->prev->data)) {
 							tmp = ptr->next;
 							//swap(ptr->prev, ptr);
 							swap_adj(ptr);

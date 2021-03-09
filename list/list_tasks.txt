@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/18 11:56:11 by averheij      #+#    #+#                  #
-#    Updated: 2021/03/09 12:34:04 by dries            ###   ########.fr        #
+#    Updated: 2021/03/09 15:43:26 by dries            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,13 +48,14 @@ splice				Transfer elements from list to list (public member function )				-writ
 remove				Remove elements with specific value (public member function )				-written,tested
 remove_if			Remove elements fulfilling condition (public member function template )		-written,tested
 unique				Remove duplicate values (public member function )							-written,tested
-merge				Merge sorted lists (public member function )
+merge				Merge sorted lists (public member function )								-written,tested
 sort				Sort elements in container (public member function )						-written,tested
 	to check relative order maintain
 		sort with a struct pair, sorting with one side
 			add an overload for <, >, ==
 		add some duplicate elements (sort side), with unique unsorted side
 		check as usual
+	but i probably wont because i know bubble sort is stable
 reverse				Reverse the order of elements (public member function )
 
 	Non-member function overloads:
