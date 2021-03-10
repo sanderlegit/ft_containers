@@ -1,14 +1,15 @@
 # **************************************************************************** #
 #                                                                              #
-#                                                         ::::::::             #
-#    list_tasks.txt                                     :+:      :+:    :+:    #
-#                                                      +:+                     #
-#    By: averheij <averheij@student.codam.nl>         +#+                      #
-#                                                    +#+                       #
-#    Created: 2021/02/18 11:56:11 by averheij      #+#    #+#                  #
-#    Updated: 2021/03/09 16:15:33 by dries            ###   ########.fr        #
+#                                                        ..eeeee..             #
+#    list_tasks.txt                                    e8'   8   '8e           #
+#                                                     d8     8     8b          #
+#    By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8          #
+#                                                     Y8 .e* 8 *e. 8P          #
+#    Created: 2021/02/18 11:56:11 by dries             *8*   8   *8*           #
+#    Updated: 2021/03/10 17:40:17 by dries               **ee8ee**             #
 #                                                                              #
 # **************************************************************************** #
+
 
 states 	[proto, partial, written, buggy, tested]
 
