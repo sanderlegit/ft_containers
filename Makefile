@@ -6,7 +6,7 @@
 #    By: averheij <averheij@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/02/15 16:29:54 by averheij      #+#    #+#                  #
-#    Updated: 2021/03/09 16:16:17 by dries            ###   ########.fr        #
+#    Updated: 2021/03/10 11:50:48 by dries            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,10 +38,10 @@ all: $(CONTAINERS)
 	#$(CXX) $(CFLAGS) -c $< -o $@ $(INCL)
 
 %.o: %.cpp
-ifeq ($(FT), 1)
-	$(CXX) $(FTFLAGS) $(CFLAGS) -c $< -o $@ $(INCL)
-else
+ifeq ($(NO_FT), 1)
 	$(CXX) $(CFLAGS) -c $< -o $@ $(INCL)
+else
+	$(CXX) $(FTFLAGS) $(CFLAGS) -c $< -o $@ $(INCL)
 endif
 
 
