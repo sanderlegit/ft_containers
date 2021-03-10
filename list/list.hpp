@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/10 12:44:21 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/10 13:42:11 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -389,7 +389,7 @@ namespace ft {
 				return iterator(base);
 			}
 
-			const_iterator			end() const {	//TODO check that this is expected behaviour i.e. that stl does not just seg fault
+			const_iterator			end() const {
 				return const_iterator(base);
 			}
 
@@ -412,7 +412,7 @@ namespace ft {
 				return reverse_iterator(base);
 			}
 
-			const_reverse_iterator			rend() const {	//TODO check that this is expected behaviour i.e. that stl does not just seg fault
+			const_reverse_iterator			rend() const {
 				return const_reverse_iterator(base);
 			}
 
@@ -625,15 +625,9 @@ namespace ft {
 			iterator			erase (iterator position) {
 				node_type		*ptr;
 
-				//ptr = base;
-				//while (position.node != ptr)
-					//ptr = ptr->next;
-				//ptr = iton(position);
 				ptr = position.node;
 				++position;
 				delete_node(ptr);
-				//std::cout << "position:" << std::endl;
-				//debug_node(position.node);
 				return position;
 			}
 
@@ -710,7 +704,6 @@ namespace ft {
 
 				if (x._size == 0)
 					return;
-				//local_tail = iton(position);
 				local_tail = position.node;
 				if ((local_tail == base || local_tail == NULL) && head == NULL) {	//uninitialized
 					local_head = base;
@@ -744,11 +737,7 @@ namespace ft {
 
 				if (x._size == 0)
 					return;
-				//splice_me = x.base;
-				//while (i.node != splice_me)
-					//splice_me = splice_me->next;
 				splice_me = i.node;
-				//local_tail = iton(position);
 				local_tail = position.node;
 				if ((local_tail == base || local_tail == NULL) && head == NULL) {	//uninitialized
 					local_head = base;
@@ -786,11 +775,6 @@ namespace ft {
 					tail = local_tail->prev;
 				++_size;
 			}
-
-			//void				splice (iterator position, list& x, iterator first, iterator last) {
-				//for (; first != last; ++first)
-					//splice(position, x, first);
-			//}
 
 			void				splice (iterator position, list& x, iterator first, iterator last) {
 				node_type*	local_head;
@@ -848,10 +832,6 @@ namespace ft {
 				if (local_head == tail)
 					tail = local_tail->prev;
 				_size += i;
-				//std::cout << "x" << std::endl;
-				//x.debug();
-				//std::cout << "this" << std::endl;
-				//debug();
 			}
 
 			/*	Removes from the container all the elements that compare equal to val. 
@@ -860,10 +840,7 @@ namespace ft {
 
 			void				remove (const value_type& val) {
 				node_type*		ptr;
-				//node_type*		next;
-				//node_type*		prev;
 
-				//debug();
 				if (_size == 0)
 					return;
 				for (iterator i = begin(); i != end();)
@@ -871,16 +848,8 @@ namespace ft {
 						ptr = base;
 						while (i.node != ptr)
 							ptr = ptr->next;
-						//delete_node(i.node);
 						++i;
-						//debug_node("del", ptr);
-						//prev = ptr->prev;
-						//next = ptr->next;
-						//debug_node("dpr", prev);
-						//debug_node("dnx", next);
 						delete_node(ptr);
-						//debug_node("dpr", prev);
-						//debug_node("dnx", next);
 					} else
 						++i;
 			}
@@ -895,8 +864,6 @@ namespace ft {
 			template <class Predicate>
 			void				remove_if (Predicate pred) {
 				node_type*		ptr;
-				//node_type*		next;
-				//node_type*		prev;
 
 				if (_size == 0)
 					return;
@@ -905,16 +872,8 @@ namespace ft {
 						ptr = base;
 						while (i.node != ptr)
 							ptr = ptr->next;
-						//delete_node(i.node);
 						++i;
-						//debug_node("del", ptr);
-						//prev = ptr->prev;
-						//next = ptr->next;
-						//debug_node("dpr", prev);
-						//debug_node("dnx", next);
 						delete_node(ptr);
-						//debug_node("dpr", prev);
-						//debug_node("dnx", next);
 					} else
 						++i;
 				}
@@ -980,8 +939,6 @@ namespace ft {
 
 				lptr = head;
 				xptr = x.head;
-				//debug();
-				//x.debug();
 				if (_size == 0 && x._size) {
 					head = x.head;
 					tail = x.tail;
@@ -994,8 +951,6 @@ namespace ft {
 				}
 				while (x._size) {
 					if (lptr != base) {
-						//debug_node("xptr", xptr);
-						//debug_node("lptr", lptr);
 						if (*(xptr->data) < *(lptr->data)) {
 							tmp = xptr->next;
 							lptr->prev->next = xptr;
@@ -1035,8 +990,6 @@ namespace ft {
 
 				lptr = head;
 				xptr = x.head;
-				//debug();
-				//x.debug();
 				if (_size == 0 && x._size) {
 					head = x.head;
 					tail = x.tail;
@@ -1049,8 +1002,6 @@ namespace ft {
 				}
 				while (x._size) {
 					if (lptr != base) {
-						//debug_node("xptr", xptr);
-						//debug_node("lptr", lptr);
 						if (comp(*(xptr->data), *(lptr->data))) {
 							tmp = xptr->next;
 							lptr->prev->next = xptr;
@@ -1099,22 +1050,17 @@ namespace ft {
 				node_type	*tmp;
 
 				unsorted = _size;
-				//debug();
 				while (unsorted > 1) {
 					highest_sort = 0;
 					ptr = head->next;
 					for (size_type i = 1; i != unsorted; ++i) {
-						//debug_node("prev", ptr->prev);
-						//debug_node("ptr", ptr);
 						if (*(ptr->data) < *(ptr->prev->data)) {
 							tmp = ptr->next;
-							//swap(ptr->prev, ptr);
 							swap_adj(ptr);
 							highest_sort = i;
 							ptr = tmp;
 						} else
 							ptr = ptr->next;
-						//debug();
 					}
 					unsorted = highest_sort;
 				}
@@ -1128,23 +1074,17 @@ namespace ft {
 				node_type	*tmp;
 
 				unsorted = _size;
-				//debug();
 				while (unsorted > 1) {
 					highest_sort = 0;
 					ptr = head->next;
 					for (size_type i = 1; i != unsorted; ++i) {
-						//debug_node("prev", ptr->prev);
-						//debug_node("ptr", ptr);
-						//if (comp(*(ptr->prev->data), *(ptr->data))) {
 						if (comp(*(ptr->data), *(ptr->prev->data))) {
 							tmp = ptr->next;
-							//swap(ptr->prev, ptr);
 							swap_adj(ptr);
 							highest_sort = i;
 							ptr = tmp;
 						} else
 							ptr = ptr->next;
-						//debug();
 					}
 					unsorted = highest_sort;
 				}
@@ -1276,15 +1216,6 @@ namespace ft {
 			}
 
 			void					delete_node(node_type *del) {
-				//node_type *prev = del->prev;
-				//node_type *next = del->next;
-				//std::cout << "\tdel:" << std::endl;
-				//debug_node(del);
-				//std::cout << "\tprev:" << std::endl;
-				//debug_node(prev);
-				//std::cout << "\tnetx:" <<  std::endl;
-				//debug_node(next);
-
 				if (del == head) {
 					head = del->next;
 					base->next = head;
@@ -1299,11 +1230,6 @@ namespace ft {
 				alloc.destroy(del->data);
 				alloc.deallocate(del->data, 1);
 				delete del;
-
-				//std::cout << "\tprev:" << std::endl;
-				//debug_node(prev);
-				//std::cout << "\tnext:" << std::endl;
-				//debug_node(next);
 			}
 
 			/*	swaps the node pointed at by ptr with the preceeding node	*/
@@ -1312,8 +1238,6 @@ namespace ft {
 				node_type	*prior;
 
 				prior = node->prev;
-				//debug_node("PREV", prior);
-				//debug_node("PTR", node);
 				prior->next = node->next;
 				node->prev = prior->prev;
 				prior->next->prev = prior;
@@ -1328,48 +1252,7 @@ namespace ft {
 					tail = prior;
 					base->prev = tail;
 				}
-				//debug_node("PREV", prior);
-				//debug_node("PTR", node);
 			}
-
-			//void					swap(node_type *n1, node_type *n2) {
-				//node_type	swp;			//HAHAHAH nice try friend, need to change ->next->prev and ->prev->next
-				//node_type	swp2;
-				//node_type	swp3;
-
-				//debug_node("n1o", n1);
-				//debug_node("n2o", n2);
-				//n1->next->prev = n2;	//Fix adj links			//Broken as hell
-				//n1->prev->next = n2;
-				//n2->next->prev = n1;
-				//n2->prev->next = n1;
-				//swp.next = n1->next;	//Swap next and prev
-				//swp.prev = n1->prev;
-				//n1->next = n2->next;
-				//n1->prev = n2->prev;
-				//n2->next = swp.next;
-				//n2->prev = swp.prev;
-				//debug_node("n1n", n1);
-				//debug_node("n2n", n2);
-				//debug_node("n1N", n1->next);
-				//debug_node("n1P", n1->prev);
-				//debug_node("n2N", n2->next);
-				//debug_node("n2P", n2->prev);
-				//if (n1 == head) {
-					//n2 = head;
-					//base->next = head;
-				//} else if (n2 == head) {
-					//n1 = head;
-					//base->next = head;
-				//}
-				//if (n1 == tail) {
-					//n2 = tail;
-					//base->prev = tail;
-				//} else if (n2 == tail) {
-					//n1 = tail;
-					//base->prev = tail;
-				//}
-			//}
 	};
 
 /*-------------------------------------------NON-MEMBER OVERLOADS-------------------------------------------*/
