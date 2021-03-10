@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/16 10:48:13 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/09 16:21:51 by dries            ###   ########.fr       */
+/*   Updated: 2021/03/10 12:44:21 by dries            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,12 @@
 # include <memory>
 # include <iterator>
 # include <cstddef>
-# include <cmath>
-
-
-
-#include <iostream>
+# include <iostream>
 
 /*	memory		std::allocator
- *	iterator	bidirectional_iterator_tag //this doesnt look right
+ *	iterator	bidirectional_iterator_tag
  *	cstddef		ptrdiff_t
- *	cmath		__true_type __is_integer*/
+ *	iostream	std::cout, debug prints	*/
 
 namespace ft {
 	template <class T, class Alloc = std::allocator<T> >
@@ -1376,6 +1372,100 @@ namespace ft {
 			//}
 	};
 
+/*-------------------------------------------NON-MEMBER OVERLOADS-------------------------------------------*/
+
+	/*	Performs the appropriate comparison operation between the list containers lhs and rhs.
+	 *	The equality comparison (operator==) is performed by first comparing sizes, and if they match,
+	 *	the elements are compared sequentially using operator==, stopping at the first mismatch 
+	 *	(as if using algorithm equal).
+	 *	The less-than comparison (operator<) behaves as if using algorithm lexicographical_compare,
+	 *	which compares the elements sequentially using operator< in a reciprocal manner (i.e.,
+	 *	checking both a<b and b<a) and stopping at the first occurrence.
+	 *	The other operations also use the operators == and < internally to compare the elements,
+	 *	behaving as if the following equivalent operations were performed:
+	 *	operation	equivalent operation
+	 *	a!=b		!(a==b)
+	 *	a>b			b<a
+	 *	a<=b		!(b<a)
+	 *	a>=b		!(a<b)	*/
+
+	template <class T, class Alloc>
+	bool				operator== (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs)	{
+		typename list<T>::size_type		i;
+		typename list<T>::iterator		*rhi;
+		typename list<T>::iterator		*lhi;
+
+		if (lhs.size() == rhs.size()) {
+			i = 0;
+			rhi = rhs.begin();
+			lhi = lhs.begin();
+			while (i != lhs.size()) {
+				if (!(*lhi == *rhi))
+					return false;
+				++i;
+				++rhi;
+				++lhi;
+			}
+		} else
+			return false;
+		return true;
+	}
+
+	template <class T, class Alloc>
+	bool 				operator!= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs)	{
+		return (!(lhs == rhs));
+	}
+
+	template <class T, class Alloc>
+	bool 				operator< (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs)	{
+		typename list<T>::size_type		i;
+		typename list<T>::iterator		*rhi;
+		typename list<T>::iterator		*lhi;
+
+		if (lhs.size() == rhs.size()) {
+			i = 0;
+			rhi = rhs.begin();
+			lhi = lhs.begin();
+			while (i != lhs.size()) {
+				if (!(*lhi < *rhi))
+					return false;
+				++i;
+				++rhi;
+				++lhi;
+			}
+		} else
+			return false;
+		return true;
+	}
+
+	template <class T, class Alloc>
+	bool 				operator<= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs)	{
+		return (!(rhs < lhs));
+
+	}
+
+	template <class T, class Alloc>
+	bool 				operator> (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs)	{
+		return (rhs < lhs);
+
+	}
+
+	template <class T, class Alloc>
+	bool 				operator>= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs)	{
+		return (!(lhs < rhs));
+	}
+
+
+	/*	The contents of container x are exchanged with those of y. Both container objects 
+	 *	must be of the same type (same template parameters), although sizes may differ.
+	 *	After the call to this member function, the elements in x are those which were in 
+	 *	y before the call, and the elements of y are those which were in x. All iterators, 
+	 *	references and pointers remain valid for the swapped objects.	*/
+
+	template <class T, class Alloc>
+	void				swap (list<T,Alloc>& x, list<T,Alloc>& y) {
+		x.swap(y);
+	}
 }
 
 #endif
