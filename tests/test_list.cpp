@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/02/18 12:04:31 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/11 13:41:28 by dries               **ee8ee**            */
+/*   Updated: 2021/03/11 13:46:05 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2286,7 +2286,7 @@ void		test_erase_range(data<T> *d) {
 	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
-	for (size_t i = 0; i < size; i++) {
+	for (int i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
 		ft->push_back(val);
@@ -2301,7 +2301,7 @@ void		test_erase_range(data<T> *d) {
 	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
-	for (size_t i = 0; i < size; i++) {
+	for (int i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
 		ft->push_back(val);
@@ -2330,7 +2330,7 @@ void		test_erase_range(data<T> *d) {
 	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
-	for (size_t i = 0; i < size; i++) {
+	for (int i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
 		ft->push_back(val);
@@ -2348,7 +2348,7 @@ void		test_erase_range(data<T> *d) {
 	if (size == 0) size += 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
-	for (size_t i = 0; i < size; i++) {
+	for (int i = 0; i < size; i++) {
 		val = randomize<T>();
 		std->push_back(val);
 		ft->push_back(val);
