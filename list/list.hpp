@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: xxxx/xx/xx xx:xx:xx by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/10 17:39:15 by dries               **ee8ee**            */
+/*   Updated: 2021/03/11 15:06:12 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,7 +250,6 @@ namespace ft {
 			 *	const_reverse_iterator		reverse_iterator<const_iterator>	
 			 *	Node						class used for nodes	*/
 
-			//TODO
 			typedef	ListBiIterator<node_type, T, T&, T*>							iterator;
 			typedef	ListBiIterator<node_type, const T, const T&, const T*>			const_iterator;
 			typedef	ReverseListBiIterator<node_type, T, T&, T*>					reverse_iterator;

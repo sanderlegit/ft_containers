@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/02/18 12:04:31 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/11 13:46:05 by dries               **ee8ee**            */
+/*   Updated: 2021/03/11 13:59:03 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ T			randomize(void) {
 	void	*ptr;
 
 	ptr = reinterpret_cast<void*>(&val);
-	memset(ptr, (unsigned char)((rand() % 253) + 3), sizeof(T));
+	memset(ptr, (unsigned char)(rand() % 255), sizeof(T));
 	return val;
 }
 
