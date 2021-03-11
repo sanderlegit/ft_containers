@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   test_list.cpp                                      :+:      :+:    :+:   */
-/*                                                     +:+                    */
-/*   By: averheij <averheij@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/02/18 12:04:31 by averheij      #+#    #+#                 */
-/*   Updated: 2021/03/10 13:38:20 by dries            ###   ########.fr       */
+/*                                                       ..eeeee..            */
+/*   test_list.cpp                                     e8'   8   '8e          */
+/*                                                    d8     8     8b         */
+/*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
+/*                                                    Y8 .e* 8 *e. 8P         */
+/*   Created: 2021/02/18 12:04:31 by dries             *8*   8   *8*          */
+/*   Updated: 2021/03/11 13:41:28 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2275,8 +2275,8 @@ void		test_erase_single(data<T> *d) {
 template<class T>
 void		test_erase_range(data<T> *d) {
 	
-	unsigned char	size;
-	unsigned char	offset;
+	int		size;
+	int		offset;
 	T				val;
 	std::list<T> 	*std;
 	ft::list<T> 	*ft;
@@ -2307,8 +2307,12 @@ void		test_erase_range(data<T> *d) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	offset = (rand() % (size / 2)) - 1;
+	offset = (rand() % (size / 2));
+	std::cout << "offset: " << offset << std::endl;
+	if (offset == 0) offset = 1;
+	std::cout << "offset: " << offset << std::endl;
 	offset++;
+	std::cout << "offset: " << offset << std::endl;
 	r1 = std->end();
 	r2 = ft->end();
 	for (int i = 0; i < offset; ++i) {
@@ -2341,6 +2345,7 @@ void		test_erase_range(data<T> *d) {
 	incr_score(d);
 
 	size = (rand() % 253) + 10;
+	if (size == 0) size += 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -2349,7 +2354,8 @@ void		test_erase_range(data<T> *d) {
 		ft->push_back(val);
 	}
 	std::cout << "testing on:\trandom filled list size:" << (int)size << "" << std::endl;
-	offset = (rand() % (size / 2)) - 1;
+	offset = (rand() % (size / 2));
+	if (offset == 0) offset += 1;
 	offset++;
 	r1 = std->begin();
 	r2 = ft->begin();

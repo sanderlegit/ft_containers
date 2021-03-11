@@ -6,7 +6,7 @@
 #    By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8          #
 #                                                     Y8 .e* 8 *e. 8P          #
 #    Created: 2021/02/18 11:56:11 by dries             *8*   8   *8*           #
-#    Updated: 2021/03/10 17:40:17 by dries               **ee8ee**             #
+#    Updated: 2021/03/10 18:33:39 by dries               **ee8ee**             #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,3 +68,8 @@ check sort stability
 but i probably wont because i know bubble sort is stable
 
 do all operations have tests with size 1, size 0??
+
+
+
+check iterators are complete!!
+https://en.cppreference.com/w/cpp/named_req/ForwardIterator
