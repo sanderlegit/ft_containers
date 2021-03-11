@@ -6,12 +6,12 @@
 #    By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8          #
 #                                                     Y8 .e* 8 *e. 8P          #
 #    Created: xxxx/xx/xx xx:xx:xx by dries             *8*   8   *8*           #
-#    Updated: 2021/03/10 17:39:34 by dries               **ee8ee**             #
+#    Updated: 2021/03/11 15:12:53 by dries               **ee8ee**             #
 #                                                                              #
 # **************************************************************************** #
 
 #CONTAINERS 	=	list vector stack queue
-CONTAINERS 	=	list
+CONTAINERS 	=	list vector
 INCL		=	$(CONTAINERS:%=-I%)
 
 TESTFILES 	=	$(CONTAINERS:%=tests/test_%.o)
@@ -33,9 +33,6 @@ CXX			=	clang++
 
 
 all: $(CONTAINERS)
-
-#test_%.o: test_%.cpp
-	#$(CXX) $(CFLAGS) -c $< -o $@ $(INCL)
 
 %.o: %.cpp
 ifeq ($(NO_FT), 1)
