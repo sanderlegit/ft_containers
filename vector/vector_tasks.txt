@@ -6,7 +6,7 @@
 #    By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8          #
 #                                                     Y8 .e* 8 *e. 8P          #
 #    Created: 2021/03/10 18:00:06 by dries             *8*   8   *8*           #
-#    Updated: 2021/03/10 18:02:19 by dries               **ee8ee**             #
+#    Updated: 2021/03/15 18:04:42 by dries               **ee8ee**             #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,25 +26,25 @@ crbegin				Return const_reverse_iterator to reverse beginning (public member fun
 crend				Return const_reverse_iterator to reverse end (public member function )
 
 Capacity:
-size				Return size (public member function )
+size				Return size (public member function )									-written,tested
 max_size			Return maximum size (public member function )
-resize				Change size (public member function )
-capacity			Return size of allocated storage capacity (public member function )
-empty				Test whether vector is empty (public member function )
+resize				Change size (public member function )									-written,
+capacity			Return size of allocated storage capacity (public member function )		-written,tested
+empty				Test whether vector is empty (public member function )					-written,tested
 reserve				Request a change in capacity (public member function )
 shrink_to_fit 		shrink to fit (public member function )
 
 Element access:
 operator[]			Access element (public member function )
 at					Access element (public member function )
-front				Access first element (public member function )
-back				Access last element (public member function )
+front				Access first element (public member function )		-written,tested
+back				Access last element (public member function )		-written,tested
 data 				Access data (public member function )
 
 Modifiers:
 assign				Assign vector content (public member function )
-push_back			Add element at the end (public member function )
-pop_back			Delete last element (public member function )
+push_back			Add element at the end (public member function )					-written,tested
+pop_back			Delete last element (public member function )						-written,tested
 insert				Insert elements (public member function )
 erase				Erase elements (public member function )
 swap				Swap content (public member function )

@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/11 13:50:52 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/11 17:03:27 by dries               **ee8ee**            */
+/*   Updated: 2021/03/15 18:12:54 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,10 @@
 #define YELLOW "\033[33m"
 #define BLUE "\033[34m"
 #define RESET "\033[m"
+#define TESTING	true
+//#define TESTING	false
+#define TESTING_ON	true
+//#define TESTING_ON	false
 //#define VERBOSE	true
 #define VERBOSE	false
 //#define VVERBOSE	true
@@ -169,11 +173,13 @@ void		incr_score(data<T> *d) {
 	std::cout << "  test:\t";
 	if (d->current_fail == 0) {
 		d->pass++;
-		std::cout << GREEN << "pass" << RESET << std::endl << std::endl;
+		std::cout << GREEN << "pass" << RESET << std::endl;
 	} else {
 		d->fail++;
-		std::cout << RED << "fail" << RESET << std::endl << std::endl;
+		std::cout << RED << "fail" << RESET << std::endl;
 	}
+	if (!(!VERBOSE && !VVERBOSE && !TESTING_ON))
+		std::cout << std::endl;
 	d->current_fail = 0;
 }
 
@@ -183,6 +189,8 @@ void		check_pass(data<T> *d, bool score) {
 		d->current_fail++;
 }
 #define comp(A)		check_pass(d, A)
+#define test(A, B, C)	{std::string tmp = A; print_comp(tmp, B, C); comp(B == C);}
+
 
 template<class T>
 void		test_equivalence(data<T> *d, std::vector<T> *std, ft::vector<T> *ft, bool capacity) {
@@ -202,8 +210,8 @@ void		test_equivalence(data<T> *d, std::vector<T> *std, ft::vector<T> *ft, bool 
 	comp(r1 == r2);
 
 	if (capacity) {
-		//r5 = std->capacity();
-		//r6 = ft->capacity();
+		r5 = std->capacity();
+		r6 = ft->capacity();
 		print_comp("capacity()", r5, r6);
 		comp(r5 == r6);
 	}
@@ -215,11 +223,11 @@ void		test_equivalence(data<T> *d, std::vector<T> *std, ft::vector<T> *ft, bool 
 		r6 = ft->size();
 		print_comp("back()", r3, r4);
 		comp(r3 == r4);
-		r3 = std->back();
-		r4 = ft->back();
+		r3 = std->front();
+		r4 = ft->front();
 		std->pop_back();
 		ft->pop_back();
-		print_comp("back()", r3, r4);
+		print_comp("front()", r3, r4);
 		comp(r3 == r4);
 		print_comp("size()", r5, r6);
 		comp(r5 == r6);
@@ -301,7 +309,7 @@ void		test_equivalence(data<T> *d, std::vector<T> *std, ft::vector<T> *ft, bool 
 	}
 
 }
-#define equal(A, B)	test_equivalence(d, A, B);
+#define equal(A, B)	test_equivalence(d, A, B, 0);
 
 template<class T>
 struct pair {
@@ -318,7 +326,7 @@ pair<T>		create_vector_internal(std::vector<T> *std, ft::vector<T> *ft, bool emp
 	if (empty)
 		size = 0;
 	else
-		size = (rand() % 253) + 3;
+		size = ((rand() % 254) + 1);
 	std = new std::vector<T>();
 	ft = new ft::vector<T>();
 	for (size_t i = 0; i < size; i++) {
@@ -352,18 +360,50 @@ pair<T>		create_vector_size_internal(std::vector<T> *std, ft::vector<T> *ft, siz
 
 #define	create_vector_size(A, B, C)	{pair<T> tmp = create_vector_size_internal(A, B, C); A=tmp.std; B=tmp.ft;}
 
+#define testing(A)	{if (TESTING) std::cout << "  testing: " A << std::endl;}
+#define testing_on(A)	{if (TESTING_ON) std::cout << "  testing on: " A << std::endl;}
+
 /*-----------------------------------CONSTRUCTOR TESTS-----------------------------------*/
+
+template<class T>
+void		test_constructor_default(data<T> *d) {
+	std::vector<T>		*std;
+	ft::vector<T>		*ft;
+
+	testing("vector = new vector()");
+	ft = new ft::vector<T>();
+	std = new std::vector<T>();
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_constructor_fill(data<T> *d, bool empty) {
+	std::vector<T>		*std;
+	ft::vector<T>		*ft;
+	T					val;
+	size_t				size;
+
+	val = randomize<T>();
+	size = (empty) ? 0 : ((rand() % 254) + 1);
+	testing("vector = new vector(" << size << ", " << val << ")");
+	ft = new ft::vector<T>(size, val);
+	std = new std::vector<T>(size, val);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+}
 
 template<class T>
 void		test_constructors(data<T> *d) {
 	print_title("constructor [default]");
 	test_constructor_default(d);
-	//print_title("constructor [fill]");
-	//test_constructor_fill(d, 0);
-	//test_constructor_fill(d, 1);
-	//print_title("constructor [range]");
-	//test_constructor_range(d, 0);
-	//test_constructor_range(d, 1);
+	print_title("constructor [fill]");
+	test_constructor_fill(d, 0);
+	test_constructor_fill(d, 1);
 	//print_title("constructor [range]");
 	//test_constructor_range(d, 0);
 	//test_constructor_range(d, 1);
@@ -377,44 +417,214 @@ void		test_constructors(data<T> *d) {
 /*-----------------------------------CAPACITY-----------------------------------*/
 
 template<class T>
+void		test_capacity_func(data<T> *d, bool empty) {
+	std::vector<T>		*std = NULL;
+	ft::vector<T>		*ft = NULL;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	testing("capacity()");
+	test("capacity()", std->capacity(), ft->capacity());
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class T>
+void		test_empty(data<T> *d, bool empty) {
+	std::vector<T>		*std = NULL;
+	ft::vector<T>		*ft = NULL;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	testing("empty()");
+	test("empty()", std->empty(), ft->empty());
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class T>
+void		test_size(data<T> *d, bool empty) {
+	std::vector<T>		*std = NULL;
+	ft::vector<T>		*ft = NULL;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	testing("size()");
+	test("size()", std->size(), ft->size());
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class T>
 void		test_capacity(data<T> *d) {
 	(void)d;
-	//print_title("operator[] [non-const]");
-	//print_title("operator[] [const]");
-	//print_title("at [non-const]");
-	//test_at(d, 0);
-	//test_at(d, 1);
-	//print_title("at [const]");
-	//print_title("at [const]");
-	//test_at_const(d, 0);
-	//test_at_const(d, 1);
-	//print_title("front [non-const]");
-	//print_title("front [const]");
-	print_title("back [non-const]");
-	print_title("back [const]");
+	print_title("size");
+	test_size(d, 0);
+	test_size(d, 1);
+	//print_title("max_size");
+	print_title("resize");
+	//test_resize(d, 0);
+	//test_resize(d, 1);
+	print_title("capacity");
+	test_capacity_func(d, 0);
+	test_capacity_func(d, 1);
+	print_title("empty");
+	test_empty(d, 0);
+	test_empty(d, 1);
+	//print_title("reserve");
+	//print_title("shrink_to_fit");
 }
 
 /*-----------------------------------ELEMENT ACCESS TESTS-----------------------------------*/
 
+//template<class T>
+//void		test_at(data<T> *d, bool empty) {
+	//std::vector<T>		*std = NULL;
+	//ft::vector<T>		*ft = NULL;
+	//T					stdr1;
+	//T					ftr1;
+	//size_t				idx;
+
+	//create_vector(std, ft, empty);
+	//testing_on("random filled vector size " << std->size());
+	//idx = 0;
+	//std::cout << "idx: " << idx << std::endl;
+	//test("at(idx)", std->at(idx), ft->at(idx));
+	//idx = rand() % std->size();
+	//std::cout << "idx: " << idx << std::endl;
+	//test("at(idx)", std->at(idx), ft->at(idx));
+	//idx = std->size() - 1;
+	//std::cout << "idx: " << idx << std::endl;
+	//test("at(idx)", std->at(idx), ft->at(idx));
+	//incr_score(d);
+	//delete std;
+	//delete ft;
+//}
+
+template<class T>
+void		test_front(data<T> *d) {
+	std::vector<T>		*std = NULL;
+	ft::vector<T>		*ft = NULL;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	testing("front()");
+	test("front()", std->front(), ft->front());
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector_size(std, ft, 1);
+	testing_on("random filled vector size " << std->size());
+	testing("front()");
+	test("front()", std->front(), ft->front());
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class T>
+void		test_back(data<T> *d) {
+	std::vector<T>		*std = NULL;
+	ft::vector<T>		*ft = NULL;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	testing("back()");
+	test("back()", std->back(), ft->back());
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector_size(std, ft, 1);
+	testing_on("random filled vector size " << std->size());
+	testing("back()");
+	test("back()", std->back(), ft->back());
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
 template<class T>
 void		test_element_access(data<T> *d) {
-	(void)d;
 	//print_title("operator[] [non-const]");
 	//print_title("operator[] [const]");
 	//print_title("at [non-const]");
 	//test_at(d, 0);
 	//test_at(d, 1);
 	//print_title("at [const]");
-	//print_title("at [const]");
 	//test_at_const(d, 0);
 	//test_at_const(d, 1);
-	//print_title("front [non-const]");
-	//print_title("front [const]");
+	print_title("front [non-const]");
+	test_front(d);
+	print_title("front [const]");
 	print_title("back [non-const]");
+	test_back(d);
 	print_title("back [const]");
 }
 
 /*-----------------------------------MODIFIERS TESTS-----------------------------------*/
+
+template<class T>
+void		test_push_back(data<T> *d, bool empty) {
+	std::vector<T>		*std = NULL;
+	ft::vector<T>		*ft = NULL;
+	T					val;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	val = randomize<T>();
+	testing("push_back(" << val << ")");
+	std->push_back(val);
+	ft->push_back(val);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	if (empty)
+		return;
+
+	create_vector_size(std, ft, 1);
+	testing_on("random filled vector size " << std->size());
+	val = randomize<T>();
+	testing("push_back(" << val << ")");
+	std->push_back(val);
+	ft->push_back(val);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_pop_back(data<T> *d) {
+	std::vector<T>		*std = NULL;
+	ft::vector<T>		*ft = NULL;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	testing("pop_back()");
+	std->pop_back();
+	ft->pop_back();
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	create_vector_size(std, ft, 1);
+	testing_on("random filled vector size " << std->size());
+	testing("pop_back()");
+	std->pop_back();
+	ft->pop_back();
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+}
 
 template<class T>
 void		test_modifiers(data<T> *d) {
@@ -422,9 +632,10 @@ void		test_modifiers(data<T> *d) {
 	//print_title("assign [range]");
 	//print_title("assign [fill]");
 	print_title("push_back");
-	//test_push_back(d, 0);
-	//test_push_back(d, 1);
+	test_push_back(d, 0);
+	test_push_back(d, 1);
 	print_title("pop_back");
+	test_pop_back(d);
 	//print_title("insert [single element]");
 	//print_title("insert [fill]");
 	//print_title("insert [range]");
@@ -443,17 +654,17 @@ void		do_tests(void) {
 	d = init_data<T>();
 
 	print_group_title("CONSTRUCTORS");
-	//test_constructors(d);
+	test_constructors(d);
 	//print_group_title("OPERATORS");
 	//test_operators(d);
 	//print_group_title("ITERATORS");
 	//test_iterators(d);
-	//print_group_title("CAPACITY");
-	//test_capacity(d);
-	//print_group_title("ELEMENT ACCESS");
-	//test_element_access(d);
-	//print_group_title("MODIFIERS");
-	//test_modifiers(d);
+	print_group_title("CAPACITY");
+	test_capacity(d);
+	print_group_title("ELEMENT ACCESS");
+	test_element_access(d);
+	print_group_title("MODIFIERS");
+	test_modifiers(d);
 	//print_group_title("OPERATIONS");
 	//test_operations(d);
 	//print_group_title("NON-MEMBER OVERLOADS");

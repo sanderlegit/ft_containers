@@ -6,12 +6,18 @@
 #    By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8          #
 #                                                     Y8 .e* 8 *e. 8P          #
 #    Created: xxxx/xx/xx xx:xx:xx by dries             *8*   8   *8*           #
-#    Updated: 2021/03/11 15:12:53 by dries               **ee8ee**             #
+#    Updated: 2021/03/15 15:06:28 by dries               **ee8ee**             #
 #                                                                              #
 # **************************************************************************** #
 
 #CONTAINERS 	=	list vector stack queue
 CONTAINERS 	=	list vector
+ifneq ($(CONT), vector)
+	CONTAINERS = vector
+endif
+ifeq ($(CONT), list)
+	CONTAINERS = list
+endif
 INCL		=	$(CONTAINERS:%=-I%)
 
 TESTFILES 	=	$(CONTAINERS:%=tests/test_%.o)
@@ -24,9 +30,6 @@ endif
 ifeq ($(G), 1)
 	DFLAGS += -g
 endif
-#ifeq ($(VERBOSE), 1)¬
-	#DLAGS += -D DISPLAY
-#endif
 FTFLAGS		=	-Wall -Wextra -Werror
 CFLAGS		=	-pedantic -std=c++98 $(DFLAGS)
 CXX			=	clang++
