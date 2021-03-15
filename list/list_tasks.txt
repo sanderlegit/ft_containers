@@ -6,7 +6,7 @@
 #    By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8          #
 #                                                     Y8 .e* 8 *e. 8P          #
 #    Created: 2021/02/18 11:56:11 by dries             *8*   8   *8*           #
-#    Updated: 2021/03/10 18:33:39 by dries               **ee8ee**             #
+#    Updated: 2021/03/11 17:00:28 by dries               **ee8ee**             #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,8 +54,8 @@ sort				Sort elements in container (public member function )						-written,teste
 reverse				Reverse the order of elements (public member function )						-written,tested
 
 	Non-member function overloads:
-relational operators (list)		Relational operators for list (function )
-swap (list)						Exchanges the contents of two lists (function template )
+relational operators (list)		Relational operators for list (function )						-written,tested
+swap (list)						Exchanges the contents of two lists (function template )		-written,tested
 
 
 a null iterator is given if .begin is called on an empty list, is this expected behaviour?

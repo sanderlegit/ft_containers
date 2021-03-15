@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/11 13:50:52 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/11 14:31:22 by dries               **ee8ee**            */
+/*   Updated: 2021/03/11 17:03:27 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,6 @@
 #define VERBOSE	false
 //#define VVERBOSE	true
 #define VVERBOSE	false
-//#ifdef DISPLAY
-	//#define VERBOSE	true
-//#endif
-//#ifndef DISPLAY
-	//#define VERBOSE	false
-//#endif
 
 /*-----------------------------------UTIL-----------------------------------*/
 
