@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/10 16:43:21 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/16 17:02:58 by dries               **ee8ee**            */
+/*   Updated: 2021/03/16 18:15:34 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,38 @@ namespace ft {
 
 		//}
 
-		vector (const vector& x) {
-
+		vector (const vector& x) : _size(x._size), _capacity(x._capacity), _data(NULL), _alloc(x._alloc) {
+			_data = _alloc.allocate(_capacity);
+			for (size_type i = 0; i != _size; i++)
+				_alloc.construct(_data + i, x[i]);
 		}
+
+/*	Destroys the container object.	*/
+
+		~vector() {
+			dellocate(_data, _size);
+			_data = NULL;
+			_size = 0;
+			_capacity = 0;
+		}
+
+/*-------------------------------------------OPERATORS-------------------------------------------*/
+
+/*	Assigns new contents to the container, replacing its current contents, and modifying its size accordingly.
+ * 	Copies all the elements from x into the container.
+ *	The container preserves its current allocator, which is used to allocate storage in case of reallocation.
+ *	Any elements held in the container before the call are either assigned to or destroyed.	*/
+
+ 		vector&					operator= (const vector& x) {
+			reserve(x._size);
+			for (size_t i = 0; i != _size; i++)
+				_alloc.destroy(_data + i);
+			for (size_t i = 0; i != x._size; i++)
+				_alloc.construct(_data + i, x[i]);
+			_size = x._size;
+			return *this;
+		}
+
 /*-------------------------------------------CAPACITY-------------------------------------------*/
 
 /*	Returns the number of elements in the vector.
@@ -181,7 +210,7 @@ namespace ft {
 			} else if (n < _size) {
 				for (size_type i = n; i != _size; i++) {
 					_alloc.destroy(_data + i);
-					_alloc.construct(_data + i);
+					//_alloc.construct(_data + i);
 				}
 				_size = n;
 			}
@@ -368,6 +397,17 @@ namespace ft {
 	};
 
 /*-------------------------------------------NON-MEMBER OVERLOADS-------------------------------------------*/
+
+	/*	The contents of container x are exchanged with those of y. Both container objects must be of the same
+	 *	type (same template parameters), although sizes may differ.
+	 *	After the call to this member function, the elements in x are those which were in y before the call,
+	 *	and the elements of y are those which were in x. All iterators, references and pointers remain valid
+	 *	for the swapped objects.	*/
+
+	template <class T, class Alloc>
+	void					swap (vector<T,Alloc>& x, vector<T,Alloc>& y) {
+		x.swap(y);
+	}
 
 }
 

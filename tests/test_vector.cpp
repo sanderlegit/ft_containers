@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/11 13:50:52 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/16 16:57:16 by dries               **ee8ee**            */
+/*   Updated: 2021/03/16 18:15:15 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@
 //#define TESTING_ON	false
 #define VERBOSE	true
 //#define VERBOSE	false
+//#define EQUALITY	true
+#define EQUALITY	false
 //#define VVERBOSE	true
 #define VVERBOSE	false
 
@@ -149,6 +151,7 @@ void		print_comp_labels(std::string str, std::string l1, std::string l2, T t, R 
 		std::cout.width(0);
 	}
 }
+
 template<class T, class R>
 void		print_comp_force_labels(std::string str, std::string l1, std::string l2, T t, R r) {
 	printf("%-16s", str.c_str());
@@ -191,6 +194,54 @@ void		check_pass(data<T> *d, bool score) {
 #define comp(A)		check_pass(d, A)
 #define test(A, B, C)	{std::string tmp = A; print_comp(tmp, B, C); comp(B == C);}
 
+template<class T, class R>
+void		eq_print_comp(std::string str, T t, R r) {
+	if (EQUALITY) {
+		printf("%-16s", str.c_str());
+		std::cout << "std:";
+
+		std::cout.width(16);
+		std::cout.flags(std::ios::right);
+		std::cout << t;
+		std::cout.flags(std::ios::internal);
+		std::cout.width(0);
+
+		std::cout << "\tft:";
+
+		std::cout.width(16);
+		std::cout.flags(std::ios::right);
+		std::cout << r << std::endl;
+		std::cout.flags(std::ios::internal);
+		std::cout.width(0);
+	}
+}
+
+template<class T, class R>
+void		eq_print_comp_labels(std::string str, std::string l1, std::string l2, T t, R r) {
+	if (EQUALITY) {
+		printf("%-16s", str.c_str());
+		l1.append(":");
+		printf("%-4s", l1.c_str());
+		//std::cout << l1 << ":";
+
+		std::cout.width(16);
+		std::cout.flags(std::ios::right);
+		std::cout << t;
+		std::cout.flags(std::ios::internal);
+		std::cout.width(0);
+
+		l2.append(":");
+		printf("\t%-4s", l2.c_str());
+		//std::cout << "\t" << l2 << ":";
+
+		std::cout.width(15);
+		std::cout.flags(std::ios::right);
+		std::cout << r << std::endl;
+		std::cout.flags(std::ios::internal);
+		std::cout.width(0);
+	}
+}
+
 
 template<class T>
 void		test_equivalence(data<T> *d, std::vector<T> *std, ft::vector<T> *ft, bool capacity) {
@@ -202,18 +253,18 @@ void		test_equivalence(data<T> *d, std::vector<T> *std, ft::vector<T> *ft, bool 
 	size_t			r6;
 
 
-	if (VERBOSE)
+	if (EQUALITY)
 		std::cout << "  testing list equality" << std::endl;
 	r1 = std->empty();
 	r2 = ft->empty();
-	print_comp("empty()", r1, r2);
+	eq_print_comp("empty()", r1, r2);
 	comp(r1 == r2);
 
 	if (capacity) {
 		r5 = std->capacity();
 		r6 = ft->capacity();
-		print_comp("capacity()", r5, r6);
-		comp(r5 == r6);
+		eq_print_comp("capacity()", r5, r6);
+		comp(r5 <= r6);
 	}
 
 	if (!r1 && !r2) {
@@ -221,17 +272,17 @@ void		test_equivalence(data<T> *d, std::vector<T> *std, ft::vector<T> *ft, bool 
 		r4 = ft->back();
 		r5 = std->size();
 		r6 = ft->size();
-		print_comp("back()", r3, r4);
+		eq_print_comp("back()", r3, r4);
 		comp(r3 == r4);
 		r3 = std->front();
 		r4 = ft->front();
 		std->pop_back();
 		ft->pop_back();
-		print_comp("front()", r3, r4);
+		eq_print_comp("front()", r3, r4);
 		comp(r3 == r4);
-		print_comp("size()", r5, r6);
+		eq_print_comp("size()", r5, r6);
 		comp(r5 == r6);
-		if (VERBOSE)
+		if (EQUALITY)
 			std::cout << "  iterating through..." << std::endl;
 		while (!std->empty() && !ft->empty()) {
 			r1 = std->empty();
@@ -243,9 +294,9 @@ void		test_equivalence(data<T> *d, std::vector<T> *std, ft::vector<T> *ft, bool 
 			std->pop_back();
 			ft->pop_back();
 			if (VVERBOSE)
-				print_comp("back", r3, r4);
+				eq_print_comp("back", r3, r4);
 			if (VVERBOSE)
-				print_comp("size", r5, r6);
+				eq_print_comp("size", r5, r6);
 			comp(r1 == r2);
 			comp(r3 == r4);
 			comp(r5 == r6);
@@ -254,18 +305,18 @@ void		test_equivalence(data<T> *d, std::vector<T> *std, ft::vector<T> *ft, bool 
 		r2 = ft->empty();
 		r5 = std->size();
 		r6 = ft->size();
-		print_comp("empty()", r1, r2);
-		print_comp("size()", r5, r6);
+		eq_print_comp("empty()", r1, r2);
+		eq_print_comp("size()", r5, r6);
 	} else if (!r1 && r2) {
 		r3 = std->back();
 		r5 = std->size();
-		print_comp_labels("back()", "std", "EMPTY!", r3, 0);
+		eq_print_comp_labels("back()", "std", "EMPTY!", r3, 0);
 		r3 = std->back();
 		std->pop_back();
 		ft->pop_back();
-		print_comp_labels("back()", "std", "EMPTY!", r3, 0);
-		print_comp_labels("size()", "std", "EMPTY!", r5, 0);
-		if (VERBOSE)
+		eq_print_comp_labels("back()", "std", "EMPTY!", r3, 0);
+		eq_print_comp_labels("size()", "std", "EMPTY!", r5, 0);
+		if (EQUALITY)
 			std::cout << "  iterating through..." << std::endl;
 		while (!std->empty()) {
 			r1 = std->empty();
@@ -273,24 +324,24 @@ void		test_equivalence(data<T> *d, std::vector<T> *std, ft::vector<T> *ft, bool 
 			r5 = std->size();
 			std->pop_back();
 			if (VVERBOSE)
-				print_comp_labels("back", "std", "EMPTY!", r3, 0);
+				eq_print_comp_labels("back", "std", "EMPTY!", r3, 0);
 			if (VVERBOSE)
-				print_comp_labels("size", "std", "EMPTY!", r5, 0);
+				eq_print_comp_labels("size", "std", "EMPTY!", r5, 0);
 		}
 		r1 = std->empty();
 		r5 = std->size();
-		print_comp_labels("empty()", "std", "EMPTY!", r1, 0);
-		print_comp_labels("size()", "std", "EMPTY!", r5, 0);
+		eq_print_comp_labels("empty()", "std", "EMPTY!", r1, 0);
+		eq_print_comp_labels("size()", "std", "EMPTY!", r5, 0);
 	} else if (r1 && !r2) {
 		r3 = ft->back();
 		r5 = ft->size();
-		print_comp_labels("back()", "EMPTY!", "ft", 0, r3);
+		eq_print_comp_labels("back()", "EMPTY!", "ft", 0, r3);
 		r3 = ft->back();
 		ft->pop_back();
 		ft->pop_back();
-		print_comp_labels("back()", "EMPTY!", "ft", 0, r3);
-		print_comp_labels("size()", "EMPTY!", "ft", 0, r5);
-		if (VERBOSE)
+		eq_print_comp_labels("back()", "EMPTY!", "ft", 0, r3);
+		eq_print_comp_labels("size()", "EMPTY!", "ft", 0, r5);
+		if (EQUALITY)
 			std::cout << "  iterating through..." << std::endl;
 		while (!ft->empty()) {
 			r1 = ft->empty();
@@ -298,14 +349,14 @@ void		test_equivalence(data<T> *d, std::vector<T> *std, ft::vector<T> *ft, bool 
 			r5 = ft->size();
 			ft->pop_back();
 			if (VVERBOSE)
-				print_comp_labels("back", "EMPTY!", "ft", 0, r3);
+				eq_print_comp_labels("back", "EMPTY!", "ft", 0, r3);
 			if (VVERBOSE)
-				print_comp_labels("size", "EMPTY!", "ft", 0, r5);
+				eq_print_comp_labels("size", "EMPTY!", "ft", 0, r5);
 		}
 		r1 = ft->empty();
 		r5 = ft->size();
-		print_comp_labels("empty()", "EMPTY!", "ft", 0, r1);
-		print_comp_labels("size()", "EMPTY!", "ft", 0, r5);
+		eq_print_comp_labels("empty()", "EMPTY!", "ft", 0, r1);
+		eq_print_comp_labels("size()", "EMPTY!", "ft", 0, r5);
 	}
 
 }
@@ -397,6 +448,78 @@ void		test_constructor_fill(data<T> *d, bool empty) {
 	incr_score(d);
 }
 
+/*	Copy Constructor Tests:
+ *	size to size	(emptya, emptyb)
+ *	size to unininitialzed	(emptysrc)
+ */
+
+template<class T>
+void		test_constructor_copy(data<T> *d, bool emptya, bool emptyb) {
+	std::vector<T>		*stda = NULL;
+	ft::vector<T>		*fta = NULL;
+	std::vector<T>		*stdb = NULL;
+	ft::vector<T>		*ftb = NULL;
+
+	create_vector(stda, fta, emptya);
+	testing_on("dest: random filled vector size " << stda->size());
+	create_vector(stdb, ftb, emptyb);
+	testing_on("src: random filled vector size " << stdb->size());
+	testing("dest = new vector(src)");
+	stda = new std::vector<T>(*stdb);
+	fta = new ft::vector<T>(*ftb);
+	equal(stda, fta);
+	equal(stdb, ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	stda = NULL;
+	fta = NULL;
+	incr_score(d);
+
+	if (emptyb)
+		return;
+
+	create_vector(stdb, ftb, emptyb);
+	testing_on("src: random filled vector size " << stdb->size());
+	testing_on("dest: unininitialzed");
+	testing("dest = new vector(src)");
+	stda = new std::vector<T>(*stdb);
+	fta = new ft::vector<T>(*ftb);
+	equal(stda, fta);
+	equal(stdb, ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+}
+
+template<class T>
+void		test_operator_equals(data<T> *d, bool emptya, bool emptyb) {
+	std::vector<T>		*stda = NULL;
+	ft::vector<T>		*fta = NULL;
+	std::vector<T>		*stdb = NULL;
+	ft::vector<T>		*ftb = NULL;
+
+	create_vector(stda, fta, emptya);
+	testing_on("dest: random filled vector size " << stda->size());
+	create_vector(stdb, ftb, emptyb);
+	testing_on("src: random filled vector size " << stdb->size());
+	testing("dest = src");
+	*stda = *stdb;
+	*fta = *ftb;
+	equal(stda, fta);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	stda = NULL;
+	fta = NULL;
+	incr_score(d);
+}
+
+
 template<class T>
 void		test_constructors(data<T> *d) {
 	print_title("constructor [default]");
@@ -407,9 +530,16 @@ void		test_constructors(data<T> *d) {
 	//print_title("constructor [range]");
 	//test_constructor_range(d, 0);
 	//test_constructor_range(d, 1);
-	//print_title("constructor [copy]");
-	//test_constructor_copy(d, 0);
-	//test_constructor_copy(d, 1);
+	print_title("constructor [copy]");
+	test_constructor_copy(d, 0, 0);
+	test_constructor_copy(d, 0, 1);
+	test_constructor_copy(d, 1, 0);
+	test_constructor_copy(d, 1, 1);
+	print_title("operator= ");
+	test_operator_equals(d, 0, 0);
+	test_operator_equals(d, 0, 1);
+	test_operator_equals(d, 1, 0);
+	test_operator_equals(d, 1, 1);
 }
 
 /*-----------------------------------ITERATORS-----------------------------------*/
@@ -594,7 +724,8 @@ void		test_reserve(data<T> *d, bool empty) {
 	testing_on("random filled vector size " << std->size());
 	size = (rand() % 512) + 1;
 	testing("reserve(" << size << ")");
-	test("max_size()", std->max_size(), ft->max_size());
+	std->reserve(size);
+	ft->reserve(size);
 	test_equivalence(d, std, ft, 1);
 	incr_score(d);
 	delete std;
@@ -604,7 +735,8 @@ void		test_reserve(data<T> *d, bool empty) {
 	testing_on("random filled vector size " << std->size());
 	size = std->size() + 1;
 	testing("reserve(" << size << ")");
-	test("max_size()", std->max_size(), ft->max_size());
+	std->reserve(size);
+	ft->reserve(size);
 	test_equivalence(d, std, ft, 1);
 	incr_score(d);
 	delete std;
@@ -614,7 +746,8 @@ void		test_reserve(data<T> *d, bool empty) {
 	testing_on("random filled vector size " << std->size());
 	size = std->size();
 	testing("reserve(" << size << ")");
-	test("max_size()", std->max_size(), ft->max_size());
+	std->reserve(size);
+	ft->reserve(size);
 	test_equivalence(d, std, ft, 1);
 	incr_score(d);
 	delete std;
@@ -627,7 +760,8 @@ void		test_reserve(data<T> *d, bool empty) {
 	testing_on("random filled vector size " << std->size());
 	size = std->size() - 1;
 	testing("reserve(" << size << ")");
-	test("max_size()", std->max_size(), ft->max_size());
+	std->reserve(size);
+	ft->reserve(size);
 	test_equivalence(d, std, ft, 1);
 	incr_score(d);
 	delete std;
@@ -637,7 +771,8 @@ void		test_reserve(data<T> *d, bool empty) {
 	testing_on("random filled vector size " << std->size());
 	size = rand() % std->size();
 	testing("reserve(" << size << ")");
-	test("max_size()", std->max_size(), ft->max_size());
+	std->reserve(size);
+	ft->reserve(size);
 	test_equivalence(d, std, ft, 1);
 	incr_score(d);
 	delete std;
@@ -647,7 +782,8 @@ void		test_reserve(data<T> *d, bool empty) {
 	testing_on("random filled vector size " << std->size());
 	size = 0;
 	testing("reserve(" << size << ")");
-	test("max_size()", std->max_size(), ft->max_size());
+	std->reserve(size);
+	ft->reserve(size);
 	test_equivalence(d, std, ft, 1);
 	incr_score(d);
 	delete std;
@@ -656,7 +792,6 @@ void		test_reserve(data<T> *d, bool empty) {
 
 template<class T>
 void		test_capacity(data<T> *d) {
-	(void)d;
 	print_title("size");
 	test_size(d, 0);
 	test_size(d, 1);
@@ -768,14 +903,12 @@ void		test_at(data<T> *d, bool empty) {
 		stdr1 = std->at(idx);
 		std_threw = 0;
 	} catch (std::exception& e) {
-		std::cout << e.what() << std::endl;
 		std_threw = 1;
 	}
 	try {
 		ftr1 = ft->at(idx);
 		ft_threw = 0;
 	} catch (std::exception& e) {
-		std::cout << e.what() << std::endl;
 		ft_threw = 1;
 	}
 	print_comp("threw", std_threw, ft_threw);
@@ -797,14 +930,12 @@ void		test_at(data<T> *d, bool empty) {
 		stdr1 = std->at(idx);
 		std_threw = 0;
 	} catch (std::exception& e) {
-		std::cout << e.what() << std::endl;
 		std_threw = 1;
 	}
 	try {
 		ftr1 = ft->at(idx);
 		ft_threw = 0;
 	} catch (std::exception& e) {
-		std::cout << e.what() << std::endl;
 		ft_threw = 1;
 	}
 	print_comp("threw", std_threw, ft_threw);
@@ -1173,7 +1304,6 @@ void		test_clear(data<T> *d, bool empty) {
 
 template<class T>
 void		test_modifiers(data<T> *d) {
-	(void)d;
 	//print_title("assign [range]");
 	//print_title("assign [fill]");
 	print_title("push_back");
@@ -1186,7 +1316,7 @@ void		test_modifiers(data<T> *d) {
 	//print_title("insert [range]");
 	//print_title("erase [posotion]");
 	//print_title("erase [range]");
-	print_title("swap");
+	print_title("swap");		//TODO check iterator validity
 	test_swap(d, 0, 0);
 	test_swap(d, 0, 1);
 	test_swap(d, 1, 0);
@@ -1194,6 +1324,60 @@ void		test_modifiers(data<T> *d) {
 	print_title("clear");
 	test_clear(d, 0);
 	test_clear(d, 1);
+}
+
+/*-----------------------------------NON-MEMBER OVERLOADS-----------------------------------*/
+
+
+template<class T>
+void		test_swap_nm(data<T> *d, bool emptya, bool emptyb) {
+	std::vector<T>		*stda = NULL;
+	ft::vector<T>		*fta = NULL;
+	std::vector<T>		*stdb = NULL;
+	ft::vector<T>		*ftb = NULL;
+
+	create_vector(stda, fta, emptya);
+	testing_on("from random filled vector size " << stda->size());
+	create_vector(stdb, ftb, emptyb);
+	testing_on("to random filled vector size " << stdb->size());
+	testing("swap(a, b)");
+	std::swap(*stda, *stdb);
+	ft::swap(*fta, *ftb);
+	equal(stda, fta);
+	equal(stdb, ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+
+	if (emptya || emptyb)
+		return;
+
+	create_vector_size(stda, fta, 1);
+	testing_on("from random filled vector size " << stda->size());
+	create_vector_size(stdb, ftb, 1);
+	testing_on("to random filled vector size " << stdb->size());
+	testing("swap(a, b)");
+	std::swap(*stda, *stdb);
+	ft::swap(*fta, *ftb);
+	equal(stda, fta);
+	equal(stdb, ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+}
+
+template<class T>
+void		test_non_member_overloads(data<T> *d) {
+	print_title("swap (non-member)");		//TODO check iterator validity
+	test_swap_nm(d, 0, 0);
+	test_swap_nm(d, 0, 1);
+	test_swap_nm(d, 1, 0);
+	test_swap_nm(d, 1, 1);
+	//TODO relational operators
 }
 
 /*-----------------------------------MAIN-----------------------------------*/
@@ -1206,8 +1390,6 @@ void		do_tests(void) {
 
 	print_group_title("CONSTRUCTORS");
 	test_constructors(d);
-	//print_group_title("OPERATORS");
-	//test_operators(d);
 	//print_group_title("ITERATORS");
 	//test_iterators(d);
 	print_group_title("CAPACITY");
@@ -1216,10 +1398,8 @@ void		do_tests(void) {
 	test_element_access(d);
 	print_group_title("MODIFIERS");
 	test_modifiers(d);
-	//print_group_title("OPERATIONS");
-	//test_operations(d);
-	//print_group_title("NON-MEMBER OVERLOADS");
-	//test_non_member_overloads(d);
+	print_group_title("NON-MEMBER OVERLOADS");
+	test_non_member_overloads(d);
 
 	std::cout << std::endl << GREEN << "pass: " << RESET << d->pass << RED << "\tfail:\t" << RESET << d->fail << std::endl;
 	delete d;
