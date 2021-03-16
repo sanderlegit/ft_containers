@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/10 16:43:21 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/16 14:36:22 by dries               **ee8ee**            */
+/*   Updated: 2021/03/16 17:02:58 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,16 +105,16 @@ namespace ft {
 
 		//}
 
-		//vector (const vector& x) {
+		vector (const vector& x) {
 
-		//}
+		}
 /*-------------------------------------------CAPACITY-------------------------------------------*/
 
 /*	Returns the number of elements in the vector.
  *	This is the number of actual objects held in the vector, which is not necessarily equal to 
  *	its storage capacity.	*/
 
-		size_type				size() const {
+		size_type				size () const {
 			return _size;
 		}
 
@@ -124,7 +124,7 @@ namespace ft {
  *	that size: it can still fail to allocate storage at any point before that size is reached.	*/
 
 
-		size_type				max_size() const {
+		size_type				max_size () const {
 			return (size_type(-1) / sizeof(int));
 		}
 
@@ -198,7 +198,7 @@ namespace ft {
  *	The capacity of a vector can be explicitly altered by calling member vector::reserve.	*/
 
 
-		size_type				capacity() const {
+		size_type				capacity () const {
 			return _capacity;
 		}
 
@@ -206,7 +206,7 @@ namespace ft {
  *	This function does not modify the container in any way. To clear the content of a vector,
  *	see vector::clear.	*/
 
-		bool					empty() const {
+		bool					empty () const {
 			return !_size;
 		}
 
@@ -267,11 +267,11 @@ namespace ft {
  *	a direct reference.
  *	Calling this function on an empty container causes undefined behavior.	*/
 
-		reference				front() {
+		reference				front () {
 			return _data[0];
 		}
 
-		const_reference			front() const {
+		const_reference			front () const {
 			return _data[0];
 		}
 
@@ -280,11 +280,11 @@ namespace ft {
  *	a direct reference.
  *	Calling this function on an empty container causes undefined behavior.	*/
 
-		reference				back() {
+		reference				back () {
 			return _data[_size - 1];
 		}
 
-		const_reference			back() const {
+		const_reference			back () const {
 			return _data[_size - 1];
 		}
 
@@ -302,12 +302,46 @@ namespace ft {
 /*	Removes the last element in the vector, effectively reducing the container size by one.
  *	This destroys the removed element.	*/
 
-		void					pop_back() {
+		void					pop_back () {
 			resize(_size - 1);
 		}
 
+/*	Exchanges the content of the container by the content of x, which is another vector object 
+ *	of the same type. Sizes may differ.
+ *	After the call to this member function, the elements in this container are those which were 
+ *	in x before the call, and the elements of x are those which were in this. All iterators, 
+ *	references and pointers remain valid for the swapped objects.	*/
+
+		void				swap (vector& x) {
+			pointer		dswp;
+			size_t		sswp;
+
+			dswp = _data;
+			_data = x._data;
+			x._data = dswp;
+			sswp = _size;
+			_size = x._size;
+			x._size = sswp;
+			sswp = _capacity;
+			_capacity = x._capacity;
+			x._capacity = sswp;
+		}
+
+/*	Removes all elements from the vector (which are destroyed), leaving the container with a size 
+ *	of 0.
+ *	A reallocation is not guaranteed to happen, and the vector capacity is not guaranteed to change 
+ *	due to calling this function. A typical alternative that forces a reallocation is to use swap:
+ *		vector<T>().swap(x);   // clear x reallocating	*/
+
+		void				clear() {
+			for (size_type i = 0; i != _size; i++)
+				_alloc.destroy(_data + i);
+			_size = 0;
+		}
+/*-------------------------------------------NON-STL FUNCTIONS-------------------------------------------*/
+
 	public:
-		void					debug() {
+		void					debug () {
 			std::cout << "size: " << _size << std::endl;
 			std::cout << "capacity: " << _capacity << std::endl;
 			for (size_t i = 0; i != _size; i++) {
@@ -315,9 +349,10 @@ namespace ft {
 			}
 		}
 
+
 	private:
-		value_type*				allocate(const size_type& size) {
-			value_type	*tmp;
+		pointer				allocate (const size_type& size) {
+			pointer	tmp;
 
 			tmp = _alloc.allocate(size);
 			for (size_type i = 0; i != size; i++)
@@ -325,7 +360,7 @@ namespace ft {
 			return tmp;
 		}
 
-		void					dellocate(pointer ptr, const size_type& size) {
+		void					dellocate (pointer ptr, const size_type& size) {
 			for (size_type i = 0; i != size; i++)
 				_alloc.destroy(ptr + i);
 			_alloc.deallocate(ptr, 2);

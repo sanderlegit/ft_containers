@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/11 13:50:52 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/16 15:09:42 by dries               **ee8ee**            */
+/*   Updated: 2021/03/16 16:57:16 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1094,6 +1094,83 @@ void		test_pop_back(data<T> *d) {
 	incr_score(d);
 }
 
+/*	Swap tests:
+ *	swap empty with empty
+ *	swap empty with full
+ *	swap full with empty
+ *	swap full with full
+ *	swap size 1 with size 1	*/
+
+template<class T>
+void		test_swap(data<T> *d, bool emptya, bool emptyb) {
+	std::vector<T>		*stda = NULL;
+	ft::vector<T>		*fta = NULL;
+	std::vector<T>		*stdb = NULL;
+	ft::vector<T>		*ftb = NULL;
+
+	create_vector(stda, fta, emptya);
+	testing_on("from random filled vector size " << stda->size());
+	create_vector(stdb, ftb, emptyb);
+	testing_on("to random filled vector size " << stdb->size());
+	testing("a.swap(b)");
+	stda->swap(*stdb);
+	fta->swap(*ftb);
+	equal(stda, fta);
+	equal(stdb, ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+
+	if (emptya || emptyb)
+		return;
+
+	create_vector_size(stda, fta, 1);
+	testing_on("from random filled vector size " << stda->size());
+	create_vector_size(stdb, ftb, 1);
+	testing_on("to random filled vector size " << stdb->size());
+	testing("a.swap(b)");
+	stda->swap(*stdb);
+	fta->swap(*ftb);
+	equal(stda, fta);
+	equal(stdb, ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+}
+
+template<class T>
+void		test_clear(data<T> *d, bool empty) {
+	std::vector<T>		*std = NULL;
+	ft::vector<T>		*ft = NULL;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	testing("clear()");
+	std->clear();
+	ft->clear();
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	if (empty)
+		return;
+
+	create_vector_size(std, ft, 1);
+	testing_on("random filled vector size " << std->size());
+	testing("clear()");
+	std->clear();
+	ft->clear();
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
 template<class T>
 void		test_modifiers(data<T> *d) {
 	(void)d;
@@ -1109,8 +1186,14 @@ void		test_modifiers(data<T> *d) {
 	//print_title("insert [range]");
 	//print_title("erase [posotion]");
 	//print_title("erase [range]");
-	//print_title("swap");
-	//print_title("clear");
+	print_title("swap");
+	test_swap(d, 0, 0);
+	test_swap(d, 0, 1);
+	test_swap(d, 1, 0);
+	test_swap(d, 1, 1);
+	print_title("clear");
+	test_clear(d, 0);
+	test_clear(d, 1);
 }
 
 /*-----------------------------------MAIN-----------------------------------*/

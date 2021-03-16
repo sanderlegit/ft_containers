@@ -6,7 +6,7 @@
 #    By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8          #
 #                                                     Y8 .e* 8 *e. 8P          #
 #    Created: 2021/03/10 18:00:06 by dries             *8*   8   *8*           #
-#    Updated: 2021/03/16 15:11:45 by dries               **ee8ee**             #
+#    Updated: 2021/03/16 16:57:45 by dries               **ee8ee**             #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,12 +37,12 @@ back				Access last element (public member function )		-written,tested
 
 Modifiers:
 assign				Assign vector content (public member function )
-push_back			Add element at the end (public member function )					-written,tested
-pop_back			Delete last element (public member function )						-written,tested
+push_back			Add element at the end (public member function )		-written,tested
+pop_back			Delete last element (public member function )			-written,tested
 insert				Insert elements (public member function )
 erase				Erase elements (public member function )
-swap				Swap content (public member function )
-clear				Clear content (public member function )
+swap				Swap content (public member function )					-written,tested
+clear				Clear content (public member function )					-written,tested
 
 Non-member function overloads
 relational operators		Relational operators for vector (function template )
