@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/10 16:43:21 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/15 18:04:29 by dries               **ee8ee**            */
+/*   Updated: 2021/03/16 14:36:22 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,12 @@
 #include <iterator>
 #include <memory>
 #include <iostream>
+#include <stdexcept>
 
 /*	memory		allocator
  *	iterator	iterator_tag	
- *	iostream	debug prints	*/
+ *	iostream	debug prints
+ *	stdexcept	out_of_range	*/
 
 namespace ft {
 	template <class T, class Alloc = std::allocator<T> >
@@ -116,27 +118,14 @@ namespace ft {
 			return _size;
 		}
 
-/*	Returns the size of the storage space currently allocated for the vector, expressed in terms 
- *	of elements.
- *	This capacity is not necessarily equal to the vector size. It can be equal or greater, with 
- *	the extra space allowing to accommodate for growth without the need to reallocate on each insertion.
- *	Notice that this capacity does not suppose a limit on the size of the vector. When this 
- *	capacity is exhausted and more is needed, it is automatically expanded by the container 
- *	(reallocating it storage space). The theoretical limit on the size of a vector is given by 
- *	member max_size.
- *	The capacity of a vector can be explicitly altered by calling member vector::reserve.	*/
+/*	Returns the maximum number of elements that the vector can hold.
+ *	This is the maximum potential size the container can reach due to known system or library 
+ *	implementation limitations, but the container is by no means guaranteed to be able to reach 
+ *	that size: it can still fail to allocate storage at any point before that size is reached.	*/
 
 
-		size_type				capacity() const {
-			return _capacity;
-		}
-
-/*	Returns whether the vector is empty (i.e. whether its size is 0).
- *	This function does not modify the container in any way. To clear the content of a vector,
- *	see vector::clear.	*/
-
-		bool					empty() const {
-			return !_size;
+		size_type				max_size() const {
+			return (size_type(-1) / sizeof(int));
 		}
 
 /*	Resizes the container so that it contains n elements.  
@@ -164,8 +153,8 @@ namespace ft {
 				tmp = _alloc.allocate(new_capacity);
 				for (size_type i = 0; i != n; i++)
 					_alloc.construct(tmp + i, val);
-				for (size_type i = n; i != new_capacity; i++)
-					_alloc.construct(tmp + i);
+				//for (size_type i = n; i != new_capacity; i++)
+					//_alloc.construct(tmp + i);
 				_data = tmp;
 				_size = n;
 				_capacity = new_capacity;
@@ -179,8 +168,8 @@ namespace ft {
 					_alloc.construct(tmp + i, _data[i]);
 				for (size_type i = _size; i != n; i++)
 					_alloc.construct(tmp + i, val);
-				for (size_type i = n; i != new_capacity; i++)
-					_alloc.construct(tmp + i);
+				//for (size_type i = n; i != new_capacity; i++)
+					//_alloc.construct(tmp + i);
 				dellocate(_data, _capacity);
 				_data = tmp;
 				_size = n;
@@ -198,7 +187,80 @@ namespace ft {
 			}
 		}
 
+/*	Returns the size of the storage space currently allocated for the vector, expressed in terms 
+ *	of elements.
+ *	This capacity is not necessarily equal to the vector size. It can be equal or greater, with 
+ *	the extra space allowing to accommodate for growth without the need to reallocate on each insertion.
+ *	Notice that this capacity does not suppose a limit on the size of the vector. When this 
+ *	capacity is exhausted and more is needed, it is automatically expanded by the container 
+ *	(reallocating it storage space). The theoretical limit on the size of a vector is given by 
+ *	member max_size.
+ *	The capacity of a vector can be explicitly altered by calling member vector::reserve.	*/
+
+
+		size_type				capacity() const {
+			return _capacity;
+		}
+
+/*	Returns whether the vector is empty (i.e. whether its size is 0).
+ *	This function does not modify the container in any way. To clear the content of a vector,
+ *	see vector::clear.	*/
+
+		bool					empty() const {
+			return !_size;
+		}
+
+/*	Requests that the vector capacity be at least enough to contain n elements.
+ *	If n is greater than the current vector capacity, the function causes the container to 
+ *	reallocate its storage increasing its capacity to n (or greater).
+ *	In all other cases, the function call does not cause a reallocation and the vector capacity 
+ *	is not affected.
+ *	This function has no effect on the vector size and cannot alter its elements.	*/
+
+		void					reserve (size_type n) {
+			value_type	*tmp;
+
+			if (n <= _capacity)
+				return;
+			tmp = _alloc.allocate(n);
+			for (size_type i = 0; i != _size; i++)
+				_alloc.construct(tmp + i, _data[i]);
+			//for (size_type i = n; i != n; i++)
+				//_alloc.construct(tmp + i);
+			_data = tmp;
+			_capacity = n;
+		}
+
+
 /*-------------------------------------------ELEMENT ACCESS-------------------------------------------*/
+
+/*	Returns a reference to the element at position n in the vector container.
+ *	Portable programs should never call this function with an argument n that is out of range, since 
+ *	this causes undefined behavior.	*/
+
+		reference				operator[] (size_type n) {
+			return _data[n];
+		}
+
+		const_reference			operator[] (size_type n) const {
+			return _data[n];
+		}
+
+/*	Returns a reference to the element at position n in the vector.
+ *	The function automatically checks whether n is within the bounds of valid elements in the vector, 
+ *	throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).	*/
+
+		reference				at (size_type n) {
+			if (n >= _size)
+				throw std::out_of_range("Vector::at(n) : n is out of range");
+			return _data[n];
+		}
+
+		const_reference			at (size_type n) const {
+			if (n >= _size)
+				throw std::out_of_range("Vector::at(n) : n is out of range");
+			return _data[n];
+		}
 
 /*	Returns a reference to the first element in the vector.
  *	Unlike member vector::begin, which returns an iterator to this same element, this function returns

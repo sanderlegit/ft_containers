@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/11 13:50:52 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/15 18:12:54 by dries               **ee8ee**            */
+/*   Updated: 2021/03/16 15:09:42 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@
 //#define TESTING	false
 #define TESTING_ON	true
 //#define TESTING_ON	false
-//#define VERBOSE	true
-#define VERBOSE	false
+#define VERBOSE	true
+//#define VERBOSE	false
 //#define VVERBOSE	true
 #define VVERBOSE	false
 
@@ -425,6 +425,7 @@ void		test_capacity_func(data<T> *d, bool empty) {
 	testing_on("random filled vector size " << std->size());
 	testing("capacity()");
 	test("capacity()", std->capacity(), ft->capacity());
+	equal(std, ft);
 	incr_score(d);
 	delete std;
 	delete ft;
@@ -439,6 +440,7 @@ void		test_empty(data<T> *d, bool empty) {
 	testing_on("random filled vector size " << std->size());
 	testing("empty()");
 	test("empty()", std->empty(), ft->empty());
+	equal(std, ft);
 	incr_score(d);
 	delete std;
 	delete ft;
@@ -453,6 +455,200 @@ void		test_size(data<T> *d, bool empty) {
 	testing_on("random filled vector size " << std->size());
 	testing("size()");
 	test("size()", std->size(), ft->size());
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+/*	Resize tests:
+ *	size to size2 (empty)
+ *	size to size + 1 (empty)
+ *	size to size (empty)
+ *	size to zero (empty)
+ *	0 to size (value initialized) (empty)
+ *	size to size - 1
+ *	size to size ^ 2	*/
+
+template<class T>
+void		test_resize(data<T> *d, bool empty) {
+	std::vector<T>		*std = NULL;
+	ft::vector<T>		*ft = NULL;
+	T					val;
+	size_t				size;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	size = rand() % 512;
+	val = randomize<T>();
+	testing("resize(" << size << ", " << val << ")");
+	std->resize(size, val);
+	ft->resize(size, val);
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	size = std->size() + 1;
+	val = randomize<T>();
+	testing("resize(" << size << ", " << val << ")");
+	std->resize(size, val);
+	ft->resize(size, val);
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	size = std->size();
+	val = randomize<T>();
+	testing("resize(" << size << ", " << val << ")");
+	std->resize(size, val);
+	ft->resize(size, val);
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	size = 0;
+	val = randomize<T>();
+	testing("resize(" << size << ", " << val << ")");
+	std->resize(size, val);
+	ft->resize(size, val);
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	if (empty)
+		return;
+
+	create_vector(std, ft, 1);
+	testing_on("random filled vector size " << std->size());
+	size = (rand() % 256) + 1;
+	testing("resize(" << size << ")");
+	std->resize(size);
+	ft->resize(size);
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	size = std->size() - 1;
+	testing("resize(" << size << ")");
+	std->resize(size);
+	ft->resize(size);
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	size = std->size() * std->size();
+	testing("resize(" << size << ")");
+	std->resize(size);
+	ft->resize(size);
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class T>
+void		test_max_size(data<T> *d) {
+	std::vector<T>		*std = NULL;
+	ft::vector<T>		*ft = NULL;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	testing("max_size()");
+	test("max_size()", std->max_size(), ft->max_size());
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+/*	Reserve tests:
+ *	size to size2 (empty)
+ *	size to size + 1 (empty)
+ *	size to size (empty);
+ *	size to size - 1
+ *	size to zero	*/
+
+template<class T>
+void		test_reserve(data<T> *d, bool empty) {
+	std::vector<T>		*std = NULL;
+	ft::vector<T>		*ft = NULL;
+	size_t				size;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	size = (rand() % 512) + 1;
+	testing("reserve(" << size << ")");
+	test("max_size()", std->max_size(), ft->max_size());
+	test_equivalence(d, std, ft, 1);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	size = std->size() + 1;
+	testing("reserve(" << size << ")");
+	test("max_size()", std->max_size(), ft->max_size());
+	test_equivalence(d, std, ft, 1);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	size = std->size();
+	testing("reserve(" << size << ")");
+	test("max_size()", std->max_size(), ft->max_size());
+	test_equivalence(d, std, ft, 1);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	if (empty)
+		return;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	size = std->size() - 1;
+	testing("reserve(" << size << ")");
+	test("max_size()", std->max_size(), ft->max_size());
+	test_equivalence(d, std, ft, 1);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	size = rand() % std->size();
+	testing("reserve(" << size << ")");
+	test("max_size()", std->max_size(), ft->max_size());
+	test_equivalence(d, std, ft, 1);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	size = 0;
+	testing("reserve(" << size << ")");
+	test("max_size()", std->max_size(), ft->max_size());
+	test_equivalence(d, std, ft, 1);
 	incr_score(d);
 	delete std;
 	delete ft;
@@ -464,45 +660,312 @@ void		test_capacity(data<T> *d) {
 	print_title("size");
 	test_size(d, 0);
 	test_size(d, 1);
-	//print_title("max_size");
+	print_title("max_size");
+	test_max_size(d);
 	print_title("resize");
-	//test_resize(d, 0);
-	//test_resize(d, 1);
+	test_resize(d, 0);
+	test_resize(d, 1);
 	print_title("capacity");
 	test_capacity_func(d, 0);
 	test_capacity_func(d, 1);
 	print_title("empty");
 	test_empty(d, 0);
 	test_empty(d, 1);
-	//print_title("reserve");
-	//print_title("shrink_to_fit");
+	print_title("reserve");
+	test_reserve(d, 0);
+	test_reserve(d, 1);
 }
 
 /*-----------------------------------ELEMENT ACCESS TESTS-----------------------------------*/
 
-//template<class T>
-//void		test_at(data<T> *d, bool empty) {
-	//std::vector<T>		*std = NULL;
-	//ft::vector<T>		*ft = NULL;
-	//T					stdr1;
-	//T					ftr1;
-	//size_t				idx;
+template<class T>
+void		test_brackets_operator(data<T> *d) {
+	std::vector<T>		*std = NULL;
+	ft::vector<T>		*ft = NULL;
+	T					stdr1;
+	T					ftr1;
+	size_t				idx;
 
-	//create_vector(std, ft, empty);
-	//testing_on("random filled vector size " << std->size());
-	//idx = 0;
-	//std::cout << "idx: " << idx << std::endl;
-	//test("at(idx)", std->at(idx), ft->at(idx));
-	//idx = rand() % std->size();
-	//std::cout << "idx: " << idx << std::endl;
-	//test("at(idx)", std->at(idx), ft->at(idx));
-	//idx = std->size() - 1;
-	//std::cout << "idx: " << idx << std::endl;
-	//test("at(idx)", std->at(idx), ft->at(idx));
-	//incr_score(d);
-	//delete std;
-	//delete ft;
-//}
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	idx = std->size() - 1;
+	testing("vec[" << idx << "]");
+	stdr1 = (*std)[idx];
+	ftr1 = (*ft)[idx];
+	print_comp("[]", stdr1, ftr1);
+	comp(stdr1 == ftr1);
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	idx = rand() % std->size();
+	testing("[" << idx << "]");
+	stdr1 = (*std)[idx];
+	ftr1 = (*ft)[idx];
+	print_comp("at()", stdr1, ftr1);
+	comp(stdr1 == ftr1);
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	idx = 0;
+	testing("[" << idx << "]");
+	stdr1 = (*std)[idx];
+	ftr1 = (*ft)[idx];
+	print_comp("at()", stdr1, ftr1);
+	comp(stdr1 == ftr1);
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	idx = 1;
+	testing("[" << idx << "]");
+	stdr1 = (*std)[idx];
+	ftr1 = (*ft)[idx];
+	print_comp("at()", stdr1, ftr1);
+	comp(stdr1 == ftr1);
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+/*	At tests:
+ *		do a bool check threw exception
+ *		compare exception y/n, if n, compare return
+ *	size 	at(size)	(empty)
+ *	size	at(size - 1)	(empty)
+ *	size	at(size + 1)	(empty)
+ *	size	at(-1)	(empty)
+ *	size	at(rand() % size)
+ *	size	at(0)
+ *	size	at(1)	*/
+
+template<class T>
+void		test_at(data<T> *d, bool empty) {
+	std::vector<T>		*std = NULL;
+	ft::vector<T>		*ft = NULL;
+	T					stdr1;
+	T					ftr1;
+	bool				std_threw;
+	bool				ft_threw;
+	size_t				idx;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	idx = std->size();
+	testing("at(" << idx << ")");
+	try {
+		stdr1 = std->at(idx);
+		std_threw = 0;
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		std_threw = 1;
+	}
+	try {
+		ftr1 = ft->at(idx);
+		ft_threw = 0;
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		ft_threw = 1;
+	}
+	print_comp("threw", std_threw, ft_threw);
+	comp(std_threw == ft_threw);
+	if (!std_threw) {
+		print_comp("at()", stdr1, ftr1);
+		comp(stdr1 == ftr1);
+	}
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	idx = std->size() - 1;
+	testing("at(" << idx << ")");
+	try {
+		stdr1 = std->at(idx);
+		std_threw = 0;
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		std_threw = 1;
+	}
+	try {
+		ftr1 = ft->at(idx);
+		ft_threw = 0;
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		ft_threw = 1;
+	}
+	print_comp("threw", std_threw, ft_threw);
+	comp(std_threw == ft_threw);
+	if (!std_threw) {
+		print_comp("at()", stdr1, ftr1);
+		comp(stdr1 == ftr1);
+	}
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	idx = std->size() + 1;
+	testing("at(" << idx << ")");
+	try {
+		stdr1 = std->at(idx);
+		std_threw = 0;
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		std_threw = 1;
+	}
+	try {
+		ftr1 = ft->at(idx);
+		ft_threw = 0;
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		ft_threw = 1;
+	}
+	print_comp("threw", std_threw, ft_threw);
+	comp(std_threw == ft_threw);
+	if (!std_threw) {
+		print_comp("at()", stdr1, ftr1);
+		comp(stdr1 == ftr1);
+	}
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	idx = -1;
+	testing("at(" << idx << ")");
+	try {
+		stdr1 = std->at(idx);
+		std_threw = 0;
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		std_threw = 1;
+	}
+	try {
+		ftr1 = ft->at(idx);
+		ft_threw = 0;
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		ft_threw = 1;
+	}
+	print_comp("threw", std_threw, ft_threw);
+	comp(std_threw == ft_threw);
+	if (!std_threw) {
+		print_comp("at()", stdr1, ftr1);
+		comp(stdr1 == ftr1);
+	}
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	if (empty)
+		return;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	idx = rand() % std->size();
+	testing("at(" << idx << ")");
+	try {
+		stdr1 = std->at(idx);
+		std_threw = 0;
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		std_threw = 1;
+	}
+	try {
+		ftr1 = ft->at(idx);
+		ft_threw = 0;
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		ft_threw = 1;
+	}
+	print_comp("threw", std_threw, ft_threw);
+	comp(std_threw == ft_threw);
+	if (!std_threw) {
+		print_comp("at()", stdr1, ftr1);
+		comp(stdr1 == ftr1);
+	}
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	idx = 0;
+	testing("at(" << idx << ")");
+	try {
+		stdr1 = std->at(idx);
+		std_threw = 0;
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		std_threw = 1;
+	}
+	try {
+		ftr1 = ft->at(idx);
+		ft_threw = 0;
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		ft_threw = 1;
+	}
+	print_comp("threw", std_threw, ft_threw);
+	comp(std_threw == ft_threw);
+	if (!std_threw) {
+		print_comp("at()", stdr1, ftr1);
+		comp(stdr1 == ftr1);
+	}
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+	
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	idx = 1;
+	testing("at(" << idx << ")");
+	try {
+		stdr1 = std->at(idx);
+		std_threw = 0;
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		std_threw = 1;
+	}
+	try {
+		ftr1 = ft->at(idx);
+		ft_threw = 0;
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		ft_threw = 1;
+	}
+	print_comp("threw", std_threw, ft_threw);
+	comp(std_threw == ft_threw);
+	if (!std_threw) {
+		print_comp("at()", stdr1, ftr1);
+		comp(stdr1 == ftr1);
+	}
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
 
 template<class T>
 void		test_front(data<T> *d) {
@@ -513,6 +976,7 @@ void		test_front(data<T> *d) {
 	testing_on("random filled vector size " << std->size());
 	testing("front()");
 	test("front()", std->front(), ft->front());
+	equal(std, ft);
 	incr_score(d);
 	delete std;
 	delete ft;
@@ -521,6 +985,7 @@ void		test_front(data<T> *d) {
 	testing_on("random filled vector size " << std->size());
 	testing("front()");
 	test("front()", std->front(), ft->front());
+	equal(std, ft);
 	incr_score(d);
 	delete std;
 	delete ft;
@@ -535,6 +1000,7 @@ void		test_back(data<T> *d) {
 	testing_on("random filled vector size " << std->size());
 	testing("back()");
 	test("back()", std->back(), ft->back());
+	equal(std, ft);
 	incr_score(d);
 	delete std;
 	delete ft;
@@ -543,6 +1009,7 @@ void		test_back(data<T> *d) {
 	testing_on("random filled vector size " << std->size());
 	testing("back()");
 	test("back()", std->back(), ft->back());
+	equal(std, ft);
 	incr_score(d);
 	delete std;
 	delete ft;
@@ -550,12 +1017,13 @@ void		test_back(data<T> *d) {
 
 template<class T>
 void		test_element_access(data<T> *d) {
-	//print_title("operator[] [non-const]");
-	//print_title("operator[] [const]");
-	//print_title("at [non-const]");
-	//test_at(d, 0);
-	//test_at(d, 1);
-	//print_title("at [const]");
+	print_title("operator[] [non-const]");
+	test_brackets_operator(d);
+	//print_title("operator[] [const]");	//TODO maybe a good way to verify that something is const return is to try compile code that discrads qualifiers and checking the error return in bash
+	print_title("at [non-const]");
+	test_at(d, 0);
+	test_at(d, 1);
+	print_title("at [const]");
 	//test_at_const(d, 0);
 	//test_at_const(d, 1);
 	print_title("front [non-const]");

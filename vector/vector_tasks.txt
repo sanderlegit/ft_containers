@@ -6,7 +6,7 @@
 #    By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8          #
 #                                                     Y8 .e* 8 *e. 8P          #
 #    Created: 2021/03/10 18:00:06 by dries             *8*   8   *8*           #
-#    Updated: 2021/03/15 18:04:42 by dries               **ee8ee**             #
+#    Updated: 2021/03/16 15:11:45 by dries               **ee8ee**             #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,26 +20,20 @@ begin				Return iterator to beginning (public member function )
 end					Return iterator to end (public member function )
 rbegin				Return reverse iterator to reverse beginning (public member function )
 rend				Return reverse iterator to reverse end (public member function )
-cbegin				Return const_iterator to beginning (public member function )
-cend				Return const_iterator to end (public member function )
-crbegin				Return const_reverse_iterator to reverse beginning (public member function )
-crend				Return const_reverse_iterator to reverse end (public member function )
 
 Capacity:
 size				Return size (public member function )									-written,tested
-max_size			Return maximum size (public member function )
-resize				Change size (public member function )									-written,
+max_size			Return maximum size (public member function )							-written,tested
+resize				Change size (public member function )									-written,tested
 capacity			Return size of allocated storage capacity (public member function )		-written,tested
 empty				Test whether vector is empty (public member function )					-written,tested
-reserve				Request a change in capacity (public member function )
-shrink_to_fit 		shrink to fit (public member function )
+reserve				Request a change in capacity (public member function )					-written,tested
 
 Element access:
-operator[]			Access element (public member function )
-at					Access element (public member function )
+operator[]			Access element (public member function )			-written,tested
+at					Access element (public member function )			-written,tested
 front				Access first element (public member function )		-written,tested
 back				Access last element (public member function )		-written,tested
-data 				Access data (public member function )
 
 Modifiers:
 assign				Assign vector content (public member function )
@@ -49,8 +43,6 @@ insert				Insert elements (public member function )
 erase				Erase elements (public member function )
 swap				Swap content (public member function )
 clear				Clear content (public member function )
-emplace 			Construct and insert element (public member function )
-emplace_back 		Construct and insert element at the end (public member function )
 
 Non-member function overloads
 relational operators		Relational operators for vector (function template )
@@ -58,8 +50,6 @@ swap						Exchange contents of vectors (function template )
 
 Template specializations
 vector<bool>				Vector of bool (class template specialization )
-
-
 
 iterators!
 https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator
