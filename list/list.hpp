@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: xxxx/xx/xx xx:xx:xx by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/17 15:22:32 by dries               **ee8ee**            */
+/*   Updated: 2021/03/17 15:23:21 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1303,23 +1303,6 @@ namespace ft {
 		typename list<T>::size_type		i;
 		typename list<T>::const_iterator		rhi;
 		typename list<T>::const_iterator		lhi;
-
-		//if (lhs.size() == 0 && rhs.size() == 0)
-			//return false;
-		//if (lhs.size() == rhs.size()) {
-			//i = 0;
-			//rhi = rhs.begin();
-			//lhi = lhs.begin();
-			//while (i != lhs.size()) {
-				//if (!(*lhi < *rhi))
-					//return false;
-				//++i;
-				//++rhi;
-				//++lhi;
-			//}
-		//} else if (lhs.size() >= rhs.size())
-			//return false;
-		//return true;
 
 		i = 0;
 		rhi = rhs.begin();
