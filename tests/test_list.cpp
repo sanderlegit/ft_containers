@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/02/18 12:04:31 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/11 13:59:03 by dries               **ee8ee**            */
+/*   Updated: 2021/03/17 15:19:38 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -3831,8 +3831,8 @@ void		test_equals_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list(stdb, ftb, emptyb);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda == stdb);
-	ftret = (stda == stdb);
+	stdret = (*stda == *stdb);
+	ftret = (*fta == *ftb);
 	print_comp_iter("==", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -3840,8 +3840,8 @@ void		test_equals_comparison(data<T> *d, bool emptya, bool emptyb) {
 	stdb = stda;
 	ftb = fta;
 	std::cout << "  copying first list to second" << std::endl;
-	stdret = (stda == stdb);
-	ftret = (stda == stdb);
+	stdret = (*stda == *stdb);
+	ftret = (*fta == *ftb);
 	print_comp_iter("==", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -3854,8 +3854,8 @@ void		test_equals_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 0);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda == stdb);
-	ftret = (stda == stdb);
+	stdret = (*stda == *stdb);
+	ftret = (*fta == *ftb);
 	print_comp_iter("==", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -3869,8 +3869,8 @@ void		test_equals_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 1);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda == stdb);
-	ftret = (stda == stdb);
+	stdret = (*stda == *stdb);
+	ftret = (*fta == *ftb);
 	print_comp_iter("==", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -3884,8 +3884,8 @@ void		test_equals_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 1);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda == stdb);
-	ftret = (stda == stdb);
+	stdret = (*stda == *stdb);
+	ftret = (*fta == *ftb);
 	print_comp_iter("==", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -3909,8 +3909,8 @@ void		test_not_equals_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list(stdb, ftb, emptyb);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda != stdb);
-	ftret = (stda != stdb);
+	stdret = (*stda != *stdb);
+	ftret = (*fta != *ftb);
 	print_comp_iter("!=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -3918,8 +3918,8 @@ void		test_not_equals_comparison(data<T> *d, bool emptya, bool emptyb) {
 	stdb = stda;
 	ftb = fta;
 	std::cout << "  copying first list to second" << std::endl;
-	stdret = (stda != stdb);
-	ftret = (stda != stdb);
+	stdret = (*stda != *stdb);
+	ftret = (*fta != *ftb);
 	print_comp_iter("!=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -3932,8 +3932,8 @@ void		test_not_equals_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 0);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda != stdb);
-	ftret = (stda != stdb);
+	stdret = (*stda != *stdb);
+	ftret = (*fta != *ftb);
 	print_comp_iter("!=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -3947,8 +3947,8 @@ void		test_not_equals_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 1);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda != stdb);
-	ftret = (stda != stdb);
+	stdret = (*stda != *stdb);
+	ftret = (*fta != *ftb);
 	print_comp_iter("!=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -3962,8 +3962,8 @@ void		test_not_equals_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 1);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda != stdb);
-	ftret = (stda != stdb);
+	stdret = (*stda != *stdb);
+	ftret = (*fta != *ftb);
 	print_comp_iter("!=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -3987,8 +3987,8 @@ void		test_less_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list(stdb, ftb, emptyb);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda < stdb);
-	ftret = (stda < stdb);
+	stdret = (*stda < *stdb);
+	ftret = (*fta < *ftb);
 	print_comp_iter("<", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -3996,8 +3996,8 @@ void		test_less_comparison(data<T> *d, bool emptya, bool emptyb) {
 	stdb = stda;
 	ftb = fta;
 	std::cout << "  copying first list to second" << std::endl;
-	stdret = (stda < stdb);
-	ftret = (stda < stdb);
+	stdret = (*stda < *stdb);
+	ftret = (*fta < *ftb);
 	print_comp_iter("<", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4010,8 +4010,8 @@ void		test_less_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 0);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda < stdb);
-	ftret = (stda < stdb);
+	stdret = (*stda < *stdb);
+	ftret = (*fta < *ftb);
 	print_comp_iter("<", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4025,8 +4025,8 @@ void		test_less_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 1);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda < stdb);
-	ftret = (stda < stdb);
+	stdret = (*stda < *stdb);
+	ftret = (*fta < *ftb);
 	print_comp_iter("<", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4040,8 +4040,8 @@ void		test_less_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 1);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda < stdb);
-	ftret = (stda < stdb);
+	stdret = (*stda < *stdb);
+	ftret = (*fta < *ftb);
 	print_comp_iter("<", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4065,8 +4065,8 @@ void		test_less_eq_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list(stdb, ftb, emptyb);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda <= stdb);
-	ftret = (stda <= stdb);
+	stdret = (*stda <= *stdb);
+	ftret = (*fta <= *ftb);
 	print_comp_iter("<=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4074,8 +4074,8 @@ void		test_less_eq_comparison(data<T> *d, bool emptya, bool emptyb) {
 	stdb = stda;
 	ftb = fta;
 	std::cout << "  copying first list to second" << std::endl;
-	stdret = (stda <= stdb);
-	ftret = (stda <= stdb);
+	stdret = (*stda <= *stdb);
+	ftret = (*fta <= *ftb);
 	print_comp_iter("<=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4088,8 +4088,8 @@ void		test_less_eq_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 0);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda <= stdb);
-	ftret = (stda <= stdb);
+	stdret = (*stda <= *stdb);
+	ftret = (*fta <= *ftb);
 	print_comp_iter("<=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4103,8 +4103,8 @@ void		test_less_eq_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 1);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda <= stdb);
-	ftret = (stda <= stdb);
+	stdret = (*stda <= *stdb);
+	ftret = (*fta <= *ftb);
 	print_comp_iter("<=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4118,8 +4118,8 @@ void		test_less_eq_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 1);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda <= stdb);
-	ftret = (stda <= stdb);
+	stdret = (*stda <= *stdb);
+	ftret = (*fta <= *ftb);
 	print_comp_iter("<=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4143,8 +4143,8 @@ void		test_greater_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list(stdb, ftb, emptyb);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda > stdb);
-	ftret = (stda > stdb);
+	stdret = (*stda > *stdb);
+	ftret = (*fta > *ftb);
 	print_comp_iter(">", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4152,8 +4152,8 @@ void		test_greater_comparison(data<T> *d, bool emptya, bool emptyb) {
 	stdb = stda;
 	ftb = fta;
 	std::cout << "  copying first list to second" << std::endl;
-	stdret = (stda > stdb);
-	ftret = (stda > stdb);
+	stdret = (*stda > *stdb);
+	ftret = (*fta > *ftb);
 	print_comp_iter(">", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4166,8 +4166,8 @@ void		test_greater_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 0);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda > stdb);
-	ftret = (stda > stdb);
+	stdret = (*stda > *stdb);
+	ftret = (*fta > *ftb);
 	print_comp_iter(">", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4181,8 +4181,8 @@ void		test_greater_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 1);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda > stdb);
-	ftret = (stda > stdb);
+	stdret = (*stda > *stdb);
+	ftret = (*fta > *ftb);
 	print_comp_iter(">", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4196,8 +4196,8 @@ void		test_greater_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 1);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda > stdb);
-	ftret = (stda > stdb);
+	stdret = (*stda > *stdb);
+	ftret = (*fta > *ftb);
 	print_comp_iter(">", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4221,8 +4221,8 @@ void		test_greater_eq_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list(stdb, ftb, emptyb);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda >= stdb);
-	ftret = (stda >= stdb);
+	stdret = (*stda >= *stdb);
+	ftret = (*fta >= *ftb);
 	print_comp_iter(">=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4230,8 +4230,8 @@ void		test_greater_eq_comparison(data<T> *d, bool emptya, bool emptyb) {
 	stdb = stda;
 	ftb = fta;
 	std::cout << "  copying first list to second" << std::endl;
-	stdret = (stda >= stdb);
-	ftret = (stda >= stdb);
+	stdret = (*stda >= *stdb);
+	ftret = (*fta >= *ftb);
 	print_comp_iter(">=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4244,8 +4244,8 @@ void		test_greater_eq_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 0);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda >= stdb);
-	ftret = (stda >= stdb);
+	stdret = (*stda >= *stdb);
+	ftret = (*fta >= *ftb);
 	print_comp_iter(">=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4259,8 +4259,8 @@ void		test_greater_eq_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 1);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda >= stdb);
-	ftret = (stda >= stdb);
+	stdret = (*stda >= *stdb);
+	ftret = (*fta >= *ftb);
 	print_comp_iter(">=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
@@ -4274,8 +4274,8 @@ void		test_greater_eq_comparison(data<T> *d, bool emptya, bool emptyb) {
 	create_list_size(stdb, ftb, 1);
 	std::cout << "testing on:\trandom filled list size:" << stda->size() << "" << std::endl;
 	std::cout << "and:       \trandom filled list size:" << stdb->size() << "" << std::endl;
-	stdret = (stda >= stdb);
-	ftret = (stda >= stdb);
+	stdret = (*stda >= *stdb);
+	ftret = (*fta >= *ftb);
 	print_comp_iter(">=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
