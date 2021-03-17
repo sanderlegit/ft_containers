@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/11 13:50:52 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/16 18:15:15 by dries               **ee8ee**            */
+/*   Updated: 2021/03/17 15:32:22 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ void		check_pass(data<T> *d, bool score) {
 		d->current_fail++;
 }
 #define comp(A)		check_pass(d, A)
-#define test(A, B, C)	{std::string tmp = A; print_comp(tmp, B, C); comp(B == C);}
+#define test(A, B, C)	{std::string tmp = A; print_comp(tmp, B, C); comp((B) == (C));}
 
 template<class T, class R>
 void		eq_print_comp(std::string str, T t, R r) {
@@ -861,6 +861,8 @@ void		test_brackets_operator(data<T> *d) {
 	delete ft;
 
 	create_vector(std, ft, 0);
+	std->push_back(1);
+	ft->push_back(1);
 	testing_on("random filled vector size " << std->size());
 	idx = 1;
 	testing("[" << idx << "]");
@@ -1371,13 +1373,320 @@ void		test_swap_nm(data<T> *d, bool emptya, bool emptyb) {
 }
 
 template<class T>
+void		test_eq_comp(data<T> *d, bool emptya, bool emptyb) {
+	std::vector<T>		*stda = NULL;
+	ft::vector<T>		*fta = NULL;
+	std::vector<T>		*stdb = NULL;
+	ft::vector<T>		*ftb = NULL;
+
+	create_vector(stda, fta, emptya);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector(stdb, ftb, emptyb);
+	testing_on("b: random filled vector size " << stdb->size());
+	test("a == b", *stda == *stdb, *fta == *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+
+	if (emptya || emptyb)
+		return;
+
+	create_vector(stda, fta, 0);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector(stdb, ftb, 1);
+	*stdb = *stda;
+	*ftb = *fta;
+	testing_on("b: copy of a");
+	test("a == b", *stda == *stdb, *fta == *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+
+	create_vector_size(stda, fta, 1);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector_size(stdb, ftb, 1);
+	testing_on("b: random filled vector size " << stdb->size());
+	test("a == b", *stda == *stdb, *fta == *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+}
+
+template<class T>
+void		test_neq_comp(data<T> *d, bool emptya, bool emptyb) {
+	std::vector<T>		*stda = NULL;
+	ft::vector<T>		*fta = NULL;
+	std::vector<T>		*stdb = NULL;
+	ft::vector<T>		*ftb = NULL;
+
+	create_vector(stda, fta, emptya);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector(stdb, ftb, emptyb);
+	testing_on("b: random filled vector size " << stdb->size());
+	test("a != b", *stda != *stdb, *fta != *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+
+	if (emptya || emptyb)
+		return;
+
+	create_vector(stda, fta, 0);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector(stdb, ftb, 1);
+	*stdb = *stda;
+	*ftb = *fta;
+	testing_on("b: copy of a");
+	test("a != b", *stda != *stdb, *fta != *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+
+	create_vector_size(stda, fta, 1);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector_size(stdb, ftb, 1);
+	testing_on("b: random filled vector size " << stdb->size());
+	test("a != b", *stda != *stdb, *fta != *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+}
+
+template<class T>
+void		test_lt_comp(data<T> *d, bool emptya, bool emptyb) {
+	std::vector<T>		*stda = NULL;
+	ft::vector<T>		*fta = NULL;
+	std::vector<T>		*stdb = NULL;
+	ft::vector<T>		*ftb = NULL;
+
+	create_vector(stda, fta, emptya);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector(stdb, ftb, emptyb);
+	testing_on("b: random filled vector size " << stdb->size());
+	test("a < b", *stda < *stdb, *fta < *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+
+	if (emptya || emptyb)
+		return;
+
+	create_vector(stda, fta, 0);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector(stdb, ftb, 1);
+	*stdb = *stda;
+	*ftb = *fta;
+	testing_on("b: copy of a");
+	test("a < b", *stda < *stdb, *fta < *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+
+	create_vector_size(stda, fta, 1);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector_size(stdb, ftb, 1);
+	testing_on("b: random filled vector size " << stdb->size());
+	test("a < b", *stda < *stdb, *fta < *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+}
+
+template<class T>
+void		test_lte_comp(data<T> *d, bool emptya, bool emptyb) {
+	std::vector<T>		*stda = NULL;
+	ft::vector<T>		*fta = NULL;
+	std::vector<T>		*stdb = NULL;
+	ft::vector<T>		*ftb = NULL;
+
+	create_vector(stda, fta, emptya);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector(stdb, ftb, emptyb);
+	testing_on("b: random filled vector size " << stdb->size());
+	test("a <= b", *stda <= *stdb, *fta <= *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+
+	if (emptya || emptyb)
+		return;
+
+	create_vector(stda, fta, 0);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector(stdb, ftb, 1);
+	*stdb = *stda;
+	*ftb = *fta;
+	testing_on("b: copy of a");
+	test("a <= b", *stda <= *stdb, *fta <= *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+
+	create_vector_size(stda, fta, 1);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector_size(stdb, ftb, 1);
+	testing_on("b: random filled vector size " << stdb->size());
+	test("a <= b", *stda <= *stdb, *fta <= *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+}
+
+template<class T>
+void		test_gt_comp(data<T> *d, bool emptya, bool emptyb) {
+	std::vector<T>		*stda = NULL;
+	ft::vector<T>		*fta = NULL;
+	std::vector<T>		*stdb = NULL;
+	ft::vector<T>		*ftb = NULL;
+
+	create_vector(stda, fta, emptya);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector(stdb, ftb, emptyb);
+	testing_on("b: random filled vector size " << stdb->size());
+	test("a > b", *stda > *stdb, *fta > *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+
+	if (emptya || emptyb)
+		return;
+
+	create_vector(stda, fta, 0);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector(stdb, ftb, 1);
+	*stdb = *stda;
+	*ftb = *fta;
+	testing_on("b: copy of a");
+	test("a > b", *stda > *stdb, *fta > *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+
+	create_vector_size(stda, fta, 1);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector_size(stdb, ftb, 1);
+	testing_on("b: random filled vector size " << stdb->size());
+	test("a > b", *stda > *stdb, *fta > *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+}
+
+
+template<class T>
+void		test_gte_comp(data<T> *d, bool emptya, bool emptyb) {
+	std::vector<T>		*stda = NULL;
+	ft::vector<T>		*fta = NULL;
+	std::vector<T>		*stdb = NULL;
+	ft::vector<T>		*ftb = NULL;
+
+	create_vector(stda, fta, emptya);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector(stdb, ftb, emptyb);
+	testing_on("b: random filled vector size " << stdb->size());
+	test("a >= b", *stda >= *stdb, *fta >= *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+
+	if (emptya || emptyb)
+		return;
+
+	create_vector(stda, fta, 0);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector(stdb, ftb, 1);
+	*stdb = *stda;
+	*ftb = *fta;
+	testing_on("b: copy of a");
+	test("a >= b", *stda >= *stdb, *fta >= *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+
+	create_vector_size(stda, fta, 1);
+	testing_on("a: random filled vector size " << stda->size());
+	create_vector_size(stdb, ftb, 1);
+	testing_on("b: random filled vector size " << stdb->size());
+	test("a >= b", *stda >= *stdb, *fta >= *ftb);
+	delete stda;
+	delete fta;
+	delete stdb;
+	delete ftb;
+	incr_score(d);
+}
+
+
+template<class T>
 void		test_non_member_overloads(data<T> *d) {
 	print_title("swap (non-member)");		//TODO check iterator validity
 	test_swap_nm(d, 0, 0);
 	test_swap_nm(d, 0, 1);
 	test_swap_nm(d, 1, 0);
 	test_swap_nm(d, 1, 1);
-	//TODO relational operators
+	print_title("operator== ");
+	test_eq_comp(d, 0, 0);
+	test_eq_comp(d, 0, 1);
+	test_eq_comp(d, 1, 0);
+	test_eq_comp(d, 1, 1);
+	print_title("operator!= ");
+	test_neq_comp(d, 0, 0);
+	test_neq_comp(d, 0, 1);
+	test_neq_comp(d, 1, 0);
+	test_neq_comp(d, 1, 1);
+	print_title("operator< ");
+	test_lt_comp(d, 0, 0);
+	test_lt_comp(d, 0, 1);
+	test_lt_comp(d, 1, 0);
+	test_lt_comp(d, 1, 1);
+	print_title("operator<= ");
+	test_lte_comp(d, 0, 0);
+	test_lte_comp(d, 0, 1);
+	test_lte_comp(d, 1, 0);
+	test_lte_comp(d, 1, 1);
+	print_title("operator> ");
+	test_gt_comp(d, 0, 0);
+	test_gt_comp(d, 0, 1);
+	test_gt_comp(d, 1, 0);
+	test_gt_comp(d, 1, 1);
+	print_title("operator>= ");
+	test_gte_comp(d, 0, 0);
+	test_gte_comp(d, 0, 1);
+	test_gte_comp(d, 1, 0);
+	test_gte_comp(d, 1, 1);
 }
 
 /*-----------------------------------MAIN-----------------------------------*/

@@ -6,13 +6,13 @@
 #    By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8          #
 #                                                     Y8 .e* 8 *e. 8P          #
 #    Created: 2021/03/10 18:00:06 by dries             *8*   8   *8*           #
-#    Updated: 2021/03/16 18:11:43 by dries               **ee8ee**             #
+#    Updated: 2021/03/17 15:33:10 by dries               **ee8ee**             #
 #                                                                              #
 # **************************************************************************** #
 
 Member functions
 (constructor)		Construct vector (public member function )			-all but range written,tested
-(destructor)		Vector destructor (public member function )			-written, seems alright
+(destructor)		Vector destructor (public member function )			-written,tested
 operator=			Assign content (public member function )			-written,tested
 
 Iterators:
@@ -45,7 +45,7 @@ swap				Swap content (public member function )					-written,tested		TODO- check 
 clear				Clear content (public member function )					-written,tested
 
 Non-member function overloads
-relational operators		Relational operators for vector (function template )	-start here today :)
+relational operators		Relational operators for vector (function template )	-written,tested
 swap						Exchange contents of vectors (function template )		-written,tested	TODO- check iterator validity
 
 Template specializations

@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/10 16:43:21 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/16 18:15:34 by dries               **ee8ee**            */
+/*   Updated: 2021/03/17 15:24:21 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ namespace ft {
  *	elements from it.	*/
 
 		void					resize (size_type n, value_type val = value_type()) {
-			value_type	*tmp;
+			pointer		tmp;
 			size_type	new_capacity;
 
 			if (n == _size) {
@@ -247,7 +247,7 @@ namespace ft {
  *	This function has no effect on the vector size and cannot alter its elements.	*/
 
 		void					reserve (size_type n) {
-			value_type	*tmp;
+			pointer	tmp;
 
 			if (n <= _capacity)
 				return;
@@ -343,7 +343,7 @@ namespace ft {
 
 		void				swap (vector& x) {
 			pointer		dswp;
-			size_t		sswp;
+			size_type	sswp;
 
 			dswp = _data;
 			_data = x._data;
@@ -397,6 +397,78 @@ namespace ft {
 	};
 
 /*-------------------------------------------NON-MEMBER OVERLOADS-------------------------------------------*/
+
+/*	Performs the appropriate comparison operation between the vector containers lhs and rhs.
+ *	The equality comparison (operator==) is performed by first comparing sizes, and if they match, the elements 
+ *	are compared sequentially using operator==, stopping at the first mismatch (as if using algorithm equal).
+ *	The less-than comparison (operator<) behaves as if using algorithm lexicographical_compare, which compares 
+ *	the elements sequentially using operator< in a reciprocal manner (i.e., checking both a<b and b<a) and 
+ *	stopping at the first occurrence.
+ *	The other operations also use the operators == and < internally to compare the elements,
+ *	behaving as if the following equivalent operations were performed:
+ *	operation	equivalent operation
+ *	a!=b		!(a==b)
+ *	a>b			b<a
+ *	a<=b		!(b<a)
+ *	a>=b		!(a<b)	*/
+
+	template <class T, class Alloc>
+	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		typename vector<T>::size_type		ir;
+		typename vector<T>::size_type		il;
+
+		if (lhs.size() == rhs.size()) {
+			ir = 0;
+			il = 0;
+			while (il != lhs.size()) {
+				if (!(lhs.at(il) == rhs.at(il)))
+					return false;
+				++ir;
+				++il;
+			}
+		} else
+			return false;
+		return true;
+	}
+
+	template <class T, class Alloc>
+	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (!(lhs == rhs));
+	}
+
+	template <class T, class Alloc>
+	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		typename vector<T>::size_type		i;
+
+		i = 0;
+		while (i != lhs.size() && i != rhs.size()) {
+			if (lhs.at(i) < rhs.at(i))
+				return true;
+			else if (rhs.at(i) < lhs.at(i))
+				return false;
+			++i;
+		}
+		if (lhs.size() < rhs.size())
+			return true;
+		else if (lhs.size() > rhs.size())
+			return false;
+		return false;
+	}
+
+	template <class T, class Alloc>
+	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (!(rhs < lhs));
+	}
+
+	template <class T, class Alloc>
+	bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (rhs < lhs);
+	}
+
+	template <class T, class Alloc>
+	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (!(lhs < rhs));
+	}
 
 	/*	The contents of container x are exchanged with those of y. Both container objects must be of the same
 	 *	type (same template parameters), although sizes may differ.
