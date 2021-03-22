@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/11 13:50:52 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/17 15:32:22 by dries               **ee8ee**            */
+/*   Updated: 2021/03/22 17:41:47 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,7 @@ void		check_pass(data<T> *d, bool score) {
 }
 #define comp(A)		check_pass(d, A)
 #define test(A, B, C)	{std::string tmp = A; print_comp(tmp, B, C); comp((B) == (C));}
+#define test_labels(A, L1, L2, B, C)	{std::string tmp = A; print_comp_labels(tmp, L1, L2, B, C); comp((B) == (C));}
 
 template<class T, class R>
 void		eq_print_comp(std::string str, T t, R r) {
@@ -543,6 +544,289 @@ void		test_constructors(data<T> *d) {
 }
 
 /*-----------------------------------ITERATORS-----------------------------------*/
+
+
+template<class T>
+void		test_it_constructors(data<T> *d) {
+	typedef typename std::vector<T>::iterator	stditer;
+	typedef typename ft::vector<T>::iterator	ftiter;
+
+	std::vector<T>	*stdv = NULL;
+	ft::vector<T>	*ftv = NULL;
+	stditer			stdi;
+	stditer			stdi2;
+	ftiter			fti = NULL;
+	ftiter			fti2 = NULL;
+
+	testing("i1 = new iterator()");
+	stdi = stditer();
+	fti = ftiter();
+	comp(1 == 1);
+	incr_score(d);
+
+	create_vector(stdv, ftv, 0);
+	testing_on("random filled vector size " << stdv->size());
+	testing_on("i1 = vector->begin()");
+	stdi = stdv->begin();
+	fti = ftv->begin();
+	testing("i2 = new iterator(i1)");
+	stdi2 = stditer(stdi);
+	fti2 = ftiter(fti);
+	test("*i2 == *i1", *stdi2 == *stdi, *fti2 == *fti);
+	test("*i", *stdi2, *fti2);
+	incr_score(d);
+
+	testing("i2 = i1");
+	stdi2 = stdi;
+	fti2 = fti;
+	test("*i2 == *i1", *stdi2 == *stdi, *fti2 == *fti);
+	test("*i", *stdi2, *fti2);
+	incr_score(d);
+
+	testing("destruction");
+	comp(1 == 1);
+	incr_score(d);
+}
+
+template<class T>
+void		test_eq_neq(data<T> *d) {
+	typedef typename std::vector<T>::iterator	stditer;
+	typedef typename ft::vector<T>::iterator	ftiter;
+
+	std::vector<T>	*stdv = NULL;
+	ft::vector<T>	*ftv = NULL;
+	stditer			stdi;
+	stditer			stdi2;
+	ftiter			fti = NULL;
+	ftiter			fti2 = NULL;
+
+	create_vector(stdv, ftv, 0);
+	testing_on("random filled vector size " << stdv->size());
+	testing_on("i1 = vector->begin(); i2 = i1;");
+	stdi = stdv->begin();
+	fti = ftv->begin();
+	stdi2 = stditer(stdi);
+	fti2 = ftiter(fti);
+	test("i2 == i1", stdi2 == stdi, fti2 == fti);
+	test("i2 != i1", stdi2 != stdi, fti2 != fti);
+	test("*i", *stdi2, *fti2);
+	incr_score(d);
+
+	testing_on("i1++");
+	stdi++;
+	fti++;
+	test("i2 == i1", stdi2 == stdi, fti2 == fti);
+	test("i2 != i1", stdi2 != stdi, fti2 != fti);
+	incr_score(d);
+}
+
+template<class T>
+void		test_dereference(data<T> *d) {
+	typedef typename std::vector<T>::iterator	stditer;
+	typedef typename ft::vector<T>::iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	stditer				stdi;
+	ftiter				fti = NULL;
+
+	create_vector(stdv, ftv, 0);
+	testing_on("random filled vector size " << stdv->size());
+	stdi = stdv->begin();
+	fti = ftv->begin();
+	test("*i", *stdi, *fti);
+	incr_score(d);
+}
+
+struct	potato {
+	potato(std::string s) : ego_sum(s) {}
+
+	std::string ego_sum;
+};
+
+template<class T>
+void		test_detaterence(data<T> *d) {
+	std::vector<potato>				std_votato;
+	ft::vector<potato>				ft_votato;
+	std::vector<potato>::iterator	std_pitato;
+	ft::vector<potato>::iterator	ft_pitato;
+
+	testing_on("i = potato_vector.begin()");
+	std_votato.push_back(potato("when i sleep, i dream of potato"));
+	ft_votato.push_back(potato("when i sleep, i dream of potato"));
+	std_pitato = std_votato.begin();
+	ft_pitato = ft_votato.begin();
+	test("i->var", std_pitato->ego_sum, std_pitato->ego_sum);
+	incr_score(d);
+
+	testing("i->var = val");
+	std_pitato->ego_sum = "potato blood runs through my veins";
+	ft_pitato->ego_sum = "potato blood runs through my veins";
+	test("i->var", std_pitato->ego_sum, std_pitato->ego_sum);
+	incr_score(d);
+}
+
+template<class T>
+void		test_assignment(data<T> *d) {
+	typedef typename std::vector<T>::iterator	stditer;
+	typedef typename ft::vector<T>::iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	stditer				stdi;
+	ftiter				fti;
+	T					val;
+
+	create_vector(stdv, ftv, 0);
+	testing_on("random filled vector size " << stdv->size());
+	stdi = stdv->begin();
+	fti = ftv->begin();
+	val = randomize<T>();
+	testing("*i = " << val);
+	*stdi = val;
+	*fti = val;
+	test("*i", *stdi, *fti);
+	incr_score(d);
+}
+
+template<class T>
+void		test_incr_decr(data<T> *d) {
+	typedef typename std::vector<T>::iterator	stditer;
+	typedef typename ft::vector<T>::iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	stditer				stdi;
+	stditer				stdir;
+	ftiter				fti;
+	ftiter				ftir;
+	T					ftr;
+	T					stdr;
+
+	create_vector_size(stdv, ftv, 10);
+	testing_on("random filled vector size " << stdv->size());
+	testing_on("i = vector->begin()");
+	stdi = stdv->begin();
+	fti = ftv->begin();
+
+	testing("ret = i++");
+	stdir = stdi++;
+	ftir = fti++;
+	test("*i", *stdi, *fti);
+	test("*ret", *stdir, *ftir);
+	incr_score(d);
+
+	testing("ret = ++i");
+	stdir = ++stdi;
+	ftir = ++fti;
+	test("*i", *stdi, *fti);
+	test("*ret", *stdir, *ftir);
+	incr_score(d);
+
+	testing("ret = *i++");
+	stdr = *stdi++;
+	ftr = *fti++;
+	test("*i", *stdi, *fti);
+	test("ret", stdr, ftr);
+	incr_score(d);
+
+	testing("ret = i--");
+	stdir = stdi--;
+	ftir = fti--;
+	test("*i", *stdi, *fti);
+	test("*ret", *stdir, *ftir);
+	incr_score(d);
+
+	testing("ret = --i");
+	stdir = --stdi;
+	ftir = --fti;
+	test("*i", *stdi, *fti);
+	test("*ret", *stdir, *ftir);
+	incr_score(d);
+
+	testing("ret = *i--");
+	stdr = *stdi--;
+	ftr = *fti--;
+	test("*i", *stdi, *fti);
+	test("ret", stdr, ftr);
+	incr_score(d);
+}
+
+template<class T>
+void		test_add_sub(data<T> *d) {
+	typedef typename std::vector<T>::iterator	stditer;
+	typedef typename ft::vector<T>::iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	stditer				stdi;
+	stditer				stdir;
+	ftiter				fti;
+	ftiter				ftir;
+	T					ftr;
+	T					stdr;
+	int					offset;
+
+	create_vector_size(stdv, ftv, 50);
+	testing_on("random filled vector size " << stdv->size());
+	testing_on("i = vector->begin()");
+	stdi = stdv->begin();
+	fti = ftv->begin();
+
+	offset = (rand() % 5) + 1;
+	testing("ret = i + " << offset);
+	stdir = stdi + offset;
+	ftir = fti + offset;
+	test("*i", *stdi, *fti);
+	test("*ret", *stdir, *ftir);
+	incr_score(d);
+
+	//offset = (rand() % 5) + 1;
+	//testing("ret = " << offset << " + i");
+	//stdir = offset + stdi;
+	//ftir = offset + fti;
+	//test("*i", *stdi, *fti);
+	//test("*ret", *stdir, *ftir);
+	//incr_score(d);
+
+	testing_on("i = vector->begin(); for (1->10) i++");
+	stdi = stdv->begin();
+	fti = ftv->begin();
+	for (int i = 0; i < 10; i++) {
+		++stdi;
+		++fti;
+	}
+
+	offset = (rand() % 5) + 1;
+	testing("ret = i - " << offset);
+	stdir = stdi - offset;
+	ftir = fti - offset;
+	test("*i", *stdi, *fti);
+	test("*ret", *stdir, *ftir);
+	incr_score(d);
+
+	//testing("ret = i1 - i2");
+	//stdir = stdi - stdi2;
+	//ftir = fti - fti2;
+	//test("*i", *stdi, *fti);
+	//test("*i2", *stdi2, *fti2);
+	//test("*ret", *stdir, *ftir);
+	//incr_score(d);
+}
+
+template<class T>
+void		test_iterators(data<T> *d) {
+	test_it_constructors(d);
+	test_eq_neq(d);
+	test_dereference(d);
+	test_detaterence(d);
+	test_assignment(d);
+	test_incr_decr(d);
+	test_add_sub(d);
+	//test_gt_lt_eq(d);
+	//test_plus_eq_minus_eq(d);
+	//test_offset_reference(d);
+}
 
 /*-----------------------------------CAPACITY-----------------------------------*/
 
@@ -1709,6 +1993,9 @@ void		do_tests(void) {
 	test_modifiers(d);
 	print_group_title("NON-MEMBER OVERLOADS");
 	test_non_member_overloads(d);
+
+	print_group_title("ITERATORS");
+	test_iterators(d);
 
 	std::cout << std::endl << GREEN << "pass: " << RESET << d->pass << RED << "\tfail:\t" << RESET << d->fail << std::endl;
 	delete d;

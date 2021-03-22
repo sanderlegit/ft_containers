@@ -6,7 +6,7 @@
 #    By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8          #
 #                                                     Y8 .e* 8 *e. 8P          #
 #    Created: 2021/02/18 11:56:11 by dries             *8*   8   *8*           #
-#    Updated: 2021/03/11 17:00:28 by dries               **ee8ee**             #
+#    Updated: 2021/03/22 14:49:07 by dries               **ee8ee**             #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ operator=			Assign content (public member function )			-written,tested
 	Iterators:				(all have const and non const)
 begin				Return iterator to beginning (public member function )						-written,tested	no const test
 end					Return iterator to end (public member function )							-written,tested	no assignments!!
+	If the container is empty, this function returns the same as list::begin.		<- NOT DONE
 rbegin				Return reverse iterator to reverse beginning (public member function )		-written,tested	no -> (needs class)
 rend				Return reverse iterator to reverse end (public member function )			-written,tested
 

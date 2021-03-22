@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/10 16:43:21 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/17 15:24:21 by dries               **ee8ee**            */
+/*   Updated: 2021/03/22 17:38:33 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,74 @@ namespace ft {
 		private:
 
 /*-------------------------------------------ITERATORS-------------------------------------------*/
+
+
 			template<class value_t, class reference_t, class pointer_t>
 			class VectorRandIterator { //https://en.cppreference.com/w/cpp/iterator/iterator
+				private:
+					pointer		_data;
 				public:
 					typedef std::random_access_iterator_tag			iterator_category;
+					typedef	value_t									value_type;
+					typedef	reference_t								reference;
+					typedef	pointer_t								pointer;
+					typedef	ptrdiff_t								difference_type;
+
+					VectorRandIterator(pointer d = NULL) : _data(d) {}
+					VectorRandIterator(const VectorRandIterator& src) { *this = src; }
+					~VectorRandIterator(void) {}
+
+					VectorRandIterator&		operator=(const VectorRandIterator& rhs) {
+						_data = rhs._data;
+						return *this;
+					}
+
+					VectorRandIterator		operator++(int n) {		//i++
+						VectorRandIterator	ret(*this);
+
+						(void)n;
+						++(*this);
+						return ret;
+					}
+
+					VectorRandIterator		operator--(int n) {		//i--
+						VectorRandIterator	ret(*this);
+
+						(void)n;
+						--(*this);
+						return ret;
+					}
+
+					VectorRandIterator&		operator++() {			//++i
+						_data++;
+						return *this;
+					}
+
+					VectorRandIterator&		operator--() {			//--i
+						_data--;
+						return *this;
+					}
+
+					VectorRandIterator		operator+(const int& rhs) {			//i + x
+						VectorRandIterator	ret(*this);
+
+						ret._data += rhs;
+						return ret;
+					}
+
+					VectorRandIterator		operator-(const int& rhs) {			//i - x
+						VectorRandIterator	ret(*this);
+
+						ret._data -= rhs;
+						return ret;
+					}
+
+					bool					operator==(const VectorRandIterator& rhs) const { return _data == rhs._data; }
+					bool					operator!=(const VectorRandIterator& rhs) const { return _data != rhs._data; }
+					pointer					operator->() const { return _data; }
+					reference 				operator*() const { return *_data; }
+
+					operator VectorRandIterator<const value_t, const reference, const pointer>() { return _data; }
 			};
 
 			template<class value_t, class reference_t, class pointer_t>
@@ -62,6 +126,7 @@ namespace ft {
 				public:
 					typedef std::random_access_iterator_tag			iterator_category;
 			};
+		public:
 
 /*	iterator				a random access iterator to value_type	convertible to const_iterator
  *	const_iterator			a random access iterator to const 
@@ -136,6 +201,29 @@ namespace ft {
 			_size = x._size;
 			return *this;
 		}
+
+/*-------------------------------------------ITERATORS ACCESS-------------------------------------------*/
+
+/*	Returns an iterator pointing to the first element in the vector.
+ *	Notice that, unlike member vector::front, which returns a reference to the first element, this function returns a random access iterator pointing to it.
+ *	If the container is empty, the returned iterator value shall not be dereferenced.	*/
+
+	iterator					begin() {
+		return iterator(_data);
+	}
+
+	const_iterator				begin() const {
+		return iterator(_data);
+	}
+
+	iterator					end() {
+		return iterator(_data + _size);
+	}
+
+	const_iterator				end() const {
+		return iterator(_data + _size);
+	}
+
 
 /*-------------------------------------------CAPACITY-------------------------------------------*/
 
