@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/10 16:43:21 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/23 14:55:00 by dries               **ee8ee**            */
+/*   Updated: 2021/03/23 15:30:18 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,97 @@ namespace ft {
 	class ReverseVectorRandIterator { //https://en.cppreference.com/w/cpp/iterator/iterator
 		public:
 			typedef std::random_access_iterator_tag			iterator_category;
+			typedef	value_t									value_type;
+			typedef	reference_t								reference;
+			typedef	pointer_t								pointer;
+			typedef	ptrdiff_t								difference_type;
+		private:
+			pointer		_data;
+		public:
+
+			ReverseVectorRandIterator(pointer d = NULL) : _data(d) {}
+			ReverseVectorRandIterator(const ReverseVectorRandIterator& src) { *this = src; }
+			~ReverseVectorRandIterator(void) {}
+
+			ReverseVectorRandIterator&		operator=(const ReverseVectorRandIterator& rhs) {
+				_data = rhs._data;
+				return *this;
+			}
+
+			ReverseVectorRandIterator		operator++(int n) {		//i++
+				ReverseVectorRandIterator	ret(*this);
+
+				(void)n;
+				++(*this);
+				return ret;
+			}
+
+			ReverseVectorRandIterator		operator--(int n) {		//i--
+				ReverseVectorRandIterator	ret(*this);
+
+				(void)n;
+				--(*this);
+				return ret;
+			}
+
+			ReverseVectorRandIterator&		operator++() {			//++i
+				_data--;
+				return *this;
+			}
+
+			ReverseVectorRandIterator&		operator--() {			//--i
+				_data++;
+				return *this;
+			}
+
+			ReverseVectorRandIterator&		operator+=(const int& rhs) {			//i += n
+				_data -= rhs;
+				return *this;
+			}
+
+			ReverseVectorRandIterator&		operator-=(const int& rhs) {			//i -= n
+				_data += rhs;
+				return *this;
+			}
+
+			ReverseVectorRandIterator		operator+(const int& rhs) {			//i + x
+				ReverseVectorRandIterator	ret(*this);
+
+				ret._data -= rhs;
+				return ret;
+			}
+
+			ReverseVectorRandIterator		operator-(const int& rhs) {			//i - x
+				ReverseVectorRandIterator	ret(*this);
+
+				ret._data += rhs;
+				return ret;
+			}
+
+			difference_type		operator-(const ReverseVectorRandIterator& rhs) {			//a - b
+				difference_type		ret;
+
+				ret = 0;
+				if (_data < rhs._data)
+					while ((_data - ret) != rhs._data)
+						--ret;
+				else
+					while ((_data - ret) != rhs._data)
+						++ret;
+				return (ret * -1);
+			}
+
+			bool					operator==(const ReverseVectorRandIterator& rhs) const { return _data == rhs._data; }
+			bool					operator!=(const ReverseVectorRandIterator& rhs) const { return _data != rhs._data; }
+			pointer					operator->() const { return _data; }
+			reference 				operator*() const { return *_data; }
+			bool					operator<(const ReverseVectorRandIterator& rhs) const { return (_data > rhs._data); }
+			bool					operator>(const ReverseVectorRandIterator& rhs) const { return (_data < rhs._data); }
+			bool					operator<=(const ReverseVectorRandIterator& rhs) const { return (_data >= rhs._data); }
+			bool					operator>=(const ReverseVectorRandIterator& rhs) const { return (_data <= rhs._data); }
+			reference				operator[](const int& rhs) const { return *(_data - rhs); }
+
+			operator ReverseVectorRandIterator<const value_t, const reference, const pointer>() { return _data; }
 	};
 
 /*-------------------------------------------VECTOR-------------------------------------------*/
@@ -164,8 +255,8 @@ namespace ft {
 			typedef size_t									size_type;
 			typedef	VectorRandIterator<T, T&, T*>							iterator;
 			typedef	VectorRandIterator<const T, const T&, const T*>			const_iterator;
-			//typedef	ReverseVectorRandIterator<T, T&, T*>					reverse_iterator;
-			//typedef	ReverseVectorRandIterator<const T, const T&, const T*>	const_reverse_iterator;
+			typedef	ReverseVectorRandIterator<T, T&, T*>					reverse_iterator;
+			typedef	ReverseVectorRandIterator<const T, const T&, const T*>	const_reverse_iterator;
 
 /*-------------------------------------------MEMBER VARIABLES-------------------------------------------*/
 	private:
@@ -250,6 +341,22 @@ namespace ft {
 
 	const_iterator				end() const {
 		return iterator(_data + _size);
+	}
+
+	reverse_iterator					rbegin() {
+		return reverse_iterator(_data + _size - 1);
+	}
+
+	const_reverse_iterator				rbegin() const {
+		return reverse_iterator(_data + _size - 1);
+	}
+
+	reverse_iterator					rend() {
+		return reverse_iterator(_data - 1);
+	}
+
+	const_reverse_iterator				rend() const {
+		return reverse_iterator(_data - 1);
 	}
 
 
@@ -602,6 +709,15 @@ namespace ft {
 	template <class T>
 	VectorRandIterator<T, T&, T*>		operator+(const int& lhs, const VectorRandIterator<T, T&, T*>& rhs) {
 		VectorRandIterator<T, T&, T*>	ret(rhs);
+
+		for (int i = 0; i < lhs; ++i)
+			++ret;
+		return ret;
+	}
+
+	template <class T>
+	ReverseVectorRandIterator<T, T&, T*>		operator+(const int& lhs, const ReverseVectorRandIterator<T, T&, T*>& rhs) {
+		ReverseVectorRandIterator<T, T&, T*>	ret(rhs);
 
 		for (int i = 0; i < lhs; ++i)
 			++ret;

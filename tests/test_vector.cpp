@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/11 13:50:52 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/23 15:16:59 by dries               **ee8ee**            */
+/*   Updated: 2021/03/23 15:27:20 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -545,7 +545,6 @@ void		test_constructors(data<T> *d) {
 
 /*-----------------------------------ITERATORS-----------------------------------*/
 
-
 template<class T>
 void		test_it_constructors(data<T> *d) {
 	typedef typename std::vector<T>::iterator	stditer;
@@ -948,7 +947,6 @@ void		test_offset_operator(data<T> *d) {
 	incr_score(d);
 }
 
-
 template<class T>
 void		test_iterators(data<T> *d) {
 	test_it_constructors(d);
@@ -961,6 +959,419 @@ void		test_iterators(data<T> *d) {
 	test_gt_lt_eqgt_eqlt(d);
 	test_plus_eq_minus_eq(d);
 	test_offset_operator(d);
+}
+
+/*-----------------------------------REVERSE ITERATORS-----------------------------------*/
+
+template<class T>
+void		test_rev_it_constructors(data<T> *d) {
+	typedef typename std::vector<T>::reverse_iterator	stditer;
+	typedef typename ft::vector<T>::reverse_iterator	ftiter;
+
+	std::vector<T>	*stdv = NULL;
+	ft::vector<T>	*ftv = NULL;
+	stditer			stdi;
+	stditer			stdi2;
+	ftiter			fti = NULL;
+	ftiter			fti2 = NULL;
+
+	testing("i1 = new iterator()");
+	stdi = stditer();
+	fti = ftiter();
+	comp(1 == 1);
+	incr_score(d);
+
+	create_vector(stdv, ftv, 0);
+	testing_on("random filled vector size " << stdv->size());
+	testing_on("i1 = vector->rbegin()");
+	stdi = stdv->rbegin();
+	fti = ftv->rbegin();
+	testing("i2 = new iterator(i1)");
+	stdi2 = stditer(stdi);
+	fti2 = ftiter(fti);
+	test("*i2 == *i1", *stdi2 == *stdi, *fti2 == *fti);
+	test("*i", *stdi2, *fti2);
+	incr_score(d);
+
+	testing("i2 = i1");
+	stdi2 = stdi;
+	fti2 = fti;
+	test("*i2 == *i1", *stdi2 == *stdi, *fti2 == *fti);
+	test("*i", *stdi2, *fti2);
+	incr_score(d);
+
+	testing("destruction");
+	comp(1 == 1);
+	incr_score(d);
+}
+
+template<class T>
+void		test_rev_eq_neq(data<T> *d) {
+	typedef typename std::vector<T>::reverse_iterator	stditer;
+	typedef typename ft::vector<T>::reverse_iterator	ftiter;
+
+	std::vector<T>	*stdv = NULL;
+	ft::vector<T>	*ftv = NULL;
+	stditer			stdi;
+	stditer			stdi2;
+	ftiter			fti = NULL;
+	ftiter			fti2 = NULL;
+
+	create_vector(stdv, ftv, 0);
+	testing_on("random filled vector size " << stdv->size());
+	testing_on("i1 = vector->rbegin(); i2 = i1;");
+	stdi = stdv->rbegin();
+	fti = ftv->rbegin();
+	stdi2 = stditer(stdi);
+	fti2 = ftiter(fti);
+	test("i2 == i1", stdi2 == stdi, fti2 == fti);
+	test("i2 != i1", stdi2 != stdi, fti2 != fti);
+	test("*i", *stdi2, *fti2);
+	incr_score(d);
+
+	testing_on("i1++");
+	stdi++;
+	fti++;
+	test("i2 == i1", stdi2 == stdi, fti2 == fti);
+	test("i2 != i1", stdi2 != stdi, fti2 != fti);
+	incr_score(d);
+}
+
+template<class T>
+void		test_rev_dereference(data<T> *d) {
+	typedef typename std::vector<T>::reverse_iterator	stditer;
+	typedef typename ft::vector<T>::reverse_iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	stditer				stdi;
+	ftiter				fti = NULL;
+
+	create_vector(stdv, ftv, 0);
+	testing_on("random filled vector size " << stdv->size());
+	stdi = stdv->rbegin();
+	fti = ftv->rbegin();
+	test("*i", *stdi, *fti);
+	incr_score(d);
+}
+
+template<class T>
+void		test_rev_detaterence(data<T> *d) {
+	std::vector<potato>				std_votato;
+	ft::vector<potato>				ft_votato;
+	std::vector<potato>::reverse_iterator	std_pitato;
+	ft::vector<potato>::reverse_iterator	ft_pitato;
+
+	testing_on("i = potato_vector.rbegin()");
+	std_votato.push_back(potato("when i sleep, i dream of potato"));
+	ft_votato.push_back(potato("when i sleep, i dream of potato"));
+	std_pitato = std_votato.rbegin();
+	ft_pitato = ft_votato.rbegin();
+	test("i->var", std_pitato->ego_sum, std_pitato->ego_sum);
+	incr_score(d);
+
+	testing("i->var = val");
+	std_pitato->ego_sum = "potato blood runs through my veins";
+	ft_pitato->ego_sum = "potato blood runs through my veins";
+	test("i->var", std_pitato->ego_sum, std_pitato->ego_sum);
+	incr_score(d);
+}
+
+template<class T>
+void		test_rev_assignment(data<T> *d) {
+	typedef typename std::vector<T>::reverse_iterator	stditer;
+	typedef typename ft::vector<T>::reverse_iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	stditer				stdi;
+	ftiter				fti;
+	T					val;
+
+	create_vector(stdv, ftv, 0);
+	testing_on("random filled vector size " << stdv->size());
+	stdi = stdv->rbegin();
+	fti = ftv->rbegin();
+	val = randomize<T>();
+	testing("*i = " << val);
+	*stdi = val;
+	*fti = val;
+	test("*i", *stdi, *fti);
+	incr_score(d);
+}
+
+template<class T>
+void		test_rev_incr_decr(data<T> *d) {
+	typedef typename std::vector<T>::reverse_iterator	stditer;
+	typedef typename ft::vector<T>::reverse_iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	stditer				stdi;
+	stditer				stdir;
+	ftiter				fti;
+	ftiter				ftir;
+	T					ftr;
+	T					stdr;
+
+	create_vector_size(stdv, ftv, 10);
+	testing_on("random filled vector size " << stdv->size());
+	testing_on("i = vector->rbegin()");
+	stdi = stdv->rbegin();
+	fti = ftv->rbegin();
+
+	testing("ret = i++");
+	stdir = stdi++;
+	ftir = fti++;
+	test("*i", *stdi, *fti);
+	test("*ret", *stdir, *ftir);
+	incr_score(d);
+
+	testing("ret = ++i");
+	stdir = ++stdi;
+	ftir = ++fti;
+	test("*i", *stdi, *fti);
+	test("*ret", *stdir, *ftir);
+	incr_score(d);
+
+	testing("ret = *i++");
+	stdr = *stdi++;
+	ftr = *fti++;
+	test("*i", *stdi, *fti);
+	test("ret", stdr, ftr);
+	incr_score(d);
+
+	testing("ret = i--");
+	stdir = stdi--;
+	ftir = fti--;
+	test("*i", *stdi, *fti);
+	test("*ret", *stdir, *ftir);
+	incr_score(d);
+
+	testing("ret = --i");
+	stdir = --stdi;
+	ftir = --fti;
+	test("*i", *stdi, *fti);
+	test("*ret", *stdir, *ftir);
+	incr_score(d);
+
+	testing("ret = *i--");
+	stdr = *stdi--;
+	ftr = *fti--;
+	test("*i", *stdi, *fti);
+	test("ret", stdr, ftr);
+	incr_score(d);
+}
+
+template<class T>
+void		test_rev_add_sub(data<T> *d) {
+	typedef typename std::vector<T>::reverse_iterator	stditer;
+	typedef typename ft::vector<T>::reverse_iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	stditer				stdi;
+	stditer				stdir;
+	ftiter				fti;
+	ftiter				ftir;
+	int					offset;
+	typename stditer::difference_type	stdr;
+	typename ftiter::difference_type	ftr;
+
+	create_vector_size(stdv, ftv, 50);
+	testing_on("random filled vector size " << stdv->size());
+	testing_on("i = vector->rbegin()");
+	stdi = stdv->rbegin();
+	fti = ftv->rbegin();
+
+	offset = (rand() % 5) + 1;
+	testing("ret = i + " << offset);
+	stdir = stdi + offset;
+	ftir = fti + offset;
+	test("*i", *stdi, *fti);
+	test("*ret", *stdir, *ftir);
+	incr_score(d);
+
+	offset = (rand() % 5) + 1;
+	testing("ret = " << offset << " + i");
+	stdir = offset + stdi;
+	ftir = offset + fti;
+	test("*i", *stdi, *fti);
+	test("*ret", *stdir, *ftir);
+	incr_score(d);
+
+	testing_on("i = vector->rbegin(); for (1->10) i++");
+	stdi = stdv->rbegin();
+	fti = ftv->rbegin();
+	for (int i = 0; i < 10; i++) {
+		++stdi;
+		++fti;
+	}
+
+	offset = (rand() % 5) + 1;
+	testing("ret = i - " << offset);
+	stdir = stdi - offset;
+	ftir = fti - offset;
+	test("*i", *stdi, *fti);
+	test("*ret", *stdir, *ftir);
+	incr_score(d);
+
+	testing("ret = i1 - i2");
+	stdr = stdi - stdir;
+	ftr = fti - ftir;
+	test("*i", *stdi, *fti);
+	test("*i2", *stdir, *ftir);
+	test("ret", stdr, ftr);
+	incr_score(d);
+
+	testing("ret = i2 - i1");
+	stdr = stdir - stdi;
+	ftr = ftir - fti;
+	test("*i", *stdi, *fti);
+	test("*i2", *stdir, *ftir);
+	test("ret", stdr, ftr);
+	incr_score(d);
+}
+
+template<class T>
+void		test_rev_gt_lt_eqgt_eqlt(data<T> *d) {
+	typedef typename std::vector<T>::reverse_iterator	stditer;
+	typedef typename ft::vector<T>::reverse_iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	stditer				stdi;
+	stditer				stdi2;
+	ftiter				fti;
+	ftiter				fti2;
+	int					offset;
+
+	create_vector_size(stdv, ftv, 50);
+	testing_on("random filled vector size " << stdv->size());
+	testing_on("i1/2 = vector->rbegin()");
+	stdi = stdv->rbegin();
+	stdi2 = stdv->rbegin();
+	fti = ftv->rbegin();
+	fti2 = ftv->rbegin();
+
+	test("*i1", *stdi, *fti);
+	test("*i2", *stdi2, *fti2);
+	test("i1 < i2", stdi < stdi2, fti < fti2);
+	incr_score(d);
+	test("i1 > i2", stdi > stdi2, fti > fti2);
+	test("i2 > i1", stdi2 > stdi, fti2 > fti);
+	incr_score(d);
+	test("i1 <= i2", stdi <= stdi2, fti <= fti2);
+	test("i2 <= i1", stdi2 <= stdi, fti2 <= fti);
+	incr_score(d);
+	test("i1 >= i2", stdi >= stdi2, fti >= fti2);
+	incr_score(d);
+
+	offset = (rand() % 5) + 1;
+	testing_on("i2 += " << offset);
+	for (int i = 0; i < offset; i++) {
+		stdi2++;
+		fti2++;
+	}
+	test("*i1", *stdi, *fti);
+	test("*i2", *stdi2, *fti2);
+	test("i1 < i2", stdi < stdi2, fti < fti2);
+	incr_score(d);
+	test("i1 > i2", stdi > stdi2, fti > fti2);
+	test("i2 > i1", stdi2 > stdi, fti2 > fti);
+	incr_score(d);
+	test("i1 <= i2", stdi <= stdi2, fti <= fti2);
+	test("i2 <= i1", stdi2 <= stdi, fti2 <= fti);
+	incr_score(d);
+	test("i1 >= i2", stdi >= stdi2, fti >= fti2);
+	incr_score(d);
+}
+
+template<class T>
+void		test_rev_plus_eq_minus_eq(data<T> *d) {
+	typedef typename std::vector<T>::reverse_iterator	stditer;
+	typedef typename ft::vector<T>::reverse_iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	stditer				stdi;
+	ftiter				fti;
+	int					offset;
+
+	create_vector_size(stdv, ftv, 50);
+	testing_on("random filled vector size " << stdv->size());
+	testing_on("i1/2 = vector->rbegin() + 25");
+	stdi = stdv->rbegin() + 25;
+	fti = ftv->rbegin() + 25;
+
+	offset = (rand() % 5) + 1;
+	testing("i += " << offset);
+	stdi += offset;
+	fti += offset;
+	test("*i1", *stdi, *fti);
+	incr_score(d);
+
+	testing("i -= " << offset);
+	stdi -= offset;
+	fti -= offset;
+	test("*i1", *stdi, *fti);
+	incr_score(d);
+
+	offset *= -1;
+	testing("i += " << offset);
+	stdi += offset;
+	fti += offset;
+	test("*i1", *stdi, *fti);
+	incr_score(d);
+
+	testing("i -= " << offset);
+	stdi -= offset;
+	fti -= offset;
+	test("*i1", *stdi, *fti);
+	incr_score(d);
+}
+
+template<class T>
+void		test_rev_offset_operator(data<T> *d) {
+	typedef typename std::vector<T>::reverse_iterator	stditer;
+	typedef typename ft::vector<T>::reverse_iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	stditer				stdi;
+	ftiter				fti;
+	int					offset;
+
+	create_vector_size(stdv, ftv, 50);
+	testing_on("random filled vector size " << stdv->size());
+	testing_on("i1/2 = vector->rbegin()");
+	stdi = stdv->rbegin();
+	fti = ftv->rbegin();
+
+	offset = (rand() % 50);
+	testing("offset = " << offset);
+	test("i[offset]", stdi[offset], fti[offset]);
+	incr_score(d);
+
+	offset = 0;
+	testing("offset = " << offset);
+	test("i[offset]", stdi[offset], fti[offset]);
+	incr_score(d);
+}
+
+
+template<class T>
+void		test_rev_iterators(data<T> *d) {
+	test_rev_it_constructors(d);
+	test_rev_eq_neq(d);
+	test_rev_dereference(d);
+	test_rev_detaterence(d);
+	test_rev_assignment(d);
+	test_rev_incr_decr(d);
+	test_rev_add_sub(d);
+	test_rev_gt_lt_eqgt_eqlt(d);
+	test_rev_plus_eq_minus_eq(d);
+	test_rev_offset_operator(d);
 }
 
 /*-----------------------------------CAPACITY-----------------------------------*/
@@ -2120,6 +2531,8 @@ void		do_tests(void) {
 	test_constructors(d);
 	//print_group_title("ITERATORS");
 	//test_iterators(d);
+	//print_group_title("REVERSE ITERATORS");
+	//test_rev_iterators(d);
 	print_group_title("CAPACITY");
 	test_capacity(d);
 	print_group_title("ELEMENT ACCESS");
@@ -2131,6 +2544,8 @@ void		do_tests(void) {
 
 	print_group_title("ITERATORS");
 	test_iterators(d);
+	print_group_title("REVERSE ITERATORS");
+	test_rev_iterators(d);
 
 	std::cout << std::endl << GREEN << "pass: " << RESET << d->pass << RED << "\tfail:\t" << RESET << d->fail << std::endl;
 	delete d;
