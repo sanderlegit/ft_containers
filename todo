@@ -1,0 +1,5 @@
+fix the leaks
+make sure list iterators (and other containers) actually work
+	i.e. if the list is empty, does end return same as begin
+do all operations have tests with size 1, size 0??
+const tests?

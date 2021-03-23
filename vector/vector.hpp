@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/10 16:43:21 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/23 15:30:18 by dries               **ee8ee**            */
+/*   Updated: 2021/03/23 17:54:09 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -557,6 +557,31 @@ namespace ft {
 		void					pop_back () {
 			resize(_size - 1);
 		}
+
+
+/*	Removes from the vector either a single element (position) or a range of elements ([first,last)).
+ *	This effectively reduces the container size by the number of elements removed, which are destroyed.
+ *	Because vectors use an array as their underlying storage, erasing elements in positions other than 
+ *	the vector end causes the container to relocate all the elements after the segment erased to their 
+ *	new positions. This is generally an inefficient operation compared to the one performed for the 
+ *	same operation by other kinds of sequence containers (such as list or forward_list).	*/
+
+		iterator	erase (iterator position) {
+			iterator	i;
+			int			idx;
+
+			i = begin();
+			while (i != position)
+				i++;
+			idx = begin() - i;
+			for (; i != end() - 1; i++) {
+				*i = *(i + 1);
+			}
+			resize(_size - 1);
+			return (begin() + idx);
+		}
+
+		iterator	erase (iterator first, iterator last);
 
 /*	Exchanges the content of the container by the content of x, which is another vector object 
  *	of the same type. Sizes may differ.

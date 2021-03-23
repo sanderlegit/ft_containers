@@ -6,7 +6,7 @@
 #    By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8          #
 #                                                     Y8 .e* 8 *e. 8P          #
 #    Created: 2021/03/10 18:00:06 by dries             *8*   8   *8*           #
-#    Updated: 2021/03/23 15:17:21 by dries               **ee8ee**             #
+#    Updated: 2021/03/23 17:54:41 by dries               **ee8ee**             #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,11 +15,11 @@ Member functions
 (destructor)		Vector destructor (public member function )			-written,tested
 operator=			Assign content (public member function )			-written,tested
 
-Iterators:
-begin				Return iterator to beginning (public member function )
-end					Return iterator to end (public member function )
-rbegin				Return reverse iterator to reverse beginning (public member function )
-rend				Return reverse iterator to reverse end (public member function )
+Iterators:		no test for const iterators
+begin				Return iterator to beginning (public member function )					-written,tested
+end					Return iterator to end (public member function )						-written,tested
+rbegin				Return reverse iterator to reverse beginning (public member function )	-written,tested
+rend				Return reverse iterator to reverse end (public member function )		-written,tested
 
 Capacity:
 size				Return size (public member function )									-written,tested
@@ -32,15 +32,15 @@ reserve				Request a change in capacity (public member function )					-written,t
 Element access:
 operator[]			Access element (public member function )			-written,tested
 at					Access element (public member function )			-written,tested
-front				Access first element (public member function )		-written,tested			no-test for const versions
-back				Access last element (public member function )		-written,tested			no-test for const versions
+front				Access first element (public member function )		-written,tested			no test for const versions
+back				Access last element (public member function )		-written,tested			no test for const versions
 
 Modifiers:
 assign				Assign vector content (public member function )
 push_back			Add element at the end (public member function )		-written,tested
 pop_back			Delete last element (public member function )			-written,tested
 insert				Insert elements (public member function )
-erase				Erase elements (public member function )
+erase				Erase elements (public member function )				-position written,tested | range not
 swap				Swap content (public member function )					-written,tested		TODO- check iterator validity
 clear				Clear content (public member function )					-written,tested
 

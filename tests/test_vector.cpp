@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/11 13:50:52 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/23 15:27:20 by dries               **ee8ee**            */
+/*   Updated: 2021/03/23 17:53:42 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -543,7 +543,7 @@ void		test_constructors(data<T> *d) {
 	test_operator_equals(d, 1, 1);
 }
 
-/*-----------------------------------ITERATORS-----------------------------------*/
+/*-----------------------------------ITERATOR CLASS-----------------------------------*/
 
 template<class T>
 void		test_it_constructors(data<T> *d) {
@@ -948,20 +948,30 @@ void		test_offset_operator(data<T> *d) {
 }
 
 template<class T>
-void		test_iterators(data<T> *d) {
+void		test_iterator_class(data<T> *d) {
+	print_title("constructors");
 	test_it_constructors(d);
+	print_title(" == != ");
 	test_eq_neq(d);
+	print_title(" * ");
 	test_dereference(d);
+	print_title(" -> ");
 	test_detaterence(d);
+	print_title(" = ");
 	test_assignment(d);
+	print_title(" ++ -- ");
 	test_incr_decr(d);
+	print_title(" + - ");
 	test_add_sub(d);
+	print_title(" < > <= >= ");
 	test_gt_lt_eqgt_eqlt(d);
+	print_title(" -= += ");
 	test_plus_eq_minus_eq(d);
+	print_title(" [] ");
 	test_offset_operator(d);
 }
 
-/*-----------------------------------REVERSE ITERATORS-----------------------------------*/
+/*-----------------------------------REVERSE ITERATOR CLASS-----------------------------------*/
 
 template<class T>
 void		test_rev_it_constructors(data<T> *d) {
@@ -1361,17 +1371,89 @@ void		test_rev_offset_operator(data<T> *d) {
 
 
 template<class T>
-void		test_rev_iterators(data<T> *d) {
+void		test_rev_iterator_class(data<T> *d) {
+	print_title("constructors");
 	test_rev_it_constructors(d);
+	print_title(" == != ");
 	test_rev_eq_neq(d);
+	print_title(" * ");
 	test_rev_dereference(d);
+	print_title(" -> ");
 	test_rev_detaterence(d);
+	print_title(" = ");
 	test_rev_assignment(d);
+	print_title(" ++ -- ");
 	test_rev_incr_decr(d);
+	print_title(" + - ");
 	test_rev_add_sub(d);
+	print_title(" < > <= >= ");
 	test_rev_gt_lt_eqgt_eqlt(d);
+	print_title(" -= += ");
 	test_rev_plus_eq_minus_eq(d);
+	print_title(" [] ");
 	test_rev_offset_operator(d);
+}
+
+/*-----------------------------------ITERATOR FUNCS-----------------------------------*/
+
+template<class T>
+void		test_begin_end(data<T> *d, bool empty) {
+	typedef typename std::vector<T>::iterator	stditer;
+	typedef typename ft::vector<T>::iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	std::vector<T>		*stdref = NULL;
+	ft::vector<T>		*ftref = NULL;
+
+	create_vector(stdv, ftv, empty);
+	testing_on("random filled vector size " << stdv->size());
+	testing("for (it i = v->begin(); i != v->end(); i++)\n\t\t{adding values to reference list}");
+	ftref = new ft::vector<T>();
+	stdref = new std::vector<T>();
+	for (ftiter fti = ftv->begin(); fti != ftv->end(); fti++) {
+		ftref->push_back(*fti);
+	}
+	for (stditer stdi = stdv->begin(); stdi != stdv->end(); stdi++) {
+		stdref->push_back(*stdi);
+	}
+	equal(stdref, ftref);
+	incr_score(d);
+}
+
+template<class T>
+void		test_rbegin_rend(data<T> *d, bool empty) {
+	typedef typename std::vector<T>::reverse_iterator	stditer;
+	typedef typename ft::vector<T>::reverse_iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	std::vector<T>		*stdref = NULL;
+	ft::vector<T>		*ftref = NULL;
+
+	create_vector(stdv, ftv, empty);
+	testing_on("random filled vector size " << stdv->size());
+	testing("for (it i = v->rbegin(); i != v->rend(); i++)\n\t\t{adding values to reference list}");
+	ftref = new ft::vector<T>();
+	stdref = new std::vector<T>();
+	for (ftiter fti = ftv->rbegin(); fti != ftv->rend(); fti++) {
+		ftref->push_back(*fti);
+	}
+	for (stditer stdi = stdv->rbegin(); stdi != stdv->rend(); stdi++) {
+		stdref->push_back(*stdi);
+	}
+	equal(stdref, ftref);
+	incr_score(d);
+}
+
+template<class T>
+void		test_iterator_funcs(data<T> *d) {
+	print_title("begin/end");
+	test_begin_end(d, 0);
+	test_begin_end(d, 1);
+	print_title("rbegin/rend");
+	test_rbegin_rend(d, 0);
+	test_rbegin_rend(d, 1);
 }
 
 /*-----------------------------------CAPACITY-----------------------------------*/
@@ -2057,6 +2139,47 @@ void		test_pop_back(data<T> *d) {
 	incr_score(d);
 }
 
+template<class T>
+void		test_erase_position(data<T> *d) {
+	typename std::vector<T>::iterator	stdr;
+	typename ft::vector<T>::iterator	ftr;
+	std::vector<T>						*std = NULL;
+	ft::vector<T>						*ft = NULL;
+	int									offset;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	testing("v.erase(v.begin())");
+	stdr = std->erase(std->begin());
+	ftr = ft->erase(ft->begin());
+	test("*ret", *stdr, *ftr);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	testing("v.erase(v.end() - 1)");
+	std->erase(std->end() - 1);
+	ft->erase(ft->end() - 1);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	offset = (rand() % (std->size() / 2));
+	testing("v.erase(v.begin() + " << offset << ")");
+	std->erase(std->begin() + offset);
+	ft->erase(ft->begin() + offset);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
 /*	Swap tests:
  *	swap empty with empty
  *	swap empty with full
@@ -2146,7 +2269,8 @@ void		test_modifiers(data<T> *d) {
 	//print_title("insert [single element]");
 	//print_title("insert [fill]");
 	//print_title("insert [range]");
-	//print_title("erase [posotion]");
+	//print_title("erase [position]");
+	//test_erase_position(d);
 	//print_title("erase [range]");
 	print_title("swap");		//TODO check iterator validity
 	test_swap(d, 0, 0);
@@ -2156,6 +2280,9 @@ void		test_modifiers(data<T> *d) {
 	print_title("clear");
 	test_clear(d, 0);
 	test_clear(d, 1);
+
+	print_title("erase [position]");
+	test_erase_position(d);
 }
 
 /*-----------------------------------NON-MEMBER OVERLOADS-----------------------------------*/
@@ -2529,23 +2656,24 @@ void		do_tests(void) {
 
 	print_group_title("CONSTRUCTORS");
 	test_constructors(d);
-	//print_group_title("ITERATORS");
-	//test_iterators(d);
-	//print_group_title("REVERSE ITERATORS");
-	//test_rev_iterators(d);
+	print_group_title("ITERATOR CLASS");
+	test_iterator_class(d);
+	print_group_title("REVERSE ITERATOR CLASS");
+	test_rev_iterator_class(d);
+	print_group_title("ITERATOR FUNCS");
+	test_iterator_funcs(d);
 	print_group_title("CAPACITY");
 	test_capacity(d);
 	print_group_title("ELEMENT ACCESS");
 	test_element_access(d);
-	print_group_title("MODIFIERS");
-	test_modifiers(d);
+	//print_group_title("MODIFIERS");
+	//test_modifiers(d);
 	print_group_title("NON-MEMBER OVERLOADS");
 	test_non_member_overloads(d);
 
-	print_group_title("ITERATORS");
-	test_iterators(d);
-	print_group_title("REVERSE ITERATORS");
-	test_rev_iterators(d);
+	print_group_title("MODIFIERS");
+	test_modifiers(d);
+
 
 	std::cout << std::endl << GREEN << "pass: " << RESET << d->pass << RED << "\tfail:\t" << RESET << d->fail << std::endl;
 	delete d;
