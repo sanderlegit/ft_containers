@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/11 13:50:52 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/22 17:41:47 by dries               **ee8ee**            */
+/*   Updated: 2021/03/23 15:16:59 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -763,9 +763,9 @@ void		test_add_sub(data<T> *d) {
 	stditer				stdir;
 	ftiter				fti;
 	ftiter				ftir;
-	T					ftr;
-	T					stdr;
 	int					offset;
+	typename stditer::difference_type	stdr;
+	typename ftiter::difference_type	ftr;
 
 	create_vector_size(stdv, ftv, 50);
 	testing_on("random filled vector size " << stdv->size());
@@ -781,13 +781,13 @@ void		test_add_sub(data<T> *d) {
 	test("*ret", *stdir, *ftir);
 	incr_score(d);
 
-	//offset = (rand() % 5) + 1;
-	//testing("ret = " << offset << " + i");
-	//stdir = offset + stdi;
-	//ftir = offset + fti;
-	//test("*i", *stdi, *fti);
-	//test("*ret", *stdir, *ftir);
-	//incr_score(d);
+	offset = (rand() % 5) + 1;
+	testing("ret = " << offset << " + i");
+	stdir = offset + stdi;
+	ftir = offset + fti;
+	test("*i", *stdi, *fti);
+	test("*ret", *stdir, *ftir);
+	incr_score(d);
 
 	testing_on("i = vector->begin(); for (1->10) i++");
 	stdi = stdv->begin();
@@ -805,14 +805,149 @@ void		test_add_sub(data<T> *d) {
 	test("*ret", *stdir, *ftir);
 	incr_score(d);
 
-	//testing("ret = i1 - i2");
-	//stdir = stdi - stdi2;
-	//ftir = fti - fti2;
-	//test("*i", *stdi, *fti);
-	//test("*i2", *stdi2, *fti2);
-	//test("*ret", *stdir, *ftir);
-	//incr_score(d);
+	testing("ret = i1 - i2");
+	stdr = stdi - stdir;
+	ftr = fti - ftir;
+	test("*i", *stdi, *fti);
+	test("*i2", *stdir, *ftir);
+	test("ret", stdr, ftr);
+	incr_score(d);
+
+	testing("ret = i2 - i1");
+	stdr = stdir - stdi;
+	ftr = ftir - fti;
+	test("*i", *stdi, *fti);
+	test("*i2", *stdir, *ftir);
+	test("ret", stdr, ftr);
+	incr_score(d);
 }
+
+template<class T>
+void		test_gt_lt_eqgt_eqlt(data<T> *d) {
+	typedef typename std::vector<T>::iterator	stditer;
+	typedef typename ft::vector<T>::iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	stditer				stdi;
+	stditer				stdi2;
+	ftiter				fti;
+	ftiter				fti2;
+	int					offset;
+
+	create_vector_size(stdv, ftv, 50);
+	testing_on("random filled vector size " << stdv->size());
+	testing_on("i1/2 = vector->begin()");
+	stdi = stdv->begin();
+	stdi2 = stdv->begin();
+	fti = ftv->begin();
+	fti2 = ftv->begin();
+
+	test("*i1", *stdi, *fti);
+	test("*i2", *stdi2, *fti2);
+	test("i1 < i2", stdi < stdi2, fti < fti2);
+	incr_score(d);
+	test("i1 > i2", stdi > stdi2, fti > fti2);
+	test("i2 > i1", stdi2 > stdi, fti2 > fti);
+	incr_score(d);
+	test("i1 <= i2", stdi <= stdi2, fti <= fti2);
+	test("i2 <= i1", stdi2 <= stdi, fti2 <= fti);
+	incr_score(d);
+	test("i1 >= i2", stdi >= stdi2, fti >= fti2);
+	incr_score(d);
+
+	offset = (rand() % 5) + 1;
+	testing_on("i2 += " << offset);
+	for (int i = 0; i < offset; i++) {
+		stdi2++;
+		fti2++;
+	}
+	test("*i1", *stdi, *fti);
+	test("*i2", *stdi2, *fti2);
+	test("i1 < i2", stdi < stdi2, fti < fti2);
+	incr_score(d);
+	test("i1 > i2", stdi > stdi2, fti > fti2);
+	test("i2 > i1", stdi2 > stdi, fti2 > fti);
+	incr_score(d);
+	test("i1 <= i2", stdi <= stdi2, fti <= fti2);
+	test("i2 <= i1", stdi2 <= stdi, fti2 <= fti);
+	incr_score(d);
+	test("i1 >= i2", stdi >= stdi2, fti >= fti2);
+	incr_score(d);
+}
+
+template<class T>
+void		test_plus_eq_minus_eq(data<T> *d) {
+	typedef typename std::vector<T>::iterator	stditer;
+	typedef typename ft::vector<T>::iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	stditer				stdi;
+	ftiter				fti;
+	int					offset;
+
+	create_vector_size(stdv, ftv, 50);
+	testing_on("random filled vector size " << stdv->size());
+	testing_on("i1/2 = vector->begin() + 25");
+	stdi = stdv->begin() + 25;
+	fti = ftv->begin() + 25;
+
+	offset = (rand() % 5) + 1;
+	testing("i += " << offset);
+	stdi += offset;
+	fti += offset;
+	test("*i1", *stdi, *fti);
+	incr_score(d);
+
+	testing("i -= " << offset);
+	stdi -= offset;
+	fti -= offset;
+	test("*i1", *stdi, *fti);
+	incr_score(d);
+
+	offset *= -1;
+	testing("i += " << offset);
+	stdi += offset;
+	fti += offset;
+	test("*i1", *stdi, *fti);
+	incr_score(d);
+
+	testing("i -= " << offset);
+	stdi -= offset;
+	fti -= offset;
+	test("*i1", *stdi, *fti);
+	incr_score(d);
+}
+
+template<class T>
+void		test_offset_operator(data<T> *d) {
+	typedef typename std::vector<T>::iterator	stditer;
+	typedef typename ft::vector<T>::iterator	ftiter;
+
+	std::vector<T>		*stdv = NULL;
+	ft::vector<T>		*ftv = NULL;
+	stditer				stdi;
+	ftiter				fti;
+	int					offset;
+
+	create_vector_size(stdv, ftv, 50);
+	testing_on("random filled vector size " << stdv->size());
+	testing_on("i1/2 = vector->begin()");
+	stdi = stdv->begin();
+	fti = ftv->begin();
+
+	offset = (rand() % 50);
+	testing("offset = " << offset);
+	test("i[offset]", stdi[offset], fti[offset]);
+	incr_score(d);
+
+	offset = 0;
+	testing("offset = " << offset);
+	test("i[offset]", stdi[offset], fti[offset]);
+	incr_score(d);
+}
+
 
 template<class T>
 void		test_iterators(data<T> *d) {
@@ -823,9 +958,9 @@ void		test_iterators(data<T> *d) {
 	test_assignment(d);
 	test_incr_decr(d);
 	test_add_sub(d);
-	//test_gt_lt_eq(d);
-	//test_plus_eq_minus_eq(d);
-	//test_offset_reference(d);
+	test_gt_lt_eqgt_eqlt(d);
+	test_plus_eq_minus_eq(d);
+	test_offset_operator(d);
 }
 
 /*-----------------------------------CAPACITY-----------------------------------*/

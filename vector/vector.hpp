@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/10 16:43:21 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/22 17:38:33 by dries               **ee8ee**            */
+/*   Updated: 2021/03/23 14:55:00 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,114 @@
  *	stdexcept	out_of_range	*/
 
 namespace ft {
+
+/*-------------------------------------------ITERATORS-------------------------------------------*/
+
+	template<class value_t, class reference_t, class pointer_t>
+	class VectorRandIterator { //https://en.cppreference.com/w/cpp/iterator/iterator
+		public:
+			typedef std::random_access_iterator_tag			iterator_category;
+			typedef	value_t									value_type;
+			typedef	reference_t								reference;
+			typedef	pointer_t								pointer;
+			typedef	ptrdiff_t								difference_type;
+		private:
+			pointer		_data;
+		public:
+
+			VectorRandIterator(pointer d = NULL) : _data(d) {}
+			VectorRandIterator(const VectorRandIterator& src) { *this = src; }
+			~VectorRandIterator(void) {}
+
+			VectorRandIterator&		operator=(const VectorRandIterator& rhs) {
+				_data = rhs._data;
+				return *this;
+			}
+
+			VectorRandIterator		operator++(int n) {		//i++
+				VectorRandIterator	ret(*this);
+
+				(void)n;
+				++(*this);
+				return ret;
+			}
+
+			VectorRandIterator		operator--(int n) {		//i--
+				VectorRandIterator	ret(*this);
+
+				(void)n;
+				--(*this);
+				return ret;
+			}
+
+			VectorRandIterator&		operator++() {			//++i
+				_data++;
+				return *this;
+			}
+
+			VectorRandIterator&		operator--() {			//--i
+				_data--;
+				return *this;
+			}
+
+			VectorRandIterator&		operator+=(const int& rhs) {			//i += n
+				_data += rhs;
+				return *this;
+			}
+
+			VectorRandIterator&		operator-=(const int& rhs) {			//i -= n
+				_data -= rhs;
+				return *this;
+			}
+
+			VectorRandIterator		operator+(const int& rhs) {			//i + x
+				VectorRandIterator	ret(*this);
+
+				ret._data += rhs;
+				return ret;
+			}
+
+			VectorRandIterator		operator-(const int& rhs) {			//i - x
+				VectorRandIterator	ret(*this);
+
+				ret._data -= rhs;
+				return ret;
+			}
+
+			difference_type		operator-(const VectorRandIterator& rhs) {			//a - b
+				difference_type		ret;
+
+				ret = 0;
+				if (_data < rhs._data)
+					while ((_data - ret) != rhs._data)
+						--ret;
+				else
+					while ((_data - ret) != rhs._data)
+						++ret;
+				return ret;
+			}
+
+			bool					operator==(const VectorRandIterator& rhs) const { return _data == rhs._data; }
+			bool					operator!=(const VectorRandIterator& rhs) const { return _data != rhs._data; }
+			pointer					operator->() const { return _data; }
+			reference 				operator*() const { return *_data; }
+			bool					operator<(const VectorRandIterator& rhs) const { return (_data < rhs._data); }
+			bool					operator>(const VectorRandIterator& rhs) const { return (_data > rhs._data); }
+			bool					operator<=(const VectorRandIterator& rhs) const { return (_data <= rhs._data); }
+			bool					operator>=(const VectorRandIterator& rhs) const { return (_data >= rhs._data); }
+			reference				operator[](const int& rhs) const { return *(_data + rhs); }
+
+			operator VectorRandIterator<const value_t, const reference, const pointer>() { return _data; }
+	};
+
+	template<class value_t, class reference_t, class pointer_t>
+	class ReverseVectorRandIterator { //https://en.cppreference.com/w/cpp/iterator/iterator
+		public:
+			typedef std::random_access_iterator_tag			iterator_category;
+	};
+
+/*-------------------------------------------VECTOR-------------------------------------------*/
+
 	template <class T, class Alloc = std::allocator<T> >
 	class vector { //https://cplusplus.com/reference/vector/vector/
 /*-------------------------------------------TYPEDEFS-------------------------------------------*/
@@ -40,6 +148,12 @@ namespace ft {
  *							iterator_traits<iterator>::difference_type	
  *	size_type				an unsigned integral type that can		usually size_t
  *							represent any non-negative value of difference_type		*/
+
+/*	iterator				a random access iterator to value_type	convertible to const_iterator
+ *	const_iterator			a random access iterator to const 
+ *							value_type	
+ *	reverse_iterator		reverse_iterator<iterator>	
+ *	const_reverse_iterator	reverse_iterator<const_iterator>	*/
 			typedef	T										value_type;
 			typedef	Alloc									allocator_type;
 			typedef value_type&								reference;
@@ -48,96 +162,10 @@ namespace ft {
 			typedef	const value_type*						const_pointer;
 			typedef	ptrdiff_t								difference_type;
 			typedef size_t									size_type;
-		private:
-
-/*-------------------------------------------ITERATORS-------------------------------------------*/
-
-
-			template<class value_t, class reference_t, class pointer_t>
-			class VectorRandIterator { //https://en.cppreference.com/w/cpp/iterator/iterator
-				private:
-					pointer		_data;
-				public:
-					typedef std::random_access_iterator_tag			iterator_category;
-					typedef	value_t									value_type;
-					typedef	reference_t								reference;
-					typedef	pointer_t								pointer;
-					typedef	ptrdiff_t								difference_type;
-
-					VectorRandIterator(pointer d = NULL) : _data(d) {}
-					VectorRandIterator(const VectorRandIterator& src) { *this = src; }
-					~VectorRandIterator(void) {}
-
-					VectorRandIterator&		operator=(const VectorRandIterator& rhs) {
-						_data = rhs._data;
-						return *this;
-					}
-
-					VectorRandIterator		operator++(int n) {		//i++
-						VectorRandIterator	ret(*this);
-
-						(void)n;
-						++(*this);
-						return ret;
-					}
-
-					VectorRandIterator		operator--(int n) {		//i--
-						VectorRandIterator	ret(*this);
-
-						(void)n;
-						--(*this);
-						return ret;
-					}
-
-					VectorRandIterator&		operator++() {			//++i
-						_data++;
-						return *this;
-					}
-
-					VectorRandIterator&		operator--() {			//--i
-						_data--;
-						return *this;
-					}
-
-					VectorRandIterator		operator+(const int& rhs) {			//i + x
-						VectorRandIterator	ret(*this);
-
-						ret._data += rhs;
-						return ret;
-					}
-
-					VectorRandIterator		operator-(const int& rhs) {			//i - x
-						VectorRandIterator	ret(*this);
-
-						ret._data -= rhs;
-						return ret;
-					}
-
-					bool					operator==(const VectorRandIterator& rhs) const { return _data == rhs._data; }
-					bool					operator!=(const VectorRandIterator& rhs) const { return _data != rhs._data; }
-					pointer					operator->() const { return _data; }
-					reference 				operator*() const { return *_data; }
-
-					operator VectorRandIterator<const value_t, const reference, const pointer>() { return _data; }
-			};
-
-			template<class value_t, class reference_t, class pointer_t>
-			class ReverseVectorRandIterator { //https://en.cppreference.com/w/cpp/iterator/iterator
-				public:
-					typedef std::random_access_iterator_tag			iterator_category;
-			};
-		public:
-
-/*	iterator				a random access iterator to value_type	convertible to const_iterator
- *	const_iterator			a random access iterator to const 
- *							value_type	
- *	reverse_iterator		reverse_iterator<iterator>	
- *	const_reverse_iterator	reverse_iterator<const_iterator>	*/
-
 			typedef	VectorRandIterator<T, T&, T*>							iterator;
 			typedef	VectorRandIterator<const T, const T&, const T*>			const_iterator;
-			typedef	ReverseVectorRandIterator<T, T&, T*>					reverse_iterator;
-			typedef	ReverseVectorRandIterator<const T, const T&, const T*>	const_reverse_iterator;
+			//typedef	ReverseVectorRandIterator<T, T&, T*>					reverse_iterator;
+			//typedef	ReverseVectorRandIterator<const T, const T&, const T*>	const_reverse_iterator;
 
 /*-------------------------------------------MEMBER VARIABLES-------------------------------------------*/
 	private:
@@ -429,7 +457,7 @@ namespace ft {
  *	in x before the call, and the elements of x are those which were in this. All iterators, 
  *	references and pointers remain valid for the swapped objects.	*/
 
-		void				swap (vector& x) {
+		void					swap (vector& x) {
 			pointer		dswp;
 			size_type	sswp;
 
@@ -450,7 +478,7 @@ namespace ft {
  *	due to calling this function. A typical alternative that forces a reallocation is to use swap:
  *		vector<T>().swap(x);   // clear x reallocating	*/
 
-		void				clear() {
+		void					clear() {
 			for (size_type i = 0; i != _size; i++)
 				_alloc.destroy(_data + i);
 			_size = 0;
@@ -468,7 +496,7 @@ namespace ft {
 
 
 	private:
-		pointer				allocate (const size_type& size) {
+		pointer					allocate (const size_type& size) {
 			pointer	tmp;
 
 			tmp = _alloc.allocate(size);
@@ -501,7 +529,7 @@ namespace ft {
  *	a>=b		!(a<b)	*/
 
 	template <class T, class Alloc>
-	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+	bool					operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 		typename vector<T>::size_type		ir;
 		typename vector<T>::size_type		il;
 
@@ -520,12 +548,12 @@ namespace ft {
 	}
 
 	template <class T, class Alloc>
-	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+	bool					operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 		return (!(lhs == rhs));
 	}
 
 	template <class T, class Alloc>
-	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+	bool					operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 		typename vector<T>::size_type		i;
 
 		i = 0;
@@ -544,29 +572,40 @@ namespace ft {
 	}
 
 	template <class T, class Alloc>
-	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+	bool 					operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 		return (!(rhs < lhs));
 	}
 
 	template <class T, class Alloc>
-	bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+	bool 					operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 		return (rhs < lhs);
 	}
 
 	template <class T, class Alloc>
-	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+	bool					operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 		return (!(lhs < rhs));
 	}
 
-	/*	The contents of container x are exchanged with those of y. Both container objects must be of the same
-	 *	type (same template parameters), although sizes may differ.
-	 *	After the call to this member function, the elements in x are those which were in y before the call,
-	 *	and the elements of y are those which were in x. All iterators, references and pointers remain valid
-	 *	for the swapped objects.	*/
+/*	The contents of container x are exchanged with those of y. Both container objects must be of the same
+ *	type (same template parameters), although sizes may differ.
+ *	After the call to this member function, the elements in x are those which were in y before the call,
+ *	and the elements of y are those which were in x. All iterators, references and pointers remain valid
+ *	for the swapped objects.	*/
 
 	template <class T, class Alloc>
 	void					swap (vector<T,Alloc>& x, vector<T,Alloc>& y) {
 		x.swap(y);
+	}
+
+/*	iter = iter + n	*/
+
+	template <class T>
+	VectorRandIterator<T, T&, T*>		operator+(const int& lhs, const VectorRandIterator<T, T&, T*>& rhs) {
+		VectorRandIterator<T, T&, T*>	ret(rhs);
+
+		for (int i = 0; i < lhs; ++i)
+			++ret;
+		return ret;
 	}
 
 }

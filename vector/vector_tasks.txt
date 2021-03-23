@@ -6,7 +6,7 @@
 #    By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8          #
 #                                                     Y8 .e* 8 *e. 8P          #
 #    Created: 2021/03/10 18:00:06 by dries             *8*   8   *8*           #
-#    Updated: 2021/03/22 17:40:19 by dries               **ee8ee**             #
+#    Updated: 2021/03/23 15:17:21 by dries               **ee8ee**             #
 #                                                                              #
 # **************************************************************************** #
 
@@ -137,20 +137,20 @@ n + a 		Supports the arithmetic operators + and - between an iterator and an int
 a + n
 a - n 		or subtracting an iterator from another.
 a - b			check what the return of this is
-	0|1|1|0 tested finished parts
+	1|1|1|1 tested
 
 a < b 		Can be compared with inequality relational operators (<, >, <= and >=).
 a > b
 a <= b
 a >= b
-	0|0|0|0
+	1|1|1|1 tested
 
 a += n		Supports compound assignment operations += and -=
 a -= n
-	~|~
+	1|1 tested
 
 a[n]		Supports the offset dereference operator ([])
-	0
+	1 tested
 
 
 
