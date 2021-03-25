@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/10 16:43:21 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/23 17:54:09 by dries               **ee8ee**            */
+/*   Updated: 2021/03/25 16:14:50 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,11 +283,13 @@ namespace ft {
 			resize(n, val);
 		}
 
-		//template <class InputIterator>
-		//vector (InputIterator first, InputIterator last,
-						 //const allocator_type& alloc = allocator_type()) {
-
-		//}
+		template <class InputIterator>
+		vector (InputIterator first, InputIterator last,
+						 const allocator_type& alloc = allocator_type())  : _size(0), _capacity(0), _data(NULL), _alloc(alloc) {
+			resize(last - first);
+			for (iterator i = first; i != last; i++)
+				_data[i - first] = *i;
+		}
 
 		vector (const vector& x) : _size(x._size), _capacity(x._capacity), _data(NULL), _alloc(x._alloc) {
 			_data = _alloc.allocate(_capacity);
@@ -542,6 +544,29 @@ namespace ft {
 
 /*-------------------------------------------MODIFIERS-------------------------------------------*/
 
+/*	Assigns new contents to the vector, replacing its current contents, and modifying its size 
+ *	accordingly.
+ *	In the range version (1), the new contents are elements constructed from each of the elements 
+ *	in the range between first and last, in the same order.
+ *	In the fill version (2), the new contents are n elements, each initialized to a copy of val.  
+ *	If a reallocation happens,the storage needed is allocated using the internal allocator.
+ *	Any elements held in the container before the call are destroyed and replaced by newly 
+ *	constructed elements (no assignments of elements take place).
+ *	This causes an automatic reallocation of the allocated storage space if -and only if- the new 
+ *	vector size surpasses the current vector capacity.	*/
+
+		template <class InputIterator>
+		void					assign (InputIterator first, InputIterator last) {
+			resize(0);
+			for (iterator i = first; i != last; i++)
+				push_back(*i);
+		}
+
+		void					assign (size_type n, const value_type& val) {
+			resize(0);
+			resize(n, val);
+		}
+
 /*	Adds a new element at the end of the vector, after its current last element. The content of val 
  *	is copied (or moved) to the new element.
  *	This effectively increases the container size by one, which causes an automatic reallocation of 
@@ -558,6 +583,79 @@ namespace ft {
 			resize(_size - 1);
 		}
 
+/*	The vector is extended by inserting new elements before the element at the specified position, 
+ *	effectively increasing the container size by the number of elements inserted.
+ *	This causes an automatic reallocation of the allocated storage space if -and only if- the new
+ *	vector size surpasses the current vector capacity.
+ *	Because vectors use an array as their underlying storage, inserting elements in positions other
+ *	than the vector end causes the container to relocate all the elements that were after position
+ *	to their new positions. This is generally an inefficient operation compared to the one performed
+ *	for the same operation by other kinds of sequence containers (such as list or forward_list).	*/
+
+
+		iterator				insert (iterator position, const value_type& val) {
+			size_type		idx;
+
+			idx = position - begin();
+			//std::cout << "idx: " << idx << std::endl;
+			//debug();
+			resize(_size + 1);
+			//debug();
+			for (reverse_iterator i = rbegin(); i != rend() - idx - 1; i++) {
+				//std::cout << rend() - i << std::endl;
+				//std::cout << "swapping i: " << *i << " \ti+1: " << *(i + 1) << std::endl;
+				//debug();
+				*i = *(i + 1);
+			}
+			//debug();
+			_data[idx] = val;
+			return (begin() + idx);
+		}
+
+		void					insert (iterator position, size_type n, const value_type& val) {
+			size_type		idx;
+
+			idx = position - begin();
+			//std::cout << "idx: " << idx << std::endl;
+			//debug();
+			resize(_size + n);
+			//debug();
+			for (reverse_iterator i = rbegin(); i != rend() - idx - n; i++) {
+				//std::cout << rend() - i << std::endl;
+				//std::cout << "swapping i: " << *i << " \ti+1: " << *(i + 1) << std::endl;
+				//debug();
+				*i = *(i + n);
+			}
+			//debug();
+			for (size_type i = 0; i < n; i++)
+				_data[idx + i] = val;
+		}
+
+		template <class InputIterator>
+		void					insert (iterator position, InputIterator first, InputIterator last) {
+			size_type	idx;
+			size_type	n;
+			iterator	vi;
+
+			n = last - first;
+			idx = position - begin();
+			//std::cout << "idx: " << idx << std::endl;
+			//debug();
+			resize(_size + n);
+			//debug();
+			for (reverse_iterator i = rbegin(); i != rend() - idx - n; i++) {
+				//std::cout << rend() - i << std::endl;
+				//std::cout << "swapping i: " << *i << " \ti+1: " << *(i + n) << std::endl;
+				//debug();
+				*i = *(i + n);
+			}
+			//debug();
+			vi = first;
+			for (size_type i = 0; i < n; i++) {
+				_data[idx + i] = *vi;
+				vi++;
+			}
+		}
 
 /*	Removes from the vector either a single element (position) or a range of elements ([first,last)).
  *	This effectively reduces the container size by the number of elements removed, which are destroyed.
@@ -567,21 +665,28 @@ namespace ft {
  *	same operation by other kinds of sequence containers (such as list or forward_list).	*/
 
 		iterator	erase (iterator position) {
-			iterator	i;
 			int			idx;
 
-			i = begin();
-			while (i != position)
-				i++;
-			idx = begin() - i;
-			for (; i != end() - 1; i++) {
+			idx = begin() - position;
+			for (iterator i = position; i != end() - 1; i++) {
 				*i = *(i + 1);
 			}
 			resize(_size - 1);
 			return (begin() + idx);
 		}
 
-		iterator	erase (iterator first, iterator last);
+		iterator	erase (iterator first, iterator last) {
+			difference_type	diff;
+			int				idx;
+
+			diff = last - first;
+			idx = begin() - first;
+			for (iterator i = first; i != end() - diff; i++) {
+				*i = *(i + diff);
+			}
+			resize(_size - diff);
+			return (begin() + idx);
+		}
 
 /*	Exchanges the content of the container by the content of x, which is another vector object 
  *	of the same type. Sizes may differ.

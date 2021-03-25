@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/11 13:50:52 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/23 17:53:42 by dries               **ee8ee**            */
+/*   Updated: 2021/03/25 16:16:32 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -431,6 +431,26 @@ void		test_constructor_default(data<T> *d) {
 	incr_score(d);
 }
 
+
+template<class T>
+void		test_constructor_range(data<T> *d, bool emptysrc) {
+	std::vector<T>						*std = NULL;
+	ft::vector<T>						*ft = NULL;
+	std::vector<T>						*stdsrc = NULL;
+	ft::vector<T>						*ftsrc = NULL;
+
+	create_vector(stdsrc, ftsrc, emptysrc);
+	testing_on("src: random filled vector size " << stdsrc->size());
+	testing("vector = new vector(src.begin(), src.end())");
+	std = new std::vector<T>(stdsrc->begin(), stdsrc->end());
+	ft = new ft::vector<T>(ftsrc->begin(), ftsrc->end());
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
 template<class T>
 void		test_constructor_fill(data<T> *d, bool empty) {
 	std::vector<T>		*std;
@@ -541,6 +561,10 @@ void		test_constructors(data<T> *d) {
 	test_operator_equals(d, 0, 1);
 	test_operator_equals(d, 1, 0);
 	test_operator_equals(d, 1, 1);
+
+	print_title("constructor [range]");
+	test_constructor_range(d, 0);
+	test_constructor_range(d, 1);
 }
 
 /*-----------------------------------ITERATOR CLASS-----------------------------------*/
@@ -2081,6 +2105,74 @@ void		test_element_access(data<T> *d) {
 
 /*-----------------------------------MODIFIERS TESTS-----------------------------------*/
 
+
+template<class T>
+void		test_assign_range(data<T> *d, bool empty, bool emptysrc) {
+	typename std::vector<T>::iterator	stdr;
+	typename ft::vector<T>::iterator	ftr;
+	std::vector<T>						*std = NULL;
+	ft::vector<T>						*ft = NULL;
+	std::vector<T>						*stdsrc = NULL;
+	ft::vector<T>						*ftsrc = NULL;
+
+	create_vector(std, ft, empty);
+	testing_on("v: random filled vector size " << std->size());
+	create_vector(stdsrc, ftsrc, emptysrc);
+	testing_on("v2: random filled vector size " << stdsrc->size());
+	testing("v.assign(v2.begin(), v2.end())");
+	std->assign(stdsrc->begin(), stdsrc->end());
+	ft->assign(ftsrc->begin(), ftsrc->end());
+	equal(std, ft);
+	equal(stdsrc, ftsrc);
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_assign_fill(data<T> *d, bool empty) {
+	std::vector<T>		*std = NULL;
+	ft::vector<T>		*ft = NULL;
+	size_t				size;
+	T					val;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	size = rand() % 256;
+	val = randomize<T>();
+	testing("v.assign(" << size << ", " << val << ")");
+	std->assign(size, val);
+	ft->assign(size, val);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	size = 0;
+	val = randomize<T>();
+	testing("v.assign(" << size << ", " << val << ")");
+	std->assign(size, val);
+	ft->assign(size, val);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	size = 1;
+	val = randomize<T>();
+	testing("v.assign(" << size << ", " << val << ")");
+	std->assign(size, val);
+	ft->assign(size, val);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
 template<class T>
 void		test_push_back(data<T> *d, bool empty) {
 	std::vector<T>		*std = NULL;
@@ -2140,6 +2232,161 @@ void		test_pop_back(data<T> *d) {
 }
 
 template<class T>
+void		test_insert_single(data<T> *d, bool empty) {
+	typename std::vector<T>::iterator	stdr;
+	typename ft::vector<T>::iterator	ftr;
+	std::vector<T>						*std = NULL;
+	ft::vector<T>						*ft = NULL;
+	int									offset;
+	T									val;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	val = randomize<T>();
+	testing("v.insert(v.begin(), " << val << ")");
+	stdr = std->insert(std->begin(), val);
+	ftr = ft->insert(ft->begin(), val);
+	if (!empty)
+		test("*ret", *stdr, *ftr);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	if (empty)
+		return;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	val = randomize<T>();
+	testing("v.insert(v.end() - 1, " << val << ")");
+	stdr = std->insert(std->end() - 1, val);
+	ftr = ft->insert(ft->end() - 1, val);
+	test("*ret", *stdr, *ftr);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	create_vector(std, ft, 0);
+	if (std->size() == 1) {
+		T		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	testing_on("random filled vector size " << std->size());
+	offset = rand() % (std->size() / 2);
+	val = randomize<T>();
+	testing("v.insert(v.begin() + " << offset << ", " << val << ")");
+	stdr = std->insert(std->begin() + offset, val);
+	ftr = ft->insert(ft->begin() + offset, val);
+	test("*ret", *stdr, *ftr);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_insert_fill(data<T> *d, bool empty) {
+	std::vector<T>						*std = NULL;
+	ft::vector<T>						*ft = NULL;
+	int									offset;
+	T									val;
+	size_t								size;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	val = randomize<T>();
+	size = rand() % 20;
+	testing("v.insert(v.begin(), " << size << ", " << val << ")");
+	std->insert(std->begin(), size, val);
+	ft->insert(ft->begin(), size, val);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	if (empty)
+		return;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	val = randomize<T>();
+	offset = rand() % (std->size() / 2);
+	size = rand() % 20;
+	testing("v.insert(v.begin() + " << offset << ", " << size << ", " << val << ")");
+	std->insert(std->begin() + offset, size, val);
+	ft->insert(ft->begin() + offset, size, val);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	val = randomize<T>();
+	size = rand() % 20;
+	testing("v.insert(v.end() - 1, " << size << ", " << val << ")");
+	std->insert(std->end() - 1, size, val);
+	ft->insert(ft->end() - 1, size, val);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	val = randomize<T>();
+	size = 0;
+	testing("v.insert(v.begin(), " << size << ", " << val << ")");
+	std->insert(std->begin(), size, val);
+	ft->insert(ft->begin(), size, val);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_insert_range(data<T> *d, bool empty, bool emptysrc) {
+	std::vector<T>						*std = NULL;
+	ft::vector<T>						*ft = NULL;
+	std::vector<T>						*stdsrc = NULL;
+	ft::vector<T>						*ftsrc = NULL;
+	int									offset;
+
+	create_vector(std, ft, empty);
+	testing_on("v: random filled vector size " << std->size());
+	create_vector(stdsrc, ftsrc, emptysrc);
+	testing_on("v2: random filled vector size " << stdsrc->size());
+	testing("v.insert(v.begin(), v2.begin(), v2.end()");
+	std->insert(std->begin(), stdsrc->begin(), stdsrc->end());
+	ft->insert(ft->begin(), ftsrc->begin(), ftsrc->end());
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	if (empty || emptysrc)
+		return;
+
+	create_vector(std, ft, empty);
+	testing_on("v: random filled vector size " << std->size());
+	create_vector(stdsrc, ftsrc, emptysrc);
+	testing_on("v2: random filled vector size " << stdsrc->size());
+	offset = rand() % (std->size() / 2);
+	testing("v.insert(v.begin() + " << offset << ", v2.begin(), v2.end()");
+	std->insert(std->begin() + offset, stdsrc->begin(), stdsrc->end());
+	ft->insert(ft->begin() + offset, ftsrc->begin(), ftsrc->end());
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+}
+
+template<class T>
 void		test_erase_position(data<T> *d) {
 	typename std::vector<T>::iterator	stdr;
 	typename ft::vector<T>::iterator	ftr;
@@ -2169,11 +2416,84 @@ void		test_erase_position(data<T> *d) {
 	incr_score(d);
 
 	create_vector(std, ft, 0);
+	if (std->size() == 1) {
+		T		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
 	testing_on("random filled vector size " << std->size());
 	offset = (rand() % (std->size() / 2));
 	testing("v.erase(v.begin() + " << offset << ")");
 	std->erase(std->begin() + offset);
 	ft->erase(ft->begin() + offset);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+}
+
+template<class T>
+void		test_erase_range(data<T> *d, bool empty) {
+	typename std::vector<T>::iterator	stdr;
+	typename ft::vector<T>::iterator	ftr;
+	std::vector<T>						*std = NULL;
+	ft::vector<T>						*ft = NULL;
+	int									offset;
+
+	create_vector(std, ft, empty);
+	testing_on("random filled vector size " << std->size());
+	testing("v.erase(v.begin(), v.end())");
+	stdr = std->erase(std->begin(), std->end());
+	ftr = ft->erase(ft->begin(), ft->end());
+	//test("*ret", *stdr, *ftr);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	if (empty)
+		return;
+
+	create_vector(std, ft, 0);
+	testing_on("random filled vector size " << std->size());
+	testing("v.erase(v.begin(), v.begin())");
+	stdr = std->erase(std->begin(), std->begin());
+	ftr = ft->erase(ft->begin(), ft->begin());
+	test("*ret", *stdr, *ftr);
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	create_vector(std, ft, 0);
+	if (std->size() == 1) {
+		T		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	testing_on("random filled vector size " << std->size());
+	offset = (rand() % (std->size() - 1));
+	testing("v.erase(v.begin() + " << offset << ", v.end())");
+	stdr = std->erase(std->begin() + offset, std->end());
+	ftr = ft->erase(ft->begin() + offset, ft->end());
+	equal(std, ft);
+	delete std;
+	delete ft;
+	incr_score(d);
+
+	create_vector(std, ft, 0);
+	if (std->size() == 1) {
+		T		val = randomize<T>();
+		std->push_back(val);
+		ft->push_back(val);
+	}
+	testing_on("random filled vector size " << std->size());
+	offset = (rand() % (std->size() - 1));
+	testing("v.erase(v.begin(), v.end() - " << offset << ")");
+	stdr = std->erase(std->begin(), std->end() - offset);
+	ftr = ft->erase(ft->begin(), ft->end() - offset);
+	if (offset > 0)
+		test("*ret", *stdr, *ftr);
 	equal(std, ft);
 	delete std;
 	delete ft;
@@ -2259,19 +2579,35 @@ void		test_clear(data<T> *d, bool empty) {
 
 template<class T>
 void		test_modifiers(data<T> *d) {
-	//print_title("assign [range]");
-	//print_title("assign [fill]");
+	print_title("assign [range]");
+	test_assign_range(d, 0, 0);
+	test_assign_range(d, 0, 1);
+	test_assign_range(d, 1, 0);
+	test_assign_range(d, 1, 1);
+	print_title("assign [fill]");
+	test_assign_fill(d, 0);
+	test_assign_fill(d, 1);
 	print_title("push_back");
 	test_push_back(d, 0);
 	test_push_back(d, 1);
 	print_title("pop_back");
 	test_pop_back(d);
-	//print_title("insert [single element]");
-	//print_title("insert [fill]");
-	//print_title("insert [range]");
-	//print_title("erase [position]");
-	//test_erase_position(d);
-	//print_title("erase [range]");
+	print_title("insert [single element]");
+	test_insert_single(d, 0);
+	test_insert_single(d, 1);
+	print_title("insert [fill]");
+	test_insert_fill(d, 0);
+	test_insert_fill(d, 1);
+	print_title("insert [range]");
+	test_insert_range(d, 0, 0);
+	test_insert_range(d, 0, 1);
+	test_insert_range(d, 1, 0);
+	test_insert_range(d, 1, 1);
+	print_title("erase [position]");
+	test_erase_position(d);
+	print_title("erase [range]");
+	test_erase_range(d, 0);
+	test_erase_range(d, 1);
 	print_title("swap");		//TODO check iterator validity
 	test_swap(d, 0, 0);
 	test_swap(d, 0, 1);
@@ -2280,13 +2616,9 @@ void		test_modifiers(data<T> *d) {
 	print_title("clear");
 	test_clear(d, 0);
 	test_clear(d, 1);
-
-	print_title("erase [position]");
-	test_erase_position(d);
 }
 
 /*-----------------------------------NON-MEMBER OVERLOADS-----------------------------------*/
-
 
 template<class T>
 void		test_swap_nm(data<T> *d, bool emptya, bool emptyb) {
@@ -2654,8 +2986,8 @@ void		do_tests(void) {
 
 	d = init_data<T>();
 
-	print_group_title("CONSTRUCTORS");
-	test_constructors(d);
+	//print_group_title("CONSTRUCTORS");
+	//test_constructors(d);
 	print_group_title("ITERATOR CLASS");
 	test_iterator_class(d);
 	print_group_title("REVERSE ITERATOR CLASS");
@@ -2666,14 +2998,13 @@ void		do_tests(void) {
 	test_capacity(d);
 	print_group_title("ELEMENT ACCESS");
 	test_element_access(d);
-	//print_group_title("MODIFIERS");
-	//test_modifiers(d);
+	print_group_title("MODIFIERS");
+	test_modifiers(d);
 	print_group_title("NON-MEMBER OVERLOADS");
 	test_non_member_overloads(d);
 
-	print_group_title("MODIFIERS");
-	test_modifiers(d);
-
+	print_group_title("CONSTRUCTORS");
+	test_constructors(d);
 
 	std::cout << std::endl << GREEN << "pass: " << RESET << d->pass << RED << "\tfail:\t" << RESET << d->fail << std::endl;
 	delete d;
