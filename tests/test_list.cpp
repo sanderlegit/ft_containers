@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/02/18 12:04:31 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/17 15:19:38 by dries               **ee8ee**            */
+/*   Updated: 2021/03/30 14:24:48 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1808,6 +1808,8 @@ void		test_insert_single(data<T> *d) {
 	comp(*r1 == *r2);
 	equal(std, ft);
 	incr_score(d);
+	delete std;
+	delete ft;
 
 	size = 0;
 	std = new std::list<T>();
@@ -1915,6 +1917,9 @@ void		test_insert_fill(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
+	delete std;
+	delete ft;
+
 	size = 0;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
@@ -1947,6 +1952,9 @@ void		test_insert_fill(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
+	delete std;
+	delete ft;
+
 	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
@@ -1978,6 +1986,9 @@ void		test_insert_fill(data<T> *d) {
 	ft->insert(ft->end(), size, val);
 	equal(std, ft);
 	incr_score(d);
+
+	delete std;
+	delete ft;
 
 	size = 0;
 	std = new std::list<T>();
@@ -2131,6 +2142,9 @@ void		test_insert_range(data<T> *d) {
 	delete stdsrc;
 	delete ftsrc;
 
+	delete std;
+	delete ft;
+
 	size = 0;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
@@ -2180,6 +2194,9 @@ void		test_insert_range(data<T> *d) {
 	incr_score(d);
 	delete stdsrc;
 	delete ftsrc;
+
+	delete std;
+	delete ft;
 
 	size = 0;
 	std = new std::list<T>();
@@ -2237,6 +2254,8 @@ void		test_erase_single(data<T> *d) {
 	comp(*r1 == *r2);
 	equal(std, ft);
 	incr_score(d);
+	delete std;
+	delete ft;
 
 	size = (rand() % 253) + 3;
 	std = new std::list<T>();
@@ -2254,6 +2273,9 @@ void		test_erase_single(data<T> *d) {
 	comp(*r1 == *r2);
 	equal(std, ft);
 	incr_score(d);
+
+	delete std;
+	delete ft;
 
 	size = (rand() % 253) + 3;
 	std = new std::list<T>();
@@ -2298,6 +2320,9 @@ void		test_erase_range(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
+	delete std;
+	delete ft;
+
 	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
@@ -2327,6 +2352,9 @@ void		test_erase_range(data<T> *d) {
 	equal(std, ft);
 	incr_score(d);
 
+	delete std;
+	delete ft;
+
 	size = (rand() % 253) + 3;
 	std = new std::list<T>();
 	ft = new ft::list<T>();
@@ -2343,6 +2371,9 @@ void		test_erase_range(data<T> *d) {
 	comp(*r1 == *r2);
 	equal(std, ft);
 	incr_score(d);
+
+	delete std;
+	delete ft;
 
 	size = (rand() % 253) + 10;
 	if (size == 0) size += 3;
@@ -2493,6 +2524,9 @@ void		test_resize(data<T> *d, bool empty) {
 		return;
 	}
 
+	delete std;
+	delete ft;
+
 	std = new std::list<T>();
 	ft = new ft::list<T>();
 	size = (rand() % 253) + 3;
@@ -2511,6 +2545,8 @@ void		test_resize(data<T> *d, bool empty) {
 	ft->resize(size, val);
 	equal(std, ft);
 	incr_score(d);
+	delete std;
+	delete ft;
 
 	std = new std::list<T>();
 	ft = new ft::list<T>();
@@ -2528,6 +2564,8 @@ void		test_resize(data<T> *d, bool empty) {
 	ft->resize(size, val);
 	equal(std, ft);
 	incr_score(d);
+	delete std;
+	delete ft;
 
 	std = new std::list<T>();
 	ft = new ft::list<T>();
@@ -2661,6 +2699,11 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 	equal(stdsrc, ftsrc);
 	incr_score(d);
 
+	delete stdsrc;
+	delete std;
+	delete ftsrc;
+	delete ft;
+
 	if (emptydest)
 		size = 0;
 	else
@@ -2701,6 +2744,11 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 		return;
 	}
 
+	delete stdsrc;
+	delete std;
+	delete ftsrc;
+	delete ft;
+
 	if (emptydest)
 		size = 0;
 	else
@@ -2728,6 +2776,11 @@ void		test_slice_entire(data<T> *d, bool emptydest, bool emptysrc) {
 	equal(std, ft);
 	equal(stdsrc, ftsrc);
 	incr_score(d);
+
+	delete stdsrc;
+	delete std;
+	delete ftsrc;
+	delete ft;
 
 	if (emptydest)
 		size = 0;
@@ -2780,6 +2833,11 @@ void		test_splice_single(data<T> *d, bool emptydest) {
 	equal(stdsrc, ftsrc);
 	incr_score(d);
 
+	delete stdsrc;
+	delete std;
+	delete ftsrc;
+	delete ft;
+
 	create_list(std, ft, emptydest);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	create_list(stdsrc, ftsrc, 0);
@@ -2799,6 +2857,11 @@ void		test_splice_single(data<T> *d, bool emptydest) {
 		return;
 	}
 
+	delete stdsrc;
+	delete std;
+	delete ftsrc;
+	delete ft;
+
 	create_list(std, ft, 0);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	create_list_size(stdsrc, ftsrc, 1);
@@ -2810,6 +2873,11 @@ void		test_splice_single(data<T> *d, bool emptydest) {
 	equal(stdsrc, ftsrc);
 	incr_score(d);
 
+	delete stdsrc;
+	delete std;
+	delete ftsrc;
+	delete ft;
+
 	create_list_size(std, ft, 1);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	create_list(stdsrc, ftsrc, 0);
@@ -2820,6 +2888,11 @@ void		test_splice_single(data<T> *d, bool emptydest) {
 	equal(std, ft);
 	equal(stdsrc, ftsrc);
 	incr_score(d);
+
+	delete stdsrc;
+	delete std;
+	delete ftsrc;
+	delete ft;
 
 	create_list_size(std, ft, 1);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
@@ -2832,6 +2905,11 @@ void		test_splice_single(data<T> *d, bool emptydest) {
 	equal(stdsrc, ftsrc);
 	incr_score(d);
 
+	delete stdsrc;
+	delete std;
+	delete ftsrc;
+	delete ft;
+
 	create_list(std, ft, 0);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
 	create_list(stdsrc, ftsrc, 0);
@@ -2842,6 +2920,11 @@ void		test_splice_single(data<T> *d, bool emptydest) {
 	equal(std, ft);
 	equal(stdsrc, ftsrc);
 	incr_score(d);
+
+	delete stdsrc;
+	delete std;
+	delete ftsrc;
+	delete ft;
 
 	create_list(std, ft, 0);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
@@ -2877,6 +2960,10 @@ void		test_splice_range(data<T> *d, bool empty) {
 	equal(std, ft);
 	equal(stdsrc, ftsrc);
 	incr_score(d);
+	delete stdsrc;
+	delete std;
+	delete ftsrc;
+	delete ft;
 
 	create_list(std, ft, empty);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
@@ -2888,6 +2975,10 @@ void		test_splice_range(data<T> *d, bool empty) {
 	equal(std, ft);
 	equal(stdsrc, ftsrc);
 	incr_score(d);
+	delete stdsrc;
+	delete std;
+	delete ftsrc;
+	delete ft;
 
 	create_list(std, ft, empty);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
@@ -2899,8 +2990,6 @@ void		test_splice_range(data<T> *d, bool empty) {
 	equal(std, ft);
 	equal(stdsrc, ftsrc);
 	incr_score(d);
-
-
 	delete stdsrc;
 	delete std;
 	delete ftsrc;
@@ -2956,6 +3045,8 @@ void		test_remove(data<T> *d, bool empty, bool noadd) {
 		delete ft;
 		return;
 	}
+	delete std;
+	delete ft;
 
 	create_list(std, ft, empty);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
@@ -3052,6 +3143,8 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 	ft->remove_if(single_digit<T>);
 	equal(std, ft);
 	incr_score(d);
+	delete std;
+	delete ft;
 
 	create_list(std, ft, empty);
 	val = 0;
@@ -3093,6 +3186,8 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 		delete ft;
 		return;
 	}
+	delete std;
+	delete ft;
 
 	create_list(std, ft, empty);
 	val = 50001;
@@ -3133,6 +3228,8 @@ void		test_remove_if(data<T> *d, bool empty, bool noadd) {
 	ft->remove_if(single_digit<T>);
 	equal(std, ft);
 	incr_score(d);
+	delete std;
+	delete ft;
 
 	create_list(std, ft, empty);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
@@ -3233,6 +3330,8 @@ void		test_unique(data<T> *d, bool empty, bool noadd) {
 		delete ft;
 		return;
 	}
+	delete std;
+	delete ft;
 
 	create_list(std, ft, empty);
 	if (!noadd) {
@@ -3346,6 +3445,8 @@ void		test_unique_pred(data<T> *d, bool empty, bool noadd) {
 		delete ft;
 		return;
 	}
+	delete std;
+	delete ft;
 
 	create_list(std, ft, empty);
 	if (!noadd) {
@@ -3423,6 +3524,8 @@ void		test_sort(data<T> *d, bool empty) {
 		delete ft;
 		return;
 	}
+	delete std;
+	delete ft;
 
 	create_list_size(std, ft, 1);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
@@ -3459,6 +3562,8 @@ void		test_sort_compare(data<T> *d, bool empty) {
 		delete ft;
 		return;
 	}
+	delete std;
+	delete ft;
 
 	create_list_size(std, ft, 1);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
@@ -3514,6 +3619,10 @@ void		test_merge(data<T> *d, bool empty) {
 		delete ftsrc;
 		return;
 	}
+	delete std;
+	delete ft;
+	delete stdsrc;
+	delete ftsrc;
 
 	create_list_size(stdsrc, ftsrc, 1);
 	create_list_size(std, ft, 1);
@@ -3524,6 +3633,10 @@ void		test_merge(data<T> *d, bool empty) {
 	ft->merge(*ftsrc);
 	equal(std, ft);
 	incr_score(d);
+	delete std;
+	delete ft;
+	delete stdsrc;
+	delete ftsrc;
 
 	create_list_size(stdsrc, ftsrc, 0);
 	create_list_size(std, ft, 1);
@@ -3534,6 +3647,10 @@ void		test_merge(data<T> *d, bool empty) {
 	ft->merge(*ftsrc);
 	equal(std, ft);
 	incr_score(d);
+	delete std;
+	delete ft;
+	delete stdsrc;
+	delete ftsrc;
 
 	create_list_size(stdsrc, ftsrc, 1);
 	create_list_size(std, ft, 0);
@@ -3593,6 +3710,10 @@ void		test_merge_compare(data<T> *d, bool empty) {
 		delete ftsrc;
 		return;
 	}
+	delete std;
+	delete ft;
+	delete stdsrc;
+	delete ftsrc;
 
 	create_list_size(stdsrc, ftsrc, 1);
 	create_list_size(std, ft, 1);
@@ -3603,6 +3724,10 @@ void		test_merge_compare(data<T> *d, bool empty) {
 	ft->merge(*ftsrc, compare_func<T>);
 	equal(std, ft);
 	incr_score(d);
+	delete std;
+	delete ft;
+	delete stdsrc;
+	delete ftsrc;
 
 	create_list_size(stdsrc, ftsrc, 0);
 	create_list_size(std, ft, 1);
@@ -3613,6 +3738,10 @@ void		test_merge_compare(data<T> *d, bool empty) {
 	ft->merge(*ftsrc, compare_func<T>);
 	equal(std, ft);
 	incr_score(d);
+	delete std;
+	delete ft;
+	delete stdsrc;
+	delete ftsrc;
 
 	create_list_size(stdsrc, ftsrc, 1);
 	create_list_size(std, ft, 0);
@@ -3648,6 +3777,8 @@ void		test_reverse(data<T> *d, bool empty) {
 		delete ft;
 		return;
 	}
+	delete std;
+	delete ft;
 
 	create_list_size(std, ft, 1);
 	std::cout << "testing on:\trandom filled list size:" << std->size() << "" << std::endl;
@@ -3837,6 +3968,8 @@ void		test_equals_comparison(data<T> *d, bool emptya, bool emptyb) {
 	comp(stdret == ftret);
 	incr_score(d);
 
+	delete stdb;
+	delete ftb;
 	stdb = stda;
 	ftb = fta;
 	std::cout << "  copying first list to second" << std::endl;
@@ -3846,6 +3979,8 @@ void		test_equals_comparison(data<T> *d, bool emptya, bool emptyb) {
 	comp(stdret == ftret);
 	incr_score(d);
 
+	delete stda;
+	delete fta;
 	if (emptya || emptyb) {
 		return;
 	}
@@ -3914,6 +4049,8 @@ void		test_not_equals_comparison(data<T> *d, bool emptya, bool emptyb) {
 	print_comp_iter("!=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
+	delete stdb;
+	delete ftb;
 
 	stdb = stda;
 	ftb = fta;
@@ -3924,6 +4061,8 @@ void		test_not_equals_comparison(data<T> *d, bool emptya, bool emptyb) {
 	comp(stdret == ftret);
 	incr_score(d);
 
+	delete stda;
+	delete fta;
 	if (emptya || emptyb) {
 		return;
 	}
@@ -3992,6 +4131,8 @@ void		test_less_comparison(data<T> *d, bool emptya, bool emptyb) {
 	print_comp_iter("<", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
+	delete stdb;
+	delete ftb;
 
 	stdb = stda;
 	ftb = fta;
@@ -4002,6 +4143,8 @@ void		test_less_comparison(data<T> *d, bool emptya, bool emptyb) {
 	comp(stdret == ftret);
 	incr_score(d);
 
+	delete stda;
+	delete fta;
 	if (emptya || emptyb) {
 		return;
 	}
@@ -4070,6 +4213,8 @@ void		test_less_eq_comparison(data<T> *d, bool emptya, bool emptyb) {
 	print_comp_iter("<=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
+	delete stdb;
+	delete ftb;
 
 	stdb = stda;
 	ftb = fta;
@@ -4080,6 +4225,8 @@ void		test_less_eq_comparison(data<T> *d, bool emptya, bool emptyb) {
 	comp(stdret == ftret);
 	incr_score(d);
 
+	delete stda;
+	delete fta;
 	if (emptya || emptyb) {
 		return;
 	}
@@ -4148,6 +4295,8 @@ void		test_greater_comparison(data<T> *d, bool emptya, bool emptyb) {
 	print_comp_iter(">", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
+	delete stdb;
+	delete ftb;
 
 	stdb = stda;
 	ftb = fta;
@@ -4158,6 +4307,8 @@ void		test_greater_comparison(data<T> *d, bool emptya, bool emptyb) {
 	comp(stdret == ftret);
 	incr_score(d);
 
+	delete stda;
+	delete fta;
 	if (emptya || emptyb) {
 		return;
 	}
@@ -4226,6 +4377,8 @@ void		test_greater_eq_comparison(data<T> *d, bool emptya, bool emptyb) {
 	print_comp_iter(">=", stdret, ftret);
 	comp(stdret == ftret);
 	incr_score(d);
+	delete stdb;
+	delete ftb;
 
 	stdb = stda;
 	ftb = fta;
@@ -4236,6 +4389,8 @@ void		test_greater_eq_comparison(data<T> *d, bool emptya, bool emptyb) {
 	comp(stdret == ftret);
 	incr_score(d);
 
+	delete stda;
+	delete fta;
 	if (emptya || emptyb) {
 		return;
 	}
@@ -4357,4 +4512,5 @@ void		do_tests(void) {
 int			main(void) {
 	srand((int) time(0));
 	do_tests<int>();
+	while(1);
 }
