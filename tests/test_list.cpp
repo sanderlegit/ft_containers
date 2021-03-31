@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/02/18 12:04:31 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/30 14:24:48 by dries               **ee8ee**            */
+/*   Updated: 2021/03/31 16:26:28 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -3291,6 +3291,7 @@ void		test_unique(data<T> *d, bool empty, bool noadd) {
 	if (!noadd) {
 		cnt = 0;
 		instances = 10;
+		val = randomize<T>();
 		while (instances > 0) {
 			if (empty) {
 				std->push_front(val);
@@ -3406,6 +3407,7 @@ void		test_unique_pred(data<T> *d, bool empty, bool noadd) {
 	if (!noadd) {
 		cnt = 0;
 		instances = 10;
+		val = randomize<T>();
 		while (instances > 0) {
 			if (empty) {
 				std->push_front(val);
@@ -4512,5 +4514,5 @@ void		do_tests(void) {
 int			main(void) {
 	srand((int) time(0));
 	do_tests<int>();
-	while(1);
+	//while(1);
 }

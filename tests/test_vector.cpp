@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/11 13:50:52 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/25 16:16:32 by dries               **ee8ee**            */
+/*   Updated: 2021/03/31 16:20:03 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -448,6 +448,8 @@ void		test_constructor_range(data<T> *d, bool emptysrc) {
 	equal(stdsrc, ftsrc);
 	delete std;
 	delete ft;
+	delete stdsrc;
+	delete ftsrc;
 	incr_score(d);
 }
 
@@ -475,14 +477,12 @@ void		test_constructor_fill(data<T> *d, bool empty) {
  */
 
 template<class T>
-void		test_constructor_copy(data<T> *d, bool emptya, bool emptyb) {
+void		test_constructor_copy(data<T> *d, bool emptyb) {
 	std::vector<T>		*stda = NULL;
 	ft::vector<T>		*fta = NULL;
 	std::vector<T>		*stdb = NULL;
 	ft::vector<T>		*ftb = NULL;
 
-	create_vector(stda, fta, emptya);
-	testing_on("dest: random filled vector size " << stda->size());
 	create_vector(stdb, ftb, emptyb);
 	testing_on("src: random filled vector size " << stdb->size());
 	testing("dest = new vector(src)");
@@ -548,23 +548,17 @@ void		test_constructors(data<T> *d) {
 	print_title("constructor [fill]");
 	test_constructor_fill(d, 0);
 	test_constructor_fill(d, 1);
-	//print_title("constructor [range]");
-	//test_constructor_range(d, 0);
-	//test_constructor_range(d, 1);
+	print_title("constructor [range]");
+	test_constructor_range(d, 0);
+	test_constructor_range(d, 1);
 	print_title("constructor [copy]");
-	test_constructor_copy(d, 0, 0);
-	test_constructor_copy(d, 0, 1);
-	test_constructor_copy(d, 1, 0);
-	test_constructor_copy(d, 1, 1);
+	test_constructor_copy(d, 0);
+	test_constructor_copy(d, 1);
 	print_title("operator= ");
 	test_operator_equals(d, 0, 0);
 	test_operator_equals(d, 0, 1);
 	test_operator_equals(d, 1, 0);
 	test_operator_equals(d, 1, 1);
-
-	print_title("constructor [range]");
-	test_constructor_range(d, 0);
-	test_constructor_range(d, 1);
 }
 
 /*-----------------------------------ITERATOR CLASS-----------------------------------*/
@@ -609,6 +603,8 @@ void		test_it_constructors(data<T> *d) {
 	testing("destruction");
 	comp(1 == 1);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -641,6 +637,8 @@ void		test_eq_neq(data<T> *d) {
 	test("i2 == i1", stdi2 == stdi, fti2 == fti);
 	test("i2 != i1", stdi2 != stdi, fti2 != fti);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -659,6 +657,8 @@ void		test_dereference(data<T> *d) {
 	fti = ftv->begin();
 	test("*i", *stdi, *fti);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 struct	potato {
@@ -710,6 +710,8 @@ void		test_assignment(data<T> *d) {
 	*fti = val;
 	test("*i", *stdi, *fti);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -773,6 +775,8 @@ void		test_incr_decr(data<T> *d) {
 	test("*i", *stdi, *fti);
 	test("ret", stdr, ftr);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -843,6 +847,8 @@ void		test_add_sub(data<T> *d) {
 	test("*i2", *stdir, *ftir);
 	test("ret", stdr, ftr);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -897,6 +903,8 @@ void		test_gt_lt_eqgt_eqlt(data<T> *d) {
 	incr_score(d);
 	test("i1 >= i2", stdi >= stdi2, fti >= fti2);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -941,6 +949,8 @@ void		test_plus_eq_minus_eq(data<T> *d) {
 	fti -= offset;
 	test("*i1", *stdi, *fti);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -969,6 +979,8 @@ void		test_offset_operator(data<T> *d) {
 	testing("offset = " << offset);
 	test("i[offset]", stdi[offset], fti[offset]);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -1037,6 +1049,8 @@ void		test_rev_it_constructors(data<T> *d) {
 	testing("destruction");
 	comp(1 == 1);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -1069,6 +1083,8 @@ void		test_rev_eq_neq(data<T> *d) {
 	test("i2 == i1", stdi2 == stdi, fti2 == fti);
 	test("i2 != i1", stdi2 != stdi, fti2 != fti);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -1087,6 +1103,8 @@ void		test_rev_dereference(data<T> *d) {
 	fti = ftv->rbegin();
 	test("*i", *stdi, *fti);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -1132,6 +1150,8 @@ void		test_rev_assignment(data<T> *d) {
 	*fti = val;
 	test("*i", *stdi, *fti);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -1195,6 +1215,8 @@ void		test_rev_incr_decr(data<T> *d) {
 	test("*i", *stdi, *fti);
 	test("ret", stdr, ftr);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -1265,6 +1287,8 @@ void		test_rev_add_sub(data<T> *d) {
 	test("*i2", *stdir, *ftir);
 	test("ret", stdr, ftr);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -1319,6 +1343,8 @@ void		test_rev_gt_lt_eqgt_eqlt(data<T> *d) {
 	incr_score(d);
 	test("i1 >= i2", stdi >= stdi2, fti >= fti2);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -1363,6 +1389,8 @@ void		test_rev_plus_eq_minus_eq(data<T> *d) {
 	fti -= offset;
 	test("*i1", *stdi, *fti);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 template<class T>
@@ -1391,6 +1419,8 @@ void		test_rev_offset_operator(data<T> *d) {
 	testing("offset = " << offset);
 	test("i[offset]", stdi[offset], fti[offset]);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
 }
 
 
@@ -1443,6 +1473,10 @@ void		test_begin_end(data<T> *d, bool empty) {
 	}
 	equal(stdref, ftref);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
+	delete stdref;
+	delete ftref;
 }
 
 template<class T>
@@ -1468,6 +1502,10 @@ void		test_rbegin_rend(data<T> *d, bool empty) {
 	}
 	equal(stdref, ftref);
 	incr_score(d);
+	delete stdv;
+	delete ftv;
+	delete stdref;
+	delete ftref;
 }
 
 template<class T>
@@ -2126,6 +2164,8 @@ void		test_assign_range(data<T> *d, bool empty, bool emptysrc) {
 	equal(stdsrc, ftsrc);
 	delete std;
 	delete ft;
+	delete stdsrc;
+	delete ftsrc;
 	incr_score(d);
 }
 
@@ -2366,6 +2406,8 @@ void		test_insert_range(data<T> *d, bool empty, bool emptysrc) {
 	equal(std, ft);
 	delete std;
 	delete ft;
+	delete stdsrc;
+	delete ftsrc;
 	incr_score(d);
 
 	if (empty || emptysrc)
@@ -2382,6 +2424,8 @@ void		test_insert_range(data<T> *d, bool empty, bool emptysrc) {
 	equal(std, ft);
 	delete std;
 	delete ft;
+	delete stdsrc;
+	delete ftsrc;
 	incr_score(d);
 
 }
@@ -2986,8 +3030,8 @@ void		do_tests(void) {
 
 	d = init_data<T>();
 
-	//print_group_title("CONSTRUCTORS");
-	//test_constructors(d);
+	print_group_title("CONSTRUCTORS");
+	test_constructors(d);
 	print_group_title("ITERATOR CLASS");
 	test_iterator_class(d);
 	print_group_title("REVERSE ITERATOR CLASS");
@@ -3003,9 +3047,6 @@ void		do_tests(void) {
 	print_group_title("NON-MEMBER OVERLOADS");
 	test_non_member_overloads(d);
 
-	print_group_title("CONSTRUCTORS");
-	test_constructors(d);
-
 	std::cout << std::endl << GREEN << "pass: " << RESET << d->pass << RED << "\tfail:\t" << RESET << d->fail << std::endl;
 	delete d;
 }
@@ -3013,5 +3054,6 @@ void		do_tests(void) {
 int			main(void) {
 	srand((int) time(0));
 	do_tests<int>();
+	//while(1)a
 }
 

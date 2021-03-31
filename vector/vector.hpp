@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/10 16:43:21 by dries             *8*   8   *8*          */
-/*   Updated: 2021/03/25 16:14:50 by dries               **ee8ee**            */
+/*   Updated: 2021/03/31 15:59:26 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -481,6 +481,7 @@ namespace ft {
 				_alloc.construct(tmp + i, _data[i]);
 			//for (size_type i = n; i != n; i++)
 				//_alloc.construct(tmp + i);
+			dellocate(_data, _capacity);
 			_data = tmp;
 			_capacity = n;
 		}

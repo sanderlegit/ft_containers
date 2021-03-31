@@ -36,3 +36,5 @@ tests/list.hpp
 .vscode/settings.json
 compile_flags.txt
 test_vector
+test_list.dSYM/Contents/Info.plist
+test_vector.dSYM/Contents/Info.plist
