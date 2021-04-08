@@ -1,9 +1,9 @@
 https://www.cs.usfca.edu/~galles/visualization/BTree.html
 
 plan:
-empty constructor
+empty constructor		done
 insert
-iterator :
+iterator :				done
 	i++
 	*i
 begin

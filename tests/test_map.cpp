@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/31 17:28:30 by dries             *8*   8   *8*          */
-/*   Updated: 2021/04/07 17:56:57 by dries               **ee8ee**            */
+/*   Updated: 2021/04/08 18:18:01 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,16 @@
 
 /*-----------------------------------UTIL-----------------------------------*/
 
-template<class T>
+template<class K, class M>
 struct data {
 	int				pass;
 	int				fail;
 	int				current_fail;
 };
 
-template<class T>
-data<T>		*init_data(void) {
-	data<T>		*d = new data<T>;
+template<class K, class M>
+data<K, M>		*init_data(void) {
+	data<K, M>		*d = new data<K, M>;
 
 	d->pass = 0;
 	d->fail = 0;
@@ -171,8 +171,8 @@ void		print_comp_force_labels(std::string str, std::string l1, std::string l2, T
 	std::cout.width(0);
 }
 
-template<class T>
-void		incr_score(data<T> *d) {
+template<class K, class M>
+void		incr_score(data<K, M> *d) {
 	std::cout << "  test:\t";
 	if (d->current_fail == 0) {
 		d->pass++;
@@ -186,8 +186,8 @@ void		incr_score(data<T> *d) {
 	d->current_fail = 0;
 }
 
-template<class T>
-void		check_pass(data<T> *d, bool score) {
+template<class K, class M>
+void		check_pass(data<K, M> *d, bool score) {
 	if (!score)
 		d->current_fail++;
 }
@@ -244,91 +244,95 @@ void		eq_print_comp_labels(std::string str, std::string l1, std::string l2, T t,
 }
 
 
-template<class T>
-void		test_equivalence(data<T> *d, std::map<T> *std, ft::map<T> *ft, bool capacity) {
-	bool			r1;
-	bool			r2;
-	T				r3;
-	T				r4;
-	size_t			r5;
-	size_t			r6;
+//template<class K, class M>
+//void		test_equivalence(data *d, std::map<K, M> *std, ft::map<K, M> *ft, bool capacity) {
+	//bool			r1;
+	//bool			r2;
+	//T				r3;
+	//T				r4;
+	//size_t			r5;
+	//size_t			r6;
 
-	if (EQUALITY)
-		std::cout << "  testing list equality" << std::endl;
-	r1 = std->empty();
-	r2 = ft->empty();
-	eq_print_comp("empty()", r1, r2);
-	comp(r1 == r2);
+	//if (EQUALITY)
+		//std::cout << "  testing list equality" << std::endl;
+	//r1 = std->empty();
+	//r2 = ft->empty();
+	//eq_print_comp("empty()", r1, r2);
+	//comp(r1 == r2);
 
-	if (capacity) {
-		r5 = std->capacity();
-		r6 = ft->capacity();
-		eq_print_comp("capacity()", r5, r6);
-		comp(r5 <= r6);
-	}
+	//if (capacity) {
+		//r5 = std->capacity();
+		//r6 = ft->capacity();
+		//eq_print_comp("capacity()", r5, r6);
+		//comp(r5 <= r6);
+	//}
 
-	if (!r1 && !r2) {
-		if (EQUALITY)
-			std::cout << "  iterating through..." << std::endl;
-		while (0) {//go over using iterators
-			//if (VVERBOSE)
-				//eq_print_comp("*i", r3, r4);
-		}
-	} else if (!r1 && r2) {
-		if (EQUALITY)
-			std::cout << "  iterating through..." << std::endl;
-		while (0)) {//go over using iterators
-			//if (VVERBOSE)
-				//eq_print_comp_labels("*i", "std", "EMPTY!", r3, 0);
-		}
-	} else if (r1 && !r2) {
-		if (EQUALITY)
-			std::cout << "  iterating through..." << std::endl;
-		while (0) {//go over using iterators
-			//if (VVERBOSE)
-				//eq_print_comp_labels("*i", "EMPTY!", "ft", 0, r3);
-		}
-	}
-}
+	//if (!r1 && !r2) {
+		//if (EQUALITY)
+			//std::cout << "  iterating through..." << std::endl;
+		//while (0) {//go over using iterators
+			////if (VVERBOSE)
+				////eq_print_comp("*i", r3, r4);
+		//}
+	//} else if (!r1 && r2) {
+		//if (EQUALITY)
+			//std::cout << "  iterating through..." << std::endl;
+		//while (0)) {//go over using iterators
+			////if (VVERBOSE)
+				////eq_print_comp_labels("*i", "std", "EMPTY!", r3, 0);
+		//}
+	//} else if (r1 && !r2) {
+		//if (EQUALITY)
+			//std::cout << "  iterating through..." << std::endl;
+		//while (0) {//go over using iterators
+			////if (VVERBOSE)
+				////eq_print_comp_labels("*i", "EMPTY!", "ft", 0, r3);
+		//}
+	//}
+//}
 #define equal(A, B)	test_equivalence(d, A, B, 0);
 
-template<class T>
+template<class K, class M>
 struct pair {
-	std::map<T>	*std;
-	ft::map<T>		*ft;
+	std::map<K, M>	*std;
+	ft::map<K, M>	*ft;
 };
 
-template<class T>
-pair<T>		create_map_internal(std::map<T> *std, ft::map<T> *ft, bool empty) {
-	size_t	size;
-	T		val;
-	pair<T>	res;
+template<class K, class M>
+pair<K, M>		create_map_internal(std::map<K, M> *std, ft::map<K, M> *ft, bool empty) {
+	size_t		size;
+	M			val;
+	K			key;
+	pair<K, M>	res;
 
 	if (empty)
 		size = 0;
 	else
 		size = ((rand() % 254) + 1);
-	std = new std::map<T>();
-	ft = new ft::map<T>();
+	std = new std::map<K, M>();
+	ft = new ft::map<K, M>();
 	for (size_t i = 0; i < size; i++) {
-		val = randomize<T>();
-		std->push_back(val);
-		ft->push_back(val);
+		val = randomize<M>();
+		key = rand() % size;
+		std->insert(std::pair<K, M>(key, val));
+		ft->insert(std::pair<K, M>(key, val));
 	}
 	res.std = std;
 	res.ft = ft;
 	return res;
 }
 
-template<class T>
-pair<T>		create_map_size_internal(std::map<T> *std, ft::map<T> *ft, size_t size) {
-	T		val;
-	pair<T>	res;
+template<class K, class M>
+pair<K, M>		create_map_size_internal(std::map<K, M> *std, ft::map<K, M> *ft, size_t size) {
+	M			val;
+	K			key;
+	pair<K, M>	res;
 
-	std = new std::map<T>();
-	ft = new ft::map<T>();
+	std = new std::map<K, M>();
+	ft = new ft::map<K, M>();
 	for (size_t i = 0; i < size; i++) {
-		val = randomize<T>();
+		val = randomize<M>();
+		key = rand() % size;
 		std->insert(val);
 		ft->insert(val);
 	}
@@ -345,8 +349,25 @@ pair<T>		create_map_size_internal(std::map<T> *std, ft::map<T> *ft, size_t size)
 #define testing_on(A)	{if (TESTING_ON) std::cout << "  testing on: " A << std::endl;}
 
 /*-----------------------------------CONSTRUCTOR TESTS-----------------------------------*/
-template<class T>
-void		test_constructors(data<T> *d) {
+
+template<class K, class M>
+void		test_empty_constructor(data<K, M> *d) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+
+	testing("m = new map()");
+	std = new std::map<K, M>();
+	ft = new ft::map<K, M>();
+
+	//equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		test_constructors(data<K, M> *d) {
+	test_empty_constructor(d);
 
 }
 
@@ -361,11 +382,11 @@ void		test_constructors(data<T> *d) {
 
 /*-----------------------------------MAIN-----------------------------------*/
 
-template<class T>
+template<class K, class M>
 void		do_tests(void) {
-	data<T>		*d;
+	data<K, M>		*d;
 
-	d = init_data<T>();
+	d = init_data<K, M>();
 
 	print_group_title("CONSTRUCTORS");
 	test_constructors(d);
@@ -392,7 +413,7 @@ void		do_tests(void) {
 
 int			main(void) {
 	srand((int) time(0));
-	do_tests<int>();
+	do_tests<int, int>();
 	//while(1)a
 }
 

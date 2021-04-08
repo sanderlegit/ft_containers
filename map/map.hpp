@@ -6,7 +6,7 @@
 /*   By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8         */
 /*                                                    Y8 .e* 8 *e. 8P         */
 /*   Created: 2021/03/31 17:27:17 by dries             *8*   8   *8*          */
-/*   Updated: 2021/04/07 17:55:32 by dries               **ee8ee**            */
+/*   Updated: 2021/04/08 18:17:02 by dries               **ee8ee**            */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,8 +214,29 @@ template < class Key,                                    		 	// map::key_type
 			typedef size_t												size_type;
 
 /*-------------------------------------------MEMBER VARIABLES-------------------------------------------*/
+		private:
+			node_type	*head;
+			size_type	size;
+			key_compare	kcomp;
+			Alloc		alloc;
 
 /*-------------------------------------------CONSTRUCTORS-------------------------------------------*/
+		public:
+
+/*	empty container constructor (default constructor) : Constructs an empty container, with no elements.	*/
+
+			explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+					: head(NULL), size(0), kcomp(comp), alloc(alloc) {}
+
+/*	range constructor : Constructs a container with as many elements as the range [first,last), with each 
+ *	element constructed from its corresponding element in that range.	*/
+
+			template <class InputIterator>
+			map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type());
+
+/*	copy constructor : Constructs a container with a copy of each of the elements in x.	*/
+
+			map (const map& x);
 
 /*-------------------------------------------OPERATORS-------------------------------------------*/
 
@@ -227,8 +248,46 @@ template < class Key,                                    		 	// map::key_type
 
 /*-------------------------------------------MODIFIERS-------------------------------------------*/
 
+/*	Extends the container by inserting new elements, effectively increasing the container size by the 
+ *	number of elements inserted.
+ *	Because element keys in a map are unique, the insertion operation checks whether each inserted element 
+ *	has a key equivalent to the one of an element already in the container, and if so, the element is not 
+ *	inserted, returning an iterator to this existing element (if the function returns a value).	*/
+
+			std::pair<iterator,bool>	insert (const value_type& val) {
+				if (head == NULL) {
+						head = new_node(val, NULL, NULL, NULL);
+				}
+			}
+
+			iterator					insert (iterator position, const value_type& val);
+
+			template <class InputIterator>
+			void						insert (InputIterator first, InputIterator last);
+
 /*-------------------------------------------NON-STL FUNCTIONS-------------------------------------------*/
 		private:
+			/*	creates a new node, with given arguements (key, val, left, right, parent)
+			 *	returns: node_type* new node	*/
+
+			node_type*				new_node(const key_type& key, const mapped_type& mapped, node_type *left = NULL, node_type *right = NULL, node_type *parent = NULL) {
+				value_type	*tmp;
+
+				tmp = alloc.allocate(1);
+				alloc.construct(tmp, mapped);
+				return new node_type(mapue_type(key, mapped), left, right, parent);
+			}
+
+			/*	creates a new node, with given arguements (pair(key, val), left, right, parent)
+			 *	returns: node_type* new node	*/
+
+			node_type*				new_node(const value_type& val, node_type *left = NULL, node_type *right = NULL, node_type *parent = NULL) {
+				value_type	*tmp;
+
+				tmp = alloc.allocate(1);
+				alloc.construct(tmp, val);
+				return new node_type(val, left, right, parent);
+			}
 
 	};
 }

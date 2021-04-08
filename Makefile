@@ -6,17 +6,20 @@
 #    By: dries <sanderlegit@gmail.com>                8!   .dWb.   !8          #
 #                                                     Y8 .e* 8 *e. 8P          #
 #    Created: xxxx/xx/xx xx:xx:xx by dries             *8*   8   *8*           #
-#    Updated: 2021/03/15 15:06:28 by dries               **ee8ee**             #
+#    Updated: 2021/04/08 18:15:53 by dries               **ee8ee**             #
 #                                                                              #
 # **************************************************************************** #
 
 #CONTAINERS 	=	list vector stack queue
-CONTAINERS 	=	list vector
-ifneq ($(CONT), vector)
+CONTAINERS 	=	list vector map
+ifeq ($(CONT), vector)
 	CONTAINERS = vector
 endif
 ifeq ($(CONT), list)
 	CONTAINERS = list
+endif
+ifeq ($(CONT), map)
+	CONTAINERS = map
 endif
 INCL		=	$(CONTAINERS:%=-I%)
 
@@ -56,7 +59,7 @@ clean:
 	rm -rf $(OFILES)
 
 fclean: clean
-	rm -rf $(CONTAINERS:%=test_%) test_map
+	rm -rf $(CONTAINERS:%=test_%)
 
 re: fclean all
 
