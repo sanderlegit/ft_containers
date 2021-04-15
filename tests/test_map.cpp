@@ -35,15 +35,15 @@
 #define BLUE "\033[34m"
 #define RESET "\033[m"
 #define TESTING	true
-//#define TESTING	false
+/* #define TESTING	false */
 #define TESTING_ON	true
-//#define TESTING_ON	false
+/* #define TESTING_ON	false */
 #define VERBOSE	true
-//#define VERBOSE	false
-//#define EQUALITY	true
-#define EQUALITY	false
-//#define VVERBOSE	true
-#define VVERBOSE	false
+/* #define VERBOSE	false */
+#define EQUALITY	true
+/* #define EQUALITY	false */
+#define VVERBOSE	true
+/* #define VVERBOSE	false */
 
 /*-----------------------------------UTIL-----------------------------------*/
 
@@ -244,53 +244,63 @@ void		eq_print_comp_labels(std::string str, std::string l1, std::string l2, T t,
 }
 
 
-//template<class K, class M>
-//void		test_equivalence(data *d, std::map<K, M> *std, ft::map<K, M> *ft, bool capacity) {
-	//bool			r1;
-	//bool			r2;
-	//T				r3;
-	//T				r4;
-	//size_t			r5;
-	//size_t			r6;
+template<class K, class M>
+void		test_equivalence(data<K, M> *d, std::map<K, M> *std, ft::map<K, M> *ft) {
+	bool			r1;
+	bool			r2;
+	std::pair<K, M>	r3;
+	std::pair<K, M>	r4;
+	size_t			r5;
+	size_t			r6;
+	typename std::map<K, M>::iterator	stdi;
+	typename ft::map<K, M>::iterator	fti;
 
-	//if (EQUALITY)
-		//std::cout << "  testing list equality" << std::endl;
-	//r1 = std->empty();
-	//r2 = ft->empty();
-	//eq_print_comp("empty()", r1, r2);
-	//comp(r1 == r2);
+	if (EQUALITY)
+		std::cout << "  testing list equality" << std::endl;
+	r1 = std->empty();
+	r2 = ft->empty();
+	eq_print_comp("empty()", r1, r2);
+	comp(r1 == r2);
+	r5 = std->size();
+	r6 = ft->size();
+	eq_print_comp("size()", r5, r6);
+	comp(r5 == r6);
 
-	//if (capacity) {
-		//r5 = std->capacity();
-		//r6 = ft->capacity();
-		//eq_print_comp("capacity()", r5, r6);
-		//comp(r5 <= r6);
-	//}
-
-	//if (!r1 && !r2) {
-		//if (EQUALITY)
-			//std::cout << "  iterating through..." << std::endl;
-		//while (0) {//go over using iterators
-			////if (VVERBOSE)
-				////eq_print_comp("*i", r3, r4);
-		//}
-	//} else if (!r1 && r2) {
-		//if (EQUALITY)
-			//std::cout << "  iterating through..." << std::endl;
-		//while (0)) {//go over using iterators
-			////if (VVERBOSE)
-				////eq_print_comp_labels("*i", "std", "EMPTY!", r3, 0);
-		//}
-	//} else if (r1 && !r2) {
-		//if (EQUALITY)
-			//std::cout << "  iterating through..." << std::endl;
-		//while (0) {//go over using iterators
-			////if (VVERBOSE)
-				////eq_print_comp_labels("*i", "EMPTY!", "ft", 0, r3);
-		//}
-	//}
-//}
-#define equal(A, B)	test_equivalence(d, A, B, 0);
+	/* if (!r1 && !r2) { */
+		if (EQUALITY)
+			std::cout << "  iterating through..." << std::endl;
+		stdi = std->begin();
+		fti = ft->begin();
+		while (stdi != std->end() && fti != ft->end()) {//go over using iterators
+			r3 = *stdi;
+			r4 = *fti;
+			if (VVERBOSE)
+				eq_print_comp("*i.k", r3.first, r4.first);
+			comp(r3.first == r4.first);
+			if (VVERBOSE)
+				eq_print_comp("*i.m", r3.second, r4.second);
+			comp(r3.second == r4.second);
+			++stdi;
+			++fti;
+		}
+	/* } else if (!r1 && r2) { */
+	/* 	if (EQUALITY) */
+	/* 		std::cout << "  iterating through..." << std::endl; */
+	/* 	while (0) {//go over using iterators */
+	/* 		if (VVERBOSE) { */
+	/* 			eq_print_comp_labels("*i", "std", "EMPTY!", r3, 0); */
+	/* 		} */
+	/* 	} */
+	/* } else if (r1 && !r2) { */
+	/* 	if (EQUALITY) */
+	/* 		std::cout << "  iterating through..." << std::endl; */
+	/* 	while (0) {//go over using iterators */
+	/* 		if (VVERBOSE) */
+	/* 			eq_print_comp_labels("*i", "EMPTY!", "ft", 0, r3); */
+	/* 	} */
+	/* } */
+}
+#define equal(A, B)	test_equivalence(d, A, B);
 
 template<class K, class M>
 struct pair {
@@ -298,12 +308,12 @@ struct pair {
 	ft::map<K, M>	*ft;
 };
 
-template<class K, class M>
-pair<K, M>		create_map_internal(std::map<K, M> *std, ft::map<K, M> *ft, bool empty) {
+template<class K, class M, class A, class B>
+pair<A, B>		create_map_internal(std::map<K, M> *std, ft::map<K, M> *ft, bool empty) {
 	size_t		size;
 	M			val;
 	K			key;
-	pair<K, M>	res;
+	pair<A, B>	res;
 
 	if (empty)
 		size = 0;
@@ -331,10 +341,10 @@ pair<K, M>		create_map_size_internal(std::map<K, M> *std, ft::map<K, M> *ft, siz
 	std = new std::map<K, M>();
 	ft = new ft::map<K, M>();
 	for (size_t i = 0; i < size; i++) {
-		val = randomize<M>();
 		key = rand() % size;
-		std->insert(val);
-		ft->insert(val);
+		val = randomize<M>();
+		std->insert(std::pair<K, M>(key, val));
+		ft->insert(std::pair<K, M>(key, val));
 	}
 	res.std = std;
 	res.ft = ft;
@@ -368,7 +378,6 @@ void		test_empty_constructor(data<K, M> *d) {
 template<class K, class M>
 void		test_constructors(data<K, M> *d) {
 	test_empty_constructor(d);
-
 }
 
 /*-----------------------------------ITERATOR CLASS TESTS-----------------------------------*/
@@ -377,6 +386,59 @@ void		test_constructors(data<K, M> *d) {
 /*-----------------------------------CAPACITY TESTS-----------------------------------*/
 /*-----------------------------------ELEMENT ACCESS TESTS-----------------------------------*/
 /*-----------------------------------MODIFIERS TESTS-----------------------------------*/
+
+//need a test for a duplacte key insert
+//test return value properly
+template<class K, class M>
+void		test_insert(data<K, M> *d) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	M					val;
+	K					key;
+
+	testing_on("m = new map()");
+	std = new std::map<K, M>();
+	ft = new ft::map<K, M>();
+
+	key = rand() % 255;
+	val = randomize<M>();
+	testing("m.insert(pair(" << key << ", " << val << ")");
+	std->insert(std::pair<K, M>(key, val));
+	ft->insert(std::pair<K, M>(key, val));
+
+	key = rand() % 255;
+	val = randomize<M>();
+	testing("m.insert(pair(" << key << ", " << val << ")");
+	std->insert(std::pair<K, M>(key, val));
+	ft->insert(std::pair<K, M>(key, val));
+
+	key = rand() % 255;
+	val = randomize<M>();
+	testing("m.insert(pair(" << key << ", " << val << ")");
+	std->insert(std::pair<K, M>(key, val));
+	ft->insert(std::pair<K, M>(key, val));
+
+	key = rand() % 255;
+	val = randomize<M>();
+	testing("m.insert(pair(" << key << ", " << val << ")");
+	std->insert(std::pair<K, M>(key, val));
+	ft->insert(std::pair<K, M>(key, val));
+
+	testing("m.insert(pair(" << key << ", " << val << ")");
+	std->insert(std::pair<K, M>(key, val));
+	ft->insert(std::pair<K, M>(key, val));
+
+	equal(std, ft);
+	/* test_equivalence(d, std, ft); */
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		test_modifiers(data<K, M> *d) {
+	test_insert(d);
+}
 /*-----------------------------------OBSERVERS TESTS-----------------------------------*/
 /*-----------------------------------OPERATIONS TESTS-----------------------------------*/
 
@@ -400,8 +462,8 @@ void		do_tests(void) {
 	//test_capacity(d);
 	//print_group_title("ELEMENT ACCESS");
 	//test_element_access(d);
-	//print_group_title("MODIFIERS");
-	//test_modifiers(d);
+	print_group_title("MODIFIERS");
+	test_modifiers(d);
 	//print_group_title("OBSERVERS");
 	//test_observers(d);
 	//print_group_title("OPERATIONS");

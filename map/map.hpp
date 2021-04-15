@@ -100,7 +100,7 @@ namespace ft {
 			bool					operator==(const MapBiIterator& rhs) const { return node == rhs.node; }
 			bool					operator!=(const MapBiIterator& rhs) const { return node != rhs.node; }
 			pointer					operator->() const { return node->data; }
-			reference 				operator*() const { return *node->data; }
+			reference 				operator*() const { return node->data; }
 
 			operator MapBiIterator<node_t, const value_t>() { return node; }
 	};
@@ -119,7 +119,7 @@ template < class Key,                                    		 	// map::key_type
 				public:
 					typedef	std::pair<const key_t, map_t>	pair;
 
-					Node(void) : data(NULL), left(NULL), right(NULL), parent(NULL) {}
+					Node(void) : data(), left(NULL), right(NULL), parent(NULL) {}
 					Node(key_t key_, map_t map_, Node *left_ = NULL, Node *right_ = NULL, Node* prev_ = NULL)
 							: data(key_, map_), left(left_), right(right_), parent(prev_) {}
 					Node(pair data_, Node *left_ = NULL, Node *right_ = NULL, Node* prev_ = NULL)
@@ -206,8 +206,8 @@ template < class Key,                                    		 	// map::key_type
 			typedef typename allocator_type::const_reference			const_reference;
 			typedef typename allocator_type::pointer					pointer;
 			typedef typename allocator_type::const_pointer				const_pointer;
-			typedef MapBiIterator<node_type, mapped_type>				iterator;
-			typedef MapBiIterator<node_type, const mapped_type>			const_iterator;
+			typedef MapBiIterator<node_type, value_type>				iterator;
+			typedef MapBiIterator<node_type, const value_type>			const_iterator;
 			//typedef ReverseMapBiIterator<node_type, mapped_type>		reverse_iterator:
 			//typedef ReverseMapBiIterator<node_type, const mapped_type>	const_reverse_iterator:
 			typedef ptrdiff_t											difference_type;
@@ -215,18 +215,19 @@ template < class Key,                                    		 	// map::key_type
 
 /*-------------------------------------------MEMBER VARIABLES-------------------------------------------*/
 		private:
-			node_type	*head;
-			size_type	size;
-			key_compare	kcomp;
-			Alloc		alloc;
+			node_type	*_head;
+			node_type	*_lend;
+			node_type	*_rend;
+			size_type	_size;
+			key_compare	_kcomp;
+			Alloc		_alloc;
 
 /*-------------------------------------------CONSTRUCTORS-------------------------------------------*/
 		public:
 
 /*	empty container constructor (default constructor) : Constructs an empty container, with no elements.	*/
 
-			explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-					: head(NULL), size(0), kcomp(comp), alloc(alloc) {}
+			explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _head(NULL), _lend(new node_type()), _rend(new node_type()), _size(0), _kcomp(comp), _alloc(alloc) {}
 
 /*	range constructor : Constructs a container with as many elements as the range [first,last), with each 
  *	element constructed from its corresponding element in that range.	*/
@@ -242,7 +243,52 @@ template < class Key,                                    		 	// map::key_type
 
 /*-------------------------------------------ITERATORS ACCESS-------------------------------------------*/
 
+/*	Returns an iterator referring to the first element in the map container.
+ *	Because map containers keep their elements ordered at all times, begin points to the element that 
+ *	goes first following the container's sorting criterion.
+ *	If the container is empty, the returned iterator value shall not be dereferenced.	*/
+
+			iterator					begin() {
+				return iterator(_lend->parent);
+			}
+
+			const_iterator				begin() const {
+				return const_iterator(_lend->parent);
+			}
+
+/*	Returns an iterator referring to the past-the-end element in the map container.
+ *	The past-the-end element is the theoretical element that would follow the last element in the 
+ *	map container. It does not point to any element, and thus shall not be dereferenced.
+ *	Because the ranges used by functions of the standard library do not include the element pointed 
+ *	by their closing iterator, this function is often used in combination with map::begin to specify
+ *	a range including all the elements in the container.
+ *	If the container is empty, this function returns the same as map::begin.	*/
+
+			iterator					end() {
+				if (empty())
+					return iterator(_lend);
+				return iterator(_rend);
+			}
+
+			const_iterator end() const {
+				if (empty())
+					return iterator(_lend);
+				return const_iterator(_rend);
+			}
+
+
 /*-------------------------------------------CAPACITY-------------------------------------------*/
+			
+/*	Returns whether the map container is empty (i.e. whether its size is 0).	*/
+
+			bool						empty() const {
+				return !_size;
+			}
+/*	Returns the number of elements in the map container.	*/
+
+			size_type					size() const {
+				return _size;
+			}
 
 /*-------------------------------------------ELEMENT ACCESS-------------------------------------------*/
 
@@ -255,9 +301,43 @@ template < class Key,                                    		 	// map::key_type
  *	inserted, returning an iterator to this existing element (if the function returns a value).	*/
 
 			std::pair<iterator,bool>	insert (const value_type& val) {
-				if (head == NULL) {
-						head = new_node(val, NULL, NULL, NULL);
+				node_type		*ptr;
+				int				placed;
+
+				if (_head == NULL) {
+					_head = new_node(val, NULL, NULL, NULL);
+					ptr = _head;
+					placed = 1;
+					++_size;
+				} else {
+					ptr = _head;
+					placed = 0;
+					while (!placed) {
+						if (val.first < ptr->data.first) {	//TODO use _keycomp
+							if (ptr->left && ptr->left != _lend)
+								ptr = ptr->left;
+							else {
+								ptr->left = new_node(val, NULL, NULL, ptr);
+								ptr = ptr->left;
+								placed = 1;
+								++_size;
+							}
+						} else if (val.first > ptr->data.first) {
+							if (ptr->right && ptr->right != _lend)
+								ptr = ptr->right;
+							else {
+								ptr->right = new_node(val, NULL, NULL, ptr);
+								ptr = ptr->right;
+								placed = 1;
+								++_size;
+							}
+						} else if (val.first == ptr->data.first) {
+							break;
+						}
+					}
 				}
+				fix_tail();
+				return std::pair<iterator,bool>(iterator(ptr), placed);
 			}
 
 			iterator					insert (iterator position, const value_type& val);
@@ -270,13 +350,13 @@ template < class Key,                                    		 	// map::key_type
 			/*	creates a new node, with given arguements (key, val, left, right, parent)
 			 *	returns: node_type* new node	*/
 
-			node_type*				new_node(const key_type& key, const mapped_type& mapped, node_type *left = NULL, node_type *right = NULL, node_type *parent = NULL) {
-				value_type	*tmp;
-
-				tmp = alloc.allocate(1);
-				alloc.construct(tmp, mapped);
-				return new node_type(mapue_type(key, mapped), left, right, parent);
-			}
+/* 			node_type*				new_node(const key_type& key, const mapped_type& mapped, node_type *left = NULL, node_type *right = NULL, node_type *parent = NULL) { */
+/* 				value_type	*tmp; */
+/*  */
+/* 				tmp = _alloc.allocate(1); */
+/* 				_alloc.construct(tmp, mapped); */
+/* 				return new node_type(mapue_type(key, mapped), left, right, parent); */
+/* 			} */
 
 			/*	creates a new node, with given arguements (pair(key, val), left, right, parent)
 			 *	returns: node_type* new node	*/
@@ -284,9 +364,30 @@ template < class Key,                                    		 	// map::key_type
 			node_type*				new_node(const value_type& val, node_type *left = NULL, node_type *right = NULL, node_type *parent = NULL) {
 				value_type	*tmp;
 
-				tmp = alloc.allocate(1);
-				alloc.construct(tmp, val);
+				tmp = _alloc.allocate(1);
+				_alloc.construct(tmp, val);
 				return new node_type(val, left, right, parent);
+			}
+
+			/*	corrects lend and rend	*/
+
+			void					fix_tail(void) {
+				node_type	*ptr;
+
+				ptr = _head;
+				while (ptr->left)
+					ptr = ptr->left;
+				if (ptr != _lend) {
+					_lend->parent = ptr;
+					ptr->left = _lend;
+				}
+				ptr = _head;
+				while (ptr->right)
+					ptr = ptr->right;
+				if (ptr != _rend) {
+					_rend->parent = ptr;
+					ptr->right = _rend;
+				}
 			}
 
 	};
