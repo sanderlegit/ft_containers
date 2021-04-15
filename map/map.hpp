@@ -332,11 +332,12 @@ template < class Key,                                    		 	// map::key_type
 								++_size;
 							}
 						} else if (val.first == ptr->data.first) {
+							//TODO duplicate key insert is broken for return
 							break;
 						}
 					}
 				}
-				fix_tail();
+				fix_tail();//fix tail hangs sometimes
 				return std::pair<iterator,bool>(iterator(ptr), placed);
 			}
 

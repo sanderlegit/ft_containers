@@ -246,12 +246,12 @@ void		eq_print_comp_labels(std::string str, std::string l1, std::string l2, T t,
 
 template<class K, class M>
 void		test_equivalence(data<K, M> *d, std::map<K, M> *std, ft::map<K, M> *ft) {
-	bool			r1;
-	bool			r2;
-	std::pair<K, M>	r3;
-	std::pair<K, M>	r4;
-	size_t			r5;
-	size_t			r6;
+	bool								r1;
+	bool								r2;
+	std::pair<K, M>						r3;
+	std::pair<K, M>						r4;
+	size_t								r5;
+	size_t								r6;
 	typename std::map<K, M>::iterator	stdi;
 	typename ft::map<K, M>::iterator	fti;
 
@@ -377,6 +377,7 @@ void		test_empty_constructor(data<K, M> *d) {
 
 template<class K, class M>
 void		test_constructors(data<K, M> *d) {
+	print_title("constructor [empty]");
 	test_empty_constructor(d);
 }
 
@@ -387,14 +388,15 @@ void		test_constructors(data<K, M> *d) {
 /*-----------------------------------ELEMENT ACCESS TESTS-----------------------------------*/
 /*-----------------------------------MODIFIERS TESTS-----------------------------------*/
 
-//need a test for a duplacte key insert
-//test return value properly
+//duplicate key insert is broken for return
 template<class K, class M>
 void		test_insert(data<K, M> *d) {
 	std::map<K, M>		*std = NULL;
 	ft::map<K, M>		*ft = NULL;
 	M					val;
 	K					key;
+	typename std::pair<typename std::map<K, M>::iterator, bool>	r1;
+	typename std::pair<typename ft::map<K, M>::iterator, bool>	r2;
 
 	testing_on("m = new map()");
 	std = new std::map<K, M>();
@@ -403,30 +405,61 @@ void		test_insert(data<K, M> *d) {
 	key = rand() % 255;
 	val = randomize<M>();
 	testing("m.insert(pair(" << key << ", " << val << ")");
-	std->insert(std::pair<K, M>(key, val));
-	ft->insert(std::pair<K, M>(key, val));
+	r1 = std->insert(std::pair<K, M>(key, val));
+	r2 = ft->insert(std::pair<K, M>(key, val));
+	print_comp("(*ret.i).k", (*r1.first).first, (*r2.first).first);
+	comp((*r1.first).first == (*r2.first).first);
+	print_comp("(*ret.i).m", (*r1.first).second, (*r2.first).second);
+	comp((*r1.first).second == (*r2.first).second);
+	print_comp("*ret.b", r1.second, r2.second);
+	comp(r1.second == r2.second);
+
+	key = rand() % 255;
+	val = randomize<M>();
+	testing("m.insert(pair(" << key << ", " << val << ")");
+	r1 = std->insert(std::pair<K, M>(key, val));
+	r2 = ft->insert(std::pair<K, M>(key, val));
+	print_comp("(*ret.i).k", (*r1.first).first, (*r2.first).first);
+	comp((*r1.first).first == (*r2.first).first);
+	print_comp("(*ret.i).m", (*r1.first).second, (*r2.first).second);
+	comp((*r1.first).second == (*r2.first).second);
+	print_comp("*ret.b", r1.second, r2.second);
+	comp(r1.second == r2.second);
 
 	key = rand() % 255;
 	val = randomize<M>();
 	testing("m.insert(pair(" << key << ", " << val << ")");
 	std->insert(std::pair<K, M>(key, val));
 	ft->insert(std::pair<K, M>(key, val));
+	print_comp("(*ret.i).k", (*r1.first).first, (*r2.first).first);
+	comp((*r1.first).first == (*r2.first).first);
+	print_comp("(*ret.i).m", (*r1.first).second, (*r2.first).second);
+	comp((*r1.first).second == (*r2.first).second);
+	print_comp("*ret.b", r1.second, r2.second);
+	comp(r1.second == r2.second);
 
 	key = rand() % 255;
 	val = randomize<M>();
 	testing("m.insert(pair(" << key << ", " << val << ")");
 	std->insert(std::pair<K, M>(key, val));
 	ft->insert(std::pair<K, M>(key, val));
+	print_comp("(*ret.i).k", (*r1.first).first, (*r2.first).first);
+	comp((*r1.first).first == (*r2.first).first);
+	print_comp("(*ret.i).m", (*r1.first).second, (*r2.first).second);
+	comp((*r1.first).second == (*r2.first).second);
+	print_comp("*ret.b", r1.second, r2.second);
+	comp(r1.second == r2.second);
 
-	key = rand() % 255;
-	val = randomize<M>();
 	testing("m.insert(pair(" << key << ", " << val << ")");
 	std->insert(std::pair<K, M>(key, val));
 	ft->insert(std::pair<K, M>(key, val));
-
-	testing("m.insert(pair(" << key << ", " << val << ")");
-	std->insert(std::pair<K, M>(key, val));
-	ft->insert(std::pair<K, M>(key, val));
+	//TODO BREAKS HERE
+	print_comp("(*ret.i).k", (*r1.first).first, (*r2.first).first);
+	comp((*r1.first).first == (*r2.first).first);
+	print_comp("(*ret.i).m", (*r1.first).second, (*r2.first).second);
+	comp((*r1.first).second == (*r2.first).second);
+	print_comp("*ret.b", r1.second, r2.second);
+	comp(r1.second == r2.second);
 
 	equal(std, ft);
 	/* test_equivalence(d, std, ft); */
@@ -437,6 +470,7 @@ void		test_insert(data<K, M> *d) {
 
 template<class K, class M>
 void		test_modifiers(data<K, M> *d) {
+	print_title("insert(val)");
 	test_insert(d);
 }
 /*-----------------------------------OBSERVERS TESTS-----------------------------------*/

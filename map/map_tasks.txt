@@ -2,30 +2,11 @@ https://www.cs.usfca.edu/~galles/visualization/BTree.html
 
 plan:
 empty constructor		done
-insert
+insert					hangs on fix tail sometimes
 iterator :				done
-	i++
-	*i
-begin
-end
+	i++					done
+	*i					done
+begin					done
+end						done
 
-
-iterator++ algo:
-	if right node
-		go right
-		while (left)
-			visited paretn = 0
-			go left
-	else
-		go to parent
-
-keep a stack of visted nodes, pointers to unwritten parents, flag for parent written in node??
-something to check wether a parent has been visited or not
-
-begin()
-	while n->left
-		n = n->left
-	return iterator(n);
-
-
-
+fill in rest of this sheet
