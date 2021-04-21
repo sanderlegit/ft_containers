@@ -22,6 +22,7 @@ int		main(void) {
 	for (std::vector<int>::iterator i = vec->begin(); i != vec->end(); i++) {
 		std::cout << *i << ", ";
 	}
+
 	std::cout << std::endl;
 	vec->assign(vec->begin() + 2, vec->end() - 1);
 	for (std::vector<int>::iterator i = vec->begin(); i != vec->end(); i++) {

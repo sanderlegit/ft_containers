@@ -99,18 +99,18 @@ namespace ft {
 
 			bool					operator==(const MapBiIterator& rhs) const { return node == rhs.node; }
 			bool					operator!=(const MapBiIterator& rhs) const { return node != rhs.node; }
-			pointer					operator->() const { return node->data; }
+			pointer					operator->() const { return &(node->data); }
 			reference 				operator*() const { return node->data; }
 
 			operator MapBiIterator<node_t, const value_t>() { return node; }
 	};
 /*-------------------------------------------MAP-------------------------------------------*/
 
-template < class Key,                                    		 	// map::key_type
-           class T,                                       			// map::mapped_type
-           class Compare = std::less<Key>,                     		// map::key_compare
-           class Alloc = std::allocator<std::pair<const Key,T> >    // map::allocator_type
-           >
+template < class Key,											 	// map::key_type
+		   class T,									   			// map::mapped_type
+		   class Compare = std::less<Key>,					 		// map::key_compare
+		   class Alloc = std::allocator<std::pair<const Key,T> >	// map::allocator_type
+		   >
 	class map {//https://cplusplus.com/reference/map/map/
 /*-------------------------------------------NODE CLASS-------------------------------------------*/
 		private:
@@ -249,10 +249,14 @@ template < class Key,                                    		 	// map::key_type
  *	If the container is empty, the returned iterator value shall not be dereferenced.	*/
 
 			iterator					begin() {
+				if (empty())
+					return iterator(_rend);
 				return iterator(_lend->parent);
 			}
 
 			const_iterator				begin() const {
+				if (empty())
+					return const_iterator(_rend);
 				return const_iterator(_lend->parent);
 			}
 
@@ -265,29 +269,31 @@ template < class Key,                                    		 	// map::key_type
  *	If the container is empty, this function returns the same as map::begin.	*/
 
 			iterator					end() {
-				if (empty())
-					return iterator(_lend);
 				return iterator(_rend);
 			}
 
 			const_iterator end() const {
-				if (empty())
-					return iterator(_lend);
 				return const_iterator(_rend);
 			}
 
-
 /*-------------------------------------------CAPACITY-------------------------------------------*/
 			
-/*	Returns whether the map container is empty (i.e. whether its size is 0).	*/
+			/*	Returns whether the map container is empty (i.e. whether its size is 0).	*/
 
 			bool						empty() const {
 				return !_size;
 			}
-/*	Returns the number of elements in the map container.	*/
+
+			/*	Returns the number of elements in the map container.	*/
 
 			size_type					size() const {
 				return _size;
+			}
+
+			/*	Returns the maximum number of elements that the map container can hold.	*/
+
+			size_type		max_size() const {
+				return std::numeric_limits<difference_type>::max() / 20;
 			}
 
 /*-------------------------------------------ELEMENT ACCESS-------------------------------------------*/
@@ -313,7 +319,9 @@ template < class Key,                                    		 	// map::key_type
 					ptr = _head;
 					placed = 0;
 					while (!placed) {
-						if (val.first < ptr->data.first) {	//TODO use _keycomp
+						if (val.first == ptr->data.first) {
+							break;
+						} else if (_kcomp(val.first, ptr->data.first)) {	//TODO use _keycomp
 							if (ptr->left && ptr->left != _lend)
 								ptr = ptr->left;
 							else {
@@ -322,8 +330,8 @@ template < class Key,                                    		 	// map::key_type
 								placed = 1;
 								++_size;
 							}
-						} else if (val.first > ptr->data.first) {
-							if (ptr->right && ptr->right != _lend)
+						} else {
+							if (ptr->right && ptr->right != _rend)
 								ptr = ptr->right;
 							else {
 								ptr->right = new_node(val, NULL, NULL, ptr);
@@ -331,17 +339,17 @@ template < class Key,                                    		 	// map::key_type
 								placed = 1;
 								++_size;
 							}
-						} else if (val.first == ptr->data.first) {
-							//TODO duplicate key insert is broken for return
-							break;
-						}
-					}
+						} 					}
 				}
-				fix_tail();//fix tail hangs sometimes
+				fix_tail();
 				return std::pair<iterator,bool>(iterator(ptr), placed);
 			}
 
-			iterator					insert (iterator position, const value_type& val);
+			iterator					insert (iterator position, const value_type& val) {
+				/* trying to do this optimization in a way that 100% doesnt result in unsorted tree is hard as hell*/
+				(void)position;
+				return insert(val).first;
+            }
 
 			template <class InputIterator>
 			void						insert (InputIterator first, InputIterator last);
@@ -375,6 +383,7 @@ template < class Key,                                    		 	// map::key_type
 			void					fix_tail(void) {
 				node_type	*ptr;
 
+				/* perror("fix tail: setting left"); */
 				ptr = _head;
 				while (ptr->left)
 					ptr = ptr->left;
@@ -382,6 +391,7 @@ template < class Key,                                    		 	// map::key_type
 					_lend->parent = ptr;
 					ptr->left = _lend;
 				}
+				/* perror("fix tail: setting right"); */
 				ptr = _head;
 				while (ptr->right)
 					ptr = ptr->right;
@@ -389,6 +399,7 @@ template < class Key,                                    		 	// map::key_type
 					_rend->parent = ptr;
 					ptr->right = _rend;
 				}
+				/* perror("fix tail: done"); */
 			}
 
 	};
