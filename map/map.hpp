@@ -298,6 +298,16 @@ template < class Key,											 	// map::key_type
 
 /*-------------------------------------------ELEMENT ACCESS-------------------------------------------*/
 
+/*	If k matches the key of an element in the container, the function returns a reference to its 
+ *	mapped value.	
+ *	If k does not match the key of any element in the container, the function inserts a new element 
+ *	with that key and returns a reference to its mapped value. Notice that this always increases the 
+ *	container size by one, even if no mapped value is assigned to the element (the element is constructed 
+ *	using its default constructor).	*/	
+			mapped_type&	operator[] (const key_type& k) {
+				return  (*((insert(value_type(k, mapped_type()))).first)).second;
+			}
+
 /*-------------------------------------------MODIFIERS-------------------------------------------*/
 
 /*	Extends the container by inserting new elements, effectively increasing the container size by the 

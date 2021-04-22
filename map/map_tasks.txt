@@ -61,7 +61,7 @@ size		    Return container size (public member function )				: done|tested
 max_size	    Return maximum size (public member function )				: done|tested
 
 Element access:
-operator[]	    Access element (public member function )
+operator[]	    Access element (public member function )					: done|tested
 
 Modifiers:
 insert		    Insert elements (public member function )		single: done|tested	hint: done|tested	range:

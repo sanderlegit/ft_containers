@@ -33,7 +33,7 @@
 
 #define TESTING	true
 #define TESTING_ON	true
-/* #define VERBOSE	true */
+#define VERBOSE	true
 /* #define EQUALITY	true */
 #define VVERBOSE	true
 
@@ -465,7 +465,7 @@ void		test_size(data<K, M> *d, bool empty) {
 	std::map<K, M>		*std = NULL;
 	ft::map<K, M>		*ft = NULL;
 	typename std::map<K, M>::size_type		r1;
-	typename std::map<K, M>::size_type		r2;
+	typename ft::map<K, M>::size_type		r2;
 
 	create_map(std, ft, empty);
 	testing_on("radom filled map size: " << std->size());
@@ -487,7 +487,7 @@ void		test_max_size(data<K, M> *d) {
 	std::map<K, M>		*std = NULL;
 	ft::map<K, M>		*ft = NULL;
 	typename std::map<K, M>::size_type		r1;
-	typename std::map<K, M>::size_type		r2;
+	typename ft::map<K, M>::size_type		r2;
 
 	create_map(std, ft, 1);
 	testing_on("radom filled map size: " << std->size());
@@ -517,6 +517,56 @@ void		test_capacity(data<K, M> *d) {
 	test_max_size(d);
 }
 /*-----------------------------------ELEMENT ACCESS TESTS-----------------------------------*/
+
+template<class K, class M>
+void		test_access_op(data<K, M> *d, bool empty) {
+	std::map<K, M>						*std = NULL;
+	ft::map<K, M>						*ft = NULL;
+	typename std::map<K, M>::iterator	stdi;
+	typename ft::map<K, M>::iterator	fti;
+	int									test_size;
+
+
+	create_map(std, ft, empty);
+	testing_on("radom filled map size: " << std->size());
+
+	test_size = 20;
+	for (int i = 0; i < test_size; i++) {
+		if (rand() % 2 && !ft->empty() && !std->empty()) {
+			int											offset = rand() % std->size();
+			testing("ret = m[(m.begin() + " << offset << ").k]");
+			stdi = std->begin();
+			fti = ft->begin();
+			for (int i = 0; i < offset; i++) {
+				stdi++;
+				fti++;
+			}
+			typename std::map<K, M>::mapped_type&		r1 = (*std)[stdi->first];
+			typename ft::map<K, M>::mapped_type&		r2 = (*ft)[fti->first];
+			print_comp("ret", r1, r2);
+			comp(r1 == r2);
+		} else {
+			K											key = randomize<K>();
+			testing("ret = m[" << key << "]");
+			typename std::map<K, M>::mapped_type&		r1 = (*std)[key];
+			typename ft::map<K, M>::mapped_type&		r2 = (*ft)[key];
+			print_comp("ret", r1, r2);
+			comp(r1 == r2);
+		}
+	}
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		test_element_access(data<K, M> *d) {
+	print_title("operator[]");
+	test_access_op(d, 0);
+	test_access_op(d, 1);
+}
 /*-----------------------------------MODIFIERS TESTS-----------------------------------*/
 
 template<class K, class M>
@@ -662,8 +712,8 @@ void		do_tests(void) {
 	test_iterator_access(d);
 	print_group_title("CAPACITY");
 	test_capacity(d);
-	//print_group_title("ELEMENT ACCESS");
-	//test_element_access(d);
+	print_group_title("ELEMENT ACCESS");
+	test_element_access(d);
 	print_group_title("MODIFIERS");
 	test_modifiers(d);
 	//print_group_title("OBSERVERS");
