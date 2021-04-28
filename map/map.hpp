@@ -102,7 +102,7 @@ namespace ft {
 			pointer					operator->() const { return &(node->data); }
 			reference 				operator*() const { return node->data; }
 
-			operator MapBiIterator<node_t, const value_t>() { return node; }
+			/* operator ConstMapBiIterator<node_t, const value_t>() { return node; } */
 	};
 /*-------------------------------------------MAP-------------------------------------------*/
 
@@ -118,13 +118,16 @@ template < class Key,											 	// map::key_type
 			class Node {
 				public:
 					typedef	std::pair<const key_t, map_t>	pair;
+					typedef	pair*							pointer;
 
-					Node(void) : data(), left(NULL), right(NULL), parent(NULL) {}
+					Node(void) : data(NULL), left(NULL), right(NULL), parent(NULL) {}
 					Node(key_t key_, map_t map_, Node *left_ = NULL, Node *right_ = NULL, Node* prev_ = NULL)
-							: data(key_, map_), left(left_), right(right_), parent(prev_) {}
+							: data(new pair(key_, map_)), left(left_), right(right_), parent(prev_) {}
 					Node(pair data_, Node *left_ = NULL, Node *right_ = NULL, Node* prev_ = NULL)
-							: data(data_), left(left_), right(right_), parent(prev_) {}
-					~Node(void) {}
+							: data(new pair(data_)), left(left_), right(right_), parent(prev_) {}
+					~Node(void) {
+						delete data;
+					}
 
 					Node&		operator=(const Node& rhs) {
 						if (this != rhs) {
@@ -168,7 +171,7 @@ template < class Key,											 	// map::key_type
 						return ptr;
 					}
 
-					pair		data;
+					pointer		data;
 					Node		*left;
 					Node		*right;
 					Node		*parent;
@@ -238,6 +241,10 @@ template < class Key,											 	// map::key_type
 /*	copy constructor : Constructs a container with a copy of each of the elements in x.	*/
 
 			map (const map& x);
+
+			~map(void) {
+				_rdel(_head);
+			} 
 
 /*-------------------------------------------OPERATORS-------------------------------------------*/
 
@@ -321,7 +328,7 @@ template < class Key,											 	// map::key_type
 				int				placed;
 
 				if (_head == NULL) {
-					_head = new_node(val, NULL, NULL, NULL);
+					_head = _new_node(val, NULL, NULL, NULL);
 					ptr = _head;
 					placed = 1;
 					++_size;
@@ -335,7 +342,7 @@ template < class Key,											 	// map::key_type
 							if (ptr->left && ptr->left != _lend)
 								ptr = ptr->left;
 							else {
-								ptr->left = new_node(val, NULL, NULL, ptr);
+								ptr->left = _new_node(val, NULL, NULL, ptr);
 								ptr = ptr->left;
 								placed = 1;
 								++_size;
@@ -344,14 +351,14 @@ template < class Key,											 	// map::key_type
 							if (ptr->right && ptr->right != _rend)
 								ptr = ptr->right;
 							else {
-								ptr->right = new_node(val, NULL, NULL, ptr);
+								ptr->right = _new_node(val, NULL, NULL, ptr);
 								ptr = ptr->right;
 								placed = 1;
 								++_size;
 							}
 						} 					}
 				}
-				fix_tail();
+				_fix_tail();
 				return std::pair<iterator,bool>(iterator(ptr), placed);
 			}
 
@@ -366,21 +373,10 @@ template < class Key,											 	// map::key_type
 
 /*-------------------------------------------NON-STL FUNCTIONS-------------------------------------------*/
 		private:
-			/*	creates a new node, with given arguements (key, val, left, right, parent)
-			 *	returns: node_type* new node	*/
-
-/* 			node_type*				new_node(const key_type& key, const mapped_type& mapped, node_type *left = NULL, node_type *right = NULL, node_type *parent = NULL) { */
-/* 				value_type	*tmp; */
-/*  */
-/* 				tmp = _alloc.allocate(1); */
-/* 				_alloc.construct(tmp, mapped); */
-/* 				return new node_type(mapue_type(key, mapped), left, right, parent); */
-/* 			} */
-
 			/*	creates a new node, with given arguements (pair(key, val), left, right, parent)
 			 *	returns: node_type* new node	*/
 
-			node_type*				new_node(const value_type& val, node_type *left = NULL, node_type *right = NULL, node_type *parent = NULL) {
+			node_type*				_new_node(const value_type& val, node_type *left = NULL, node_type *right = NULL, node_type *parent = NULL) {
 				value_type	*tmp;
 
 				tmp = _alloc.allocate(1);
@@ -390,7 +386,7 @@ template < class Key,											 	// map::key_type
 
 			/*	corrects lend and rend	*/
 
-			void					fix_tail(void) {
+			void					_fix_tail(void) {
 				node_type	*ptr;
 
 				/* perror("fix tail: setting left"); */
@@ -410,6 +406,16 @@ template < class Key,											 	// map::key_type
 					ptr->right = _rend;
 				}
 				/* perror("fix tail: done"); */
+			}
+
+			void					_rdel(node_type *me) {
+				if (me) {
+					if (me->left)
+						_rdel(me->left);
+					if (me->right)
+						_rdel(me->right);
+					delete me;
+				}
 			}
 
 	};

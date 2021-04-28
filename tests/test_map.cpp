@@ -368,9 +368,11 @@ pair<K, M>		create_map_size_internal(std::map<K, M> *std, ft::map<K, M> *ft, siz
 	return res;
 }
 
-#define	create_map(A, B, C)	{pair<K, M> tmp = create_map_internal(A, B, C); A=tmp.std; B=tmp.ft;}
+#define	create_map(A, B, empty)	{pair<K, M> tmp = create_map_internal(A, B, empty); A=tmp.std; B=tmp.ft;}
 
-#define	create_map_size(A, B, C)	{pair<K, M> tmp = create_map_size_internal(A, B, C); A=tmp.std; B=tmp.ft;}
+#define	create_map_size(A, B, size)	{pair<K, M> tmp = create_map_size_internal(A, B, size); A=tmp.std; B=tmp.ft;}
+
+#define create_map_empty_size(A, B, empty, size) {if (!empty) { create_map_size(std, ft, size); } else { create_map(std, ft, 1); }}
 
 #define testing(A)	{if (TESTING) std::cout << "  testing: " A << std::endl;}
 #define testing_on(A)	{if (TESTING_ON) std::cout << "  testing on: " A << std::endl;}
@@ -399,6 +401,155 @@ void		test_constructors(data<K, M> *d) {
 }
 
 /*-----------------------------------ITERATOR CLASS TESTS-----------------------------------*/
+
+template<class K, class M>
+void		itest_constructors(data<K, M> *d) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	typename ft::map<K, M>::iterator	*fti;
+	typename std::map<K, M>::iterator	*stdi;
+
+	create_map_empty_size(std, ft, 0, 5);
+	testing_on("radom filled map size: " << std->size());
+
+	testing("i = new iterator()");
+	fti = new typename ft::map<K, M>::iterator();
+	stdi = new typename std::map<K, M>::iterator();
+	delete stdi;
+	delete fti;
+	incr_score(d);
+
+	testing("i = new iterator(m.begin())");
+	fti = new typename ft::map<K, M>::iterator(ft->begin());
+	stdi = new typename std::map<K, M>::iterator(std->begin());
+	print_comp("i->first", (*stdi)->first, (*fti)->first);
+	comp((*stdi)->first == (*fti)->first);
+	print_comp("i->second", (*stdi)->second, (*fti)->second);
+	comp((*stdi)->second == (*fti)->second);
+	delete stdi;
+	delete fti;
+
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		itest_copy_op(data<K, M> *d) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	typename ft::map<K, M>::iterator	fti;
+	typename std::map<K, M>::iterator	stdi;
+
+	create_map_empty_size(std, ft, 0, 5);
+	testing_on("radom filled map size: " << std->size());
+	testing("i = m.begin()");
+	fti = ft->begin();
+	stdi = std->begin();
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		itest_comp_ops(data<K, M> *d) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	typename ft::map<K, M>::iterator	fti;
+	typename std::map<K, M>::iterator	stdi;
+	typename ft::map<K, M>::iterator	fti2;
+	typename std::map<K, M>::iterator	stdi2;
+
+	create_map_empty_size(std, ft, 0, 5);
+	testing_on("radom filled map size: " << std->size());
+	testing_on("i = m.begin()");
+	testing_on("i2 = m.begin()");
+	fti = ft->begin();
+	fti2 = ft->begin();
+	stdi = std->begin();
+	stdi2 = std->begin();
+	print_comp("i==i2", stdi == stdi2, fti == fti2);
+	comp((stdi == stdi2) == (fti == fti2));
+	print_comp("i!=i2", stdi != stdi2, fti != fti2);
+	comp((stdi != stdi2) == (fti != fti2));
+	incr_score(d);
+	testing_on("i2++");
+	fti2++;
+	stdi2++;
+	print_comp("i==i2", stdi == stdi2, fti == fti2);
+	comp((stdi == stdi2) == (fti == fti2));
+	print_comp("i!=i2", stdi != stdi2, fti != fti2);
+	comp((stdi != stdi2) == (fti != fti2));
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		itest_deref_ops(data<K, M> *d) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	typename ft::map<K, M>::iterator	fti;
+	typename std::map<K, M>::iterator	stdi;
+
+	create_map_empty_size(std, ft, 0, 5);
+	testing_on("radom filled map size: " << std->size());
+	testing_on("i = m.begin()");
+	fti = ft->begin();
+	stdi = std->begin();
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("(*i).m", (*stdi).second, (*fti).second);
+	comp((*stdi).second == (*fti).second);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		itest_val_assign(data<K, M> *d) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	typename ft::map<K, M>::iterator	fti;
+	typename std::map<K, M>::iterator	stdi;
+
+	create_map_empty_size(std, ft, 0, 5);
+	testing_on("radom filled map size: " << std->size());
+	testing("i = m.begin()");
+	fti = ft->begin();
+	stdi = std->begin();
+	testing("*i = pair(1, 1)");
+	*fti = typename ft::map<K, M>::value_type(1, 1);
+	*stdi = typename std::map<K, M>::value_type(1, 1);
+	
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		test_iterator_class(data<K, M> *d) {
+	print_title("constructors [default|copy]");
+	itest_constructors(d);
+	print_title("operator= ");
+	itest_copy_op(d);
+	print_title("operators==|!= ");
+	itest_comp_ops(d);
+	print_title("operators*|-> ");
+	itest_deref_ops(d);
+	print_title("value assigment");
+	itest_val_assign(d);
+	/* print_title("operator++|-- "); */
+	/* itest_incr_decr(d); */
+}
 /*-----------------------------------REVERSE ITERATOR CLASS TESTS-----------------------------------*/
 /*-----------------------------------ITERATOR ACCESS TESTS-----------------------------------*/
 
@@ -409,7 +560,8 @@ void		test_begin_end(data<K, M> *d, bool empty) {
 	typename ft::map<K, M>::iterator	fti;
 	typename std::map<K, M>::iterator	stdi;
 
-	create_map(std, ft, empty);
+	create_map_empty_size(std, ft, empty, 5);
+
 	testing_on("radom filled map size: " << std->size());
 
 	testing("for(i = m.begin(); i != m.end(); i++) *i;");
@@ -428,8 +580,6 @@ void		test_begin_end(data<K, M> *d, bool empty) {
 	delete ft;
 }
 	
-
-
 template<class K, class M>
 void		test_iterator_access(data<K, M> *d) {
 	print_title("insert [single]");
@@ -530,7 +680,7 @@ void		test_access_op(data<K, M> *d, bool empty) {
 	create_map(std, ft, empty);
 	testing_on("radom filled map size: " << std->size());
 
-	test_size = 20;
+	test_size = 5;
 	for (int i = 0; i < test_size; i++) {
 		if (rand() % 2 && !ft->empty() && !std->empty()) {
 			int											offset = rand() % std->size();
@@ -579,13 +729,10 @@ void		test_insert_single(data<K, M> *d, bool empty) {
 	typename std::pair<typename std::map<K, M>::iterator, bool>	r1;
 	typename std::pair<typename ft::map<K, M>::iterator, bool>	r2;
 
-	/* testing_on("m = new map()"); */
-	/* std = new std::map<K, M>(); */
-	/* ft = new ft::map<K, M>(); */
 	create_map(std, ft, empty);
 	testing_on("radom filled map size: " << std->size());
 
-	size = rand() % 20;
+	size = rand() % 5;
 	for (int i = 0; i < size; i++) {
 		key = rand() % 255;
 		val = randomize<M>();
@@ -598,7 +745,7 @@ void		test_insert_single(data<K, M> *d, bool empty) {
 		comp((*r1.first).second == (*r2.first).second);
 		print_comp("*ret.b", r1.second, r2.second);
 		comp(r1.second == r2.second);
-		if (i % 8 == 0) {
+		if (i % 2 == 0) {
 			testing("m.insert(pair(" << key << ", " << val << ")");
 			r1 = std->insert(std::pair<K, M>(key, val));
 			r2 = ft->insert(std::pair<K, M>(key, val));
@@ -619,7 +766,7 @@ void		test_insert_single(data<K, M> *d, bool empty) {
 
 
 template<class K, class M>
-void		test_insert_hint(data<K, M> *d, bool empty) {
+void		test_insert_hint(data<K, M> *d) {
 	std::map<K, M>		*std = NULL;
 	ft::map<K, M>		*ft = NULL;
 	M					val;
@@ -629,17 +776,10 @@ void		test_insert_hint(data<K, M> *d, bool empty) {
 	typename std::map<K, M>::iterator	stdi;
 	typename ft::map<K, M>::iterator	fti;
 
-	/* testing_on("m = new map()"); */
-	/* std = new std::map<K, M>(); */
-	/* ft = new ft::map<K, M>(); */
-	create_map(std, ft, empty);
-	key = rand() % 255;
-	val = randomize<M>();
-	ft->insert(std::pair<K, M>(key, val));
-	std->insert(std::pair<K, M>(key, val));
+	create_map(std, ft, 0);
 	testing_on("radom filled map size: " << std->size());
 
-	size = rand() % 20;
+	size = rand() % 5;
 	for (int i = 0; i < size; i++) {
 		key = rand() % 255;
 		val = randomize<M>();
@@ -657,7 +797,7 @@ void		test_insert_hint(data<K, M> *d, bool empty) {
 		comp(stdi->first == fti->first);
 		print_comp("i->m", stdi->second, fti->second);
 		comp(stdi->second == fti->second);
-		if (i % 8 == 0) {
+		if (i % 2 == 0) {
 			offset = (i != 0) ? rand() % i : 0;
 			stdi = std->begin();
 			fti = ft->begin();
@@ -689,8 +829,7 @@ void		test_modifiers(data<K, M> *d) {
 	test_insert_single(d, 0);
 	test_insert_single(d, 1);
 	print_title("insert [hint]");
-	test_insert_hint(d, 0);
-	test_insert_hint(d, 1);
+	test_insert_hint(d);
 }
 /*-----------------------------------OBSERVERS TESTS-----------------------------------*/
 /*-----------------------------------OPERATIONS TESTS-----------------------------------*/
@@ -704,10 +843,10 @@ void		do_tests(void) {
 
 	print_group_title("CONSTRUCTORS");
 	test_constructors(d);
-	//print_group_title("ITERATOR CLASS");
-	//test_iterator_class(d);
-	//print_group_title("REVERSE ITERATOR CLASS");
-	//test_rev_iterator_class(d);
+	/* print_group_title("ITERATOR CLASS"); */
+	/* test_iterator_class(d); */
+	/* print_group_title("REVERSE ITERATOR CLASS"); */
+	/* test_rev_iterator_class(d); */
 	print_group_title("ITERATOR ACCESS");
 	test_iterator_access(d);
 	print_group_title("CAPACITY");
@@ -716,10 +855,12 @@ void		do_tests(void) {
 	test_element_access(d);
 	print_group_title("MODIFIERS");
 	test_modifiers(d);
-	//print_group_title("OBSERVERS");
-	//test_observers(d);
-	//print_group_title("OPERATIONS");
-	//test_operations(d);
+	/* print_group_title("OBSERVERS"); */
+	/* test_observers(d); */
+	/* print_group_title("OPERATIONS"); */
+	/* test_operations(d); */
+	print_group_title("ITERATOR CLASS");
+	test_iterator_class(d);
 
 	std::cout << std::endl << GREEN << "pass: " << RESET << d->pass << RED << "\tfail:\t" << RESET << d->fail << std::endl;
 	delete d;
@@ -728,6 +869,6 @@ void		do_tests(void) {
 int			main(void) {
 	srand((int) time(0));
 	do_tests<int, int>();
-	//while(1)a
+	/* while(1); */
 }
 

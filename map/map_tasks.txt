@@ -12,18 +12,18 @@ end						done
 fill in rest of this sheet
 
 (constructor)	Construct map (public member function )             default: done|tested  range:  copy:  
-(destructor)	Map destructor (public member function )            
+(destructor)	Map destructor (public member function )            :done|tested,	but still some leaks
 operator=		Copy container content (public member function )    
 
 Iterator class:
 forwards iterator
-	(constructor)	default:	copy:	
-	(destructor)	:
-	operator=		:
-	operator==		:
-	operator!=		:
-	operator*		:
-	operator->		:
+	(constructor)	default: done|tested	copy:	done|tested
+	(destructor)	:done|tested
+	operator=		:done|tested
+	operator==		:done|tested
+	operator!=		:done|tested
+	operator*		:done|tested
+	operator->		:done|tested
 	assignable val (*i = val)	:
 	operator++		:
 	++operator		:
