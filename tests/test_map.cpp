@@ -649,6 +649,253 @@ void		test_iterator_class(data<K, M> *d) {
 	itest_incr_decr(d);
 }
 /*-----------------------------------REVERSE ITERATOR CLASS TESTS-----------------------------------*/
+
+template<class K, class M>
+void		irtest_constructors(data<K, M> *d) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	typename ft::map<K, M>::reverse_iterator	*fti;
+	typename std::map<K, M>::reverse_iterator	*stdi;
+
+	create_map_empty_size(std, ft, 0, 5);
+	testing_on("radom filled map size: " << std->size());
+
+	testing("i = new reverse_iterator()");
+	fti = new typename ft::map<K, M>::reverse_iterator();
+	stdi = new typename std::map<K, M>::reverse_iterator();
+	delete stdi;
+	delete fti;
+	incr_score(d);
+
+	testing("i = new reverse_iterator(m.rbegin())");
+	fti = new typename ft::map<K, M>::reverse_iterator(ft->rbegin());
+	stdi = new typename std::map<K, M>::reverse_iterator(std->rbegin());
+	print_comp("i->first", (*stdi)->first, (*fti)->first);
+	comp((*stdi)->first == (*fti)->first);
+	print_comp("i->second", (*stdi)->second, (*fti)->second);
+	comp((*stdi)->second == (*fti)->second);
+	delete stdi;
+	delete fti;
+
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		irtest_copy_op(data<K, M> *d) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	typename ft::map<K, M>::reverse_iterator	fti;
+	typename std::map<K, M>::reverse_iterator	stdi;
+
+	create_map_empty_size(std, ft, 0, 5);
+	testing_on("radom filled map size: " << std->size());
+	testing("i = m.rbegin()");
+	fti = ft->rbegin();
+	stdi = std->rbegin();
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		irtest_comp_ops(data<K, M> *d) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	typename ft::map<K, M>::reverse_iterator	fti;
+	typename std::map<K, M>::reverse_iterator	stdi;
+	typename ft::map<K, M>::reverse_iterator	fti2;
+	typename std::map<K, M>::reverse_iterator	stdi2;
+
+	create_map_empty_size(std, ft, 0, 5);
+	testing_on("radom filled map size: " << std->size());
+	testing_on("i = m.rbegin()");
+	testing_on("i2 = m.rbegin()");
+	fti = ft->rbegin();
+	fti2 = ft->rbegin();
+	stdi = std->rbegin();
+	stdi2 = std->rbegin();
+	print_comp("i==i2", stdi == stdi2, fti == fti2);
+	comp((stdi == stdi2) == (fti == fti2));
+	print_comp("i!=i2", stdi != stdi2, fti != fti2);
+	comp((stdi != stdi2) == (fti != fti2));
+	incr_score(d);
+	testing_on("i2++");
+	fti2++;
+	stdi2++;
+	print_comp("i==i2", stdi == stdi2, fti == fti2);
+	comp((stdi == stdi2) == (fti == fti2));
+	print_comp("i!=i2", stdi != stdi2, fti != fti2);
+	comp((stdi != stdi2) == (fti != fti2));
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		irtest_deref_ops(data<K, M> *d) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	typename ft::map<K, M>::reverse_iterator	fti;
+	typename std::map<K, M>::reverse_iterator	stdi;
+
+	create_map_empty_size(std, ft, 0, 5);
+	testing_on("radom filled map size: " << std->size());
+	testing_on("i = m.rbegin()");
+	fti = ft->rbegin();
+	stdi = std->rbegin();
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("(*i).m", (*stdi).second, (*fti).second);
+	comp((*stdi).second == (*fti).second);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		irtest_val_assign(data<K, M> *d) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	typename ft::map<K, M>::reverse_iterator	fti;
+	typename std::map<K, M>::reverse_iterator	stdi;
+
+	create_map_empty_size(std, ft, 0, 5);
+	testing_on("radom filled map size: " << std->size());
+	testing("i = m.rbegin()");
+	fti = ft->rbegin();
+	stdi = std->rbegin();
+	testing("*i.m = 1");
+	(*fti).second = 1;
+	(*stdi).second = 1;
+	
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		irtest_incr_decr(data<K, M> *d) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	typename ft::map<K, M>::value_type	*r1;
+	typename std::map<K, M>::value_type	*r2;
+	typename ft::map<K, M>::reverse_iterator	fti;
+	typename std::map<K, M>::reverse_iterator	stdi;
+	typename ft::map<K, M>::reverse_iterator	fti2;
+	typename std::map<K, M>::reverse_iterator	stdi2;
+
+	create_map_empty_size(std, ft, 0, 5);
+	testing_on("radom filled map size: " << std->size());
+	testing_on("i = m.rbegin()");
+	fti = ft->rbegin();
+	stdi = std->rbegin();
+	testing("i2 = i++");
+	fti2 = fti++;
+	stdi2 = stdi++;
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	print_comp("i2->k", stdi2->first, fti2->first);
+	comp(stdi2->first == fti2->first);
+	print_comp("i2->m", stdi2->second, fti2->second);
+	comp(stdi2->second == fti2->second);
+	incr_score(d);
+
+	testing("i2 = ++i");
+	fti2 = ++fti;
+	stdi2 = ++stdi;
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	print_comp("i2->k", stdi2->first, fti2->first);
+	comp(stdi2->first == fti2->first);
+	print_comp("i2->m", stdi2->second, fti2->second);
+	comp(stdi2->second == fti2->second);
+	incr_score(d);
+
+	testing("i2 = i--");
+	fti2 = fti--;
+	stdi2 = stdi--;
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	print_comp("i2->k", stdi2->first, fti2->first);
+	comp(stdi2->first == fti2->first);
+	print_comp("i2->m", stdi2->second, fti2->second);
+	comp(stdi2->second == fti2->second);
+	incr_score(d);
+
+	testing("i2 = --i");
+	fti2 = --fti;
+	stdi2 = --stdi;
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	print_comp("i2->k", stdi2->first, fti2->first);
+	comp(stdi2->first == fti2->first);
+	print_comp("i2->m", stdi2->second, fti2->second);
+	comp(stdi2->second == fti2->second);
+	incr_score(d);
+
+	testing("r = *i++");
+	r1 = new typename ft::map<K, M>::value_type(*fti++);
+	r2 = new typename std::map<K, M>::value_type(*stdi++);
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	print_comp("r->k", r2->first, r1->first);
+	comp(r2->first == r1->first);
+	print_comp("r->m", r2->second, r1->second);
+	comp(r2->second == r1->second);
+	incr_score(d);
+
+	testing("r = *i--");
+	r1 = new typename ft::map<K, M>::value_type(*fti--);
+	r2 = new typename std::map<K, M>::value_type(*stdi--);
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	print_comp("r->k", r2->first, r1->first);
+	comp(r2->first == r1->first);
+	print_comp("r->m", r2->second, r1->second);
+	comp(r2->second == r1->second);
+	incr_score(d);
+
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		test_rev_iterator_class(data<K, M> *d) {
+	print_title("constructors [default|copy]");
+	irtest_constructors(d);
+	print_title("operator= ");
+	irtest_copy_op(d);
+	print_title("operators==|!= ");
+	irtest_comp_ops(d);
+	print_title("operators*|-> ");
+	irtest_deref_ops(d);
+	print_title("value assigment");
+	irtest_val_assign(d);
+	print_title("operator++|-- ");
+	irtest_incr_decr(d);
+}
 /*-----------------------------------ITERATOR ACCESS TESTS-----------------------------------*/
 
 template<class K, class M>
@@ -677,12 +924,43 @@ void		test_begin_end(data<K, M> *d, bool empty) {
 	delete std;
 	delete ft;
 }
+
+
+template<class K, class M>
+void		test_rbegin_rend(data<K, M> *d, bool empty) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	typename ft::map<K, M>::reverse_iterator	fti;
+	typename std::map<K, M>::reverse_iterator	stdi;
+
+	create_map_empty_size(std, ft, empty, 5);
+
+	testing_on("radom filled map size: " << std->size());
+
+	testing("for(i = m.rbegin(); i != m.rend(); i++) *i;");
+	stdi = std->rbegin();
+	for (fti = ft->rbegin(); fti != ft->rend(); fti++) {
+		print_comp("i->first", stdi->first, fti->first);
+		comp(stdi->first == fti->first);
+		print_comp("i->second", stdi->second, fti->second);
+		comp(stdi->second == fti->second);
+		stdi++;
+	}
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
 	
 template<class K, class M>
 void		test_iterator_access(data<K, M> *d) {
-	print_title("insert [single]");
+	print_title("begin end");
 	test_begin_end(d, 0);
 	test_begin_end(d, 1);
+	print_title("rbegin rend");
+	test_rbegin_rend(d, 0);
+	test_rbegin_rend(d, 1);
 }
 
 /*-----------------------------------CAPACITY TESTS-----------------------------------*/
@@ -941,10 +1219,10 @@ void		do_tests(void) {
 
 	print_group_title("CONSTRUCTORS");
 	test_constructors(d);
-	/* print_group_title("ITERATOR CLASS"); */
-	/* test_iterator_class(d); */
-	/* print_group_title("REVERSE ITERATOR CLASS"); */
-	/* test_rev_iterator_class(d); */
+	print_group_title("ITERATOR CLASS");
+	test_iterator_class(d);
+	print_group_title("REVERSE ITERATOR CLASS");
+	test_rev_iterator_class(d);
 	print_group_title("ITERATOR ACCESS");
 	test_iterator_access(d);
 	print_group_title("CAPACITY");
@@ -957,8 +1235,8 @@ void		do_tests(void) {
 	/* test_observers(d); */
 	/* print_group_title("OPERATIONS"); */
 	/* test_operations(d); */
-	print_group_title("ITERATOR CLASS");
-	test_iterator_class(d);
+	/* print_group_title("ITERATOR CLASS"); */
+	/* test_iterator_class(d); */
 
 	std::cout << std::endl << GREEN << "pass: " << RESET << d->pass << RED << "\tfail:\t" << RESET << d->fail << std::endl;
 	delete d;

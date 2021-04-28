@@ -102,7 +102,86 @@ namespace ft {
 			pointer					operator->() const { return &(node->data); }
 			reference 				operator*() const { return node->data; }
 
-			/* operator ConstMapBiIterator<node_t, const value_t>() { return node; } */
+			operator MapBiIterator<node_t, const value_t>() { return node; }
+	};
+
+	template<class node_t, class value_t>
+	class MapReverseBiIterator {
+		public:
+			node_t	*node;
+
+			typedef std::bidirectional_iterator_tag			iterator_category;
+			typedef	value_t									value_type;
+			typedef	value_t&								reference;
+			typedef	value_t*								pointer;
+			typedef	ptrdiff_t								difference_type;
+
+			MapReverseBiIterator(node_t* n = NULL) : node(n) {}
+			MapReverseBiIterator(const MapReverseBiIterator& src) { *this = src; }
+			~MapReverseBiIterator(void) {}
+
+			MapReverseBiIterator&		operator=(const MapReverseBiIterator& rhs) {
+				node = rhs.node;
+				return *this;
+			}
+
+
+			MapReverseBiIterator		operator++(int n) {		//i++
+				MapReverseBiIterator	ret(*this);
+
+				(void)n;
+				++(*this);
+				return ret;
+			}
+
+			MapReverseBiIterator		operator--(int n) {		//i--
+				MapReverseBiIterator	ret(*this);
+
+				(void)n;
+				--(*this);
+				return ret;
+			}
+
+			MapReverseBiIterator&		operator++() {			//++i
+				node = node->prev();
+				return *this;
+			}
+
+			MapReverseBiIterator&		operator--() {			//--i
+				node = node->next();
+				return *this;
+			}
+
+			MapReverseBiIterator		operator+(const int& rhs) {			//i + x
+				MapReverseBiIterator	ret(*this);
+
+				if (rhs > 0)
+					for (int i = 0; i < rhs; ++i)
+						++(*this);
+				else if (rhs < 0)
+					for (int i = 0; i > rhs; --i)
+						--(*this);
+				return ret;
+			}
+
+			MapReverseBiIterator		operator-(const int& rhs) {			//i - x
+				MapReverseBiIterator	ret(*this);
+
+				if (rhs > 0)
+					for (int i = 0; i < rhs; ++i)
+						--(*this);
+				else if (rhs < 0)
+					for (int i = 0; i > rhs; --i)
+						++(*this);
+				return ret;
+			}
+
+			bool					operator==(const MapReverseBiIterator& rhs) const { return node == rhs.node; }
+			bool					operator!=(const MapReverseBiIterator& rhs) const { return node != rhs.node; }
+			pointer					operator->() const { return &(node->data); }
+			reference 				operator*() const { return node->data; }
+
+			operator MapReverseBiIterator<node_t, const value_t>() { return node; }
 	};
 /*-------------------------------------------MAP-------------------------------------------*/
 
@@ -208,8 +287,8 @@ template < class Key,											 	// map::key_type
 			typedef typename allocator_type::const_pointer				const_pointer;
 			typedef MapBiIterator<node_type, value_type>				iterator;
 			typedef MapBiIterator<node_type, const value_type>			const_iterator;
-			//typedef ReverseMapBiIterator<node_type, mapped_type>		reverse_iterator:
-			//typedef ReverseMapBiIterator<node_type, const mapped_type>	const_reverse_iterator:
+			typedef MapReverseBiIterator<node_type, value_type>			reverse_iterator;
+			typedef MapReverseBiIterator<node_type, const value_type>	const_reverse_iterator;
 			typedef ptrdiff_t											difference_type;
 			typedef size_t												size_type;
 
@@ -278,6 +357,34 @@ template < class Key,											 	// map::key_type
 
 			const_iterator end() const {
 				return const_iterator(_rend);
+			}
+
+/*	Returns a reverse iterator pointing to the last element in the container (i.e., its reverse beginning).
+ *	Reverse iterators iterate backwards: increasing them moves them towards the beginning of the container.
+ *	rbegin points to the element preceding the one that would be pointed to by member end.	*/
+
+			reverse_iterator 			rbegin() {
+				if (empty())
+					return reverse_iterator(_lend);
+				return reverse_iterator(_rend->parent);
+			}
+
+			const_reverse_iterator		rbegin() const {
+				if (empty())
+					return const_reverse_iterator(_lend);
+				return const_reverse_iterator(_rend->parent);
+			}
+
+/*	Returns a reverse iterator pointing to the theoretical element right before the first element in the 
+ *	map container (which is considered its reverse end).
+ *	The range between map::rbegin and map::rend contains all the elements of the container (in reverse order).	*/
+
+			reverse_iterator rend() {
+				return reverse_iterator(_lend);
+			}
+			
+			const_reverse_iterator rend() const {
+				return const_reverse_iterator(_lend);
 			}
 
 /*-------------------------------------------CAPACITY-------------------------------------------*/

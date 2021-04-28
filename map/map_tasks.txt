@@ -1,59 +1,47 @@
 https://www.cs.usfca.edu/~galles/visualization/BTree.html
 
-plan:
-empty constructor		done
-insert					done
-iterator :				done
-	i++					done
-	*i					done
-begin					done
-end						done
-
-fill in rest of this sheet
-
 (constructor)	Construct map (public member function )             default: done|tested  range:  copy:  
-(destructor)	Map destructor (public member function )            :done|tested,	but still some leaks
+(destructor)	Map destructor (public member function )            : done|tested,	but still some leaks
 operator=		Copy container content (public member function )    
 
 Iterator class:
 forwards iterator
-	(constructor)	default: done|tested	copy:	done|tested
-	(destructor)	:done|tested
-	operator=		:done|tested
-	operator==		:done|tested
-	operator!=		:done|tested
-	operator*		:done|tested
-	operator->		:done|tested
-	assignable val (*i = val)	:done|tested
-	operator++		:done|tested
-	++operator		:done|tested
-	*a++ (dereference, i++)		:done|tested
-	operator--		:done|tested
-	--operator		:done|tested
-	*a-- (dereference, i--)		:done|tested
+	(constructor)	default: done|tested	copy: done|tested
+	(destructor)	: done|tested
+	operator=		: done|tested
+	operator==		: done|tested
+	operator!=		: done|tested
+	operator*		: done|tested
+	operator->		: done|tested
+	assignable val (*i = val)	: done|tested
+	operator++		: done|tested
+	++operator		: done|tested
+	*a++ (dereference, i++)		: done|tested
+	operator--		: done|tested
+	--operator		: done|tested
+	*a-- (dereference, i--)		: done|tested
 	
 reverse iterator
-	(constructor)	default:	copy:	
-	(destructor)	:
-	operator=		:
-	operator==		:
-	operator!=		:
-	operator*		:
-	operator->		:
-	assignable val (*i = val)	:
-	operator++		:
-	++operator		:
-	*a++ (dereference, i++)		:
-	operator--		:
-	--operator		:
-	*a-- (dereference, i--)		:
-	
+	(constructor)	default: done|tested	copy: done|tested
+	(destructor)	: done|tested
+	operator=		: done|tested
+	operator==		: done|tested
+	operator!=		: done|tested
+	operator*		: done|tested
+	operator->		: done|tested
+	assignable val (*i = val)	: done|tested
+	operator++		: done|tested
+	++operator		: done|tested
+	*a++ (dereference, i++)		: done|tested
+	operator--		: done|tested
+	--operator		: done|tested
+	*a-- (dereference, i--)		: done|tested
 	
 Iterator access:
 begin		    Return iterator to beginning (public member function )                      : done|tested
 end		        Return iterator to end (public member function )                            : done|tested
-rbegin		    Return reverse iterator to reverse beginning (public member function )      :
-rend		    Return reverse iterator to reverse end (public member function )			:
+rbegin		    Return reverse iterator to reverse beginning (public member function )      : done|tested
+rend		    Return reverse iterator to reverse end (public member function )			: done|tested
 
 Capacity:
 empty		    Test whether container is empty (public member function )	: done|tested
