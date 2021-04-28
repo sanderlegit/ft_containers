@@ -118,16 +118,13 @@ template < class Key,											 	// map::key_type
 			class Node {
 				public:
 					typedef	std::pair<const key_t, map_t>	pair;
-					typedef	pair*							pointer;
 
-					Node(void) : data(NULL), left(NULL), right(NULL), parent(NULL) {}
+					Node(void) : data(), left(NULL), right(NULL), parent(NULL) {}
 					Node(key_t key_, map_t map_, Node *left_ = NULL, Node *right_ = NULL, Node* prev_ = NULL)
-							: data(new pair(key_, map_)), left(left_), right(right_), parent(prev_) {}
+							: data(pair(key_, map_)), left(left_), right(right_), parent(prev_) {}
 					Node(pair data_, Node *left_ = NULL, Node *right_ = NULL, Node* prev_ = NULL)
-							: data(new pair(data_)), left(left_), right(right_), parent(prev_) {}
-					~Node(void) {
-						delete data;
-					}
+							: data(pair(data_)), left(left_), right(right_), parent(prev_) {}
+					~Node(void) {}
 
 					Node&		operator=(const Node& rhs) {
 						if (this != rhs) {
@@ -171,7 +168,7 @@ template < class Key,											 	// map::key_type
 						return ptr;
 					}
 
-					pointer		data;
+					pair		data;
 					Node		*left;
 					Node		*right;
 					Node		*parent;

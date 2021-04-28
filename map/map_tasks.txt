@@ -24,13 +24,13 @@ forwards iterator
 	operator!=		:done|tested
 	operator*		:done|tested
 	operator->		:done|tested
-	assignable val (*i = val)	:
-	operator++		:
-	++operator		:
-	*a++ (dereference, i++)		:
-	operator--		:
-	--operator		:
-	*a-- (dereference, i--)		:
+	assignable val (*i = val)	:done|tested
+	operator++		:done|tested
+	++operator		:done|tested
+	*a++ (dereference, i++)		:done|tested
+	operator--		:done|tested
+	--operator		:done|tested
+	*a-- (dereference, i--)		:done|tested
 	
 reverse iterator
 	(constructor)	default:	copy:	

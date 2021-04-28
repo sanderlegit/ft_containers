@@ -522,15 +522,113 @@ void		itest_val_assign(data<K, M> *d) {
 	testing("i = m.begin()");
 	fti = ft->begin();
 	stdi = std->begin();
-	testing("*i = pair(1, 1)");
-	*fti = typename ft::map<K, M>::value_type(1, 1);
-	*stdi = typename std::map<K, M>::value_type(1, 1);
+	testing("*i.m = 1");
+	(*fti).second = 1;
+	(*stdi).second = 1;
 	
 	print_comp("i->k", stdi->first, fti->first);
 	comp(stdi->first == fti->first);
 	print_comp("i->m", stdi->second, fti->second);
 	comp(stdi->second == fti->second);
 	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		itest_incr_decr(data<K, M> *d) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	typename ft::map<K, M>::value_type	*r1;
+	typename std::map<K, M>::value_type	*r2;
+	typename ft::map<K, M>::iterator	fti;
+	typename std::map<K, M>::iterator	stdi;
+	typename ft::map<K, M>::iterator	fti2;
+	typename std::map<K, M>::iterator	stdi2;
+
+	create_map_empty_size(std, ft, 0, 5);
+	testing_on("radom filled map size: " << std->size());
+	testing_on("i = m.begin()");
+	fti = ft->begin();
+	stdi = std->begin();
+	testing("i2 = i++");
+	fti2 = fti++;
+	stdi2 = stdi++;
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	print_comp("i2->k", stdi2->first, fti2->first);
+	comp(stdi2->first == fti2->first);
+	print_comp("i2->m", stdi2->second, fti2->second);
+	comp(stdi2->second == fti2->second);
+	incr_score(d);
+
+	testing("i2 = ++i");
+	fti2 = ++fti;
+	stdi2 = ++stdi;
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	print_comp("i2->k", stdi2->first, fti2->first);
+	comp(stdi2->first == fti2->first);
+	print_comp("i2->m", stdi2->second, fti2->second);
+	comp(stdi2->second == fti2->second);
+	incr_score(d);
+
+	testing("i2 = i--");
+	fti2 = fti--;
+	stdi2 = stdi--;
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	print_comp("i2->k", stdi2->first, fti2->first);
+	comp(stdi2->first == fti2->first);
+	print_comp("i2->m", stdi2->second, fti2->second);
+	comp(stdi2->second == fti2->second);
+	incr_score(d);
+
+	testing("i2 = --i");
+	fti2 = --fti;
+	stdi2 = --stdi;
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	print_comp("i2->k", stdi2->first, fti2->first);
+	comp(stdi2->first == fti2->first);
+	print_comp("i2->m", stdi2->second, fti2->second);
+	comp(stdi2->second == fti2->second);
+	incr_score(d);
+
+	testing("r = *i++");
+	r1 = new typename ft::map<K, M>::value_type(*fti++);
+	r2 = new typename std::map<K, M>::value_type(*stdi++);
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	print_comp("r->k", r2->first, r1->first);
+	comp(r2->first == r1->first);
+	print_comp("r->m", r2->second, r1->second);
+	comp(r2->second == r1->second);
+	incr_score(d);
+
+	testing("r = *i--");
+	r1 = new typename ft::map<K, M>::value_type(*fti--);
+	r2 = new typename std::map<K, M>::value_type(*stdi--);
+	print_comp("i->k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("i->m", stdi->second, fti->second);
+	comp(stdi->second == fti->second);
+	print_comp("r->k", r2->first, r1->first);
+	comp(r2->first == r1->first);
+	print_comp("r->m", r2->second, r1->second);
+	comp(r2->second == r1->second);
+	incr_score(d);
+
 	delete std;
 	delete ft;
 }
@@ -547,8 +645,8 @@ void		test_iterator_class(data<K, M> *d) {
 	itest_deref_ops(d);
 	print_title("value assigment");
 	itest_val_assign(d);
-	/* print_title("operator++|-- "); */
-	/* itest_incr_decr(d); */
+	print_title("operator++|-- ");
+	itest_incr_decr(d);
 }
 /*-----------------------------------REVERSE ITERATOR CLASS TESTS-----------------------------------*/
 /*-----------------------------------ITERATOR ACCESS TESTS-----------------------------------*/
