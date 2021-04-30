@@ -312,17 +312,31 @@ template < class Key,											 	// map::key_type
  *	element constructed from its corresponding element in that range.	*/
 
 			template <class InputIterator>
-			map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type());
+			map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _head(NULL), _lend(new node_type()), _rend(new node_type()), _size(0), _kcomp(comp), _alloc(alloc) {
+				insert(first, last);
+			}
 
 /*	copy constructor : Constructs a container with a copy of each of the elements in x.	*/
 
-			map (const map& x);
+			map (const map& x) : _head(NULL), _lend(new node_type()), _rend(new node_type()), _size(0), _kcomp(key_compare()), _alloc(allocator_type()) {
+				insert(x.begin(), x.end());
+			}
 
 			~map(void) {
 				_rdel(_head);
 			} 
 
 /*-------------------------------------------OPERATORS-------------------------------------------*/
+
+/*	Assigns new contents to the container, replacing its current content.	*/
+
+			map&						operator= (const map& x) {
+				_rdel(_head);
+				_lend = new node_type();
+				_rend = new node_type();
+				insert(x.begin(), x.end());
+				return *this;
+			}
 
 /*-------------------------------------------ITERATORS ACCESS-------------------------------------------*/
 
@@ -442,7 +456,7 @@ template < class Key,											 	// map::key_type
 					while (!placed) {
 						if (val.first == ptr->data.first) {
 							break;
-						} else if (_kcomp(val.first, ptr->data.first)) {	//TODO use _keycomp
+						} else if (_kcomp(val.first, ptr->data.first)) {
 							if (ptr->left && ptr->left != _lend)
 								ptr = ptr->left;
 							else {
@@ -473,7 +487,12 @@ template < class Key,											 	// map::key_type
             }
 
 			template <class InputIterator>
-			void						insert (InputIterator first, InputIterator last);
+			void						insert (InputIterator first, InputIterator last) {
+				while (first != last) {
+					insert(*first);
+					first++;
+				}
+			}
 
 /*-------------------------------------------NON-STL FUNCTIONS-------------------------------------------*/
 		private:
@@ -513,6 +532,7 @@ template < class Key,											 	// map::key_type
 			}
 
 			void					_rdel(node_type *me) {
+				_size = 0;
 				if (me) {
 					if (me->left)
 						_rdel(me->left);
@@ -520,6 +540,7 @@ template < class Key,											 	// map::key_type
 						_rdel(me->right);
 					delete me;
 				}
+				_head = NULL;
 			}
 
 	};

@@ -395,9 +395,85 @@ void		test_empty_constructor(data<K, M> *d) {
 }
 
 template<class K, class M>
+void		test_range_constructor(data<K, M> *d, bool empty) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	std::map<K, M>		*stdsrc = NULL;
+	ft::map<K, M>		*ftsrc = NULL;
+
+	create_map(stdsrc, ftsrc, empty);
+	testing_on("src: random filled map size: " << stdsrc->size());
+	testing("m = new map(src.begin(), src.end())");
+	std = new std::map<K, M>(stdsrc->begin(), stdsrc->end());
+	ft = new ft::map<K, M>(ftsrc->begin(), ftsrc->end());
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+	delete stdsrc;
+	delete ftsrc;
+}
+
+template<class K, class M>
+void		test_copy_constructor(data<K, M> *d, bool empty) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	std::map<K, M>		*stdsrc = NULL;
+	ft::map<K, M>		*ftsrc = NULL;
+
+	create_map(stdsrc, ftsrc, empty);
+	testing_on("src: random filled map size: " << stdsrc->size());
+	testing("m = new map(src)");
+	std = new std::map<K, M>(*stdsrc);
+	ft = new ft::map<K, M>(*ftsrc);
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+	delete stdsrc;
+	delete ftsrc;
+}
+
+template<class K, class M>
+void		test_operator_assign(data<K, M> *d, bool empty, bool emptysrc) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	std::map<K, M>		*stdsrc = NULL;
+	ft::map<K, M>		*ftsrc = NULL;
+
+	create_map(std, ft, empty);
+	testing_on("dest: random filled map size: " << std->size());
+	create_map(stdsrc, ftsrc, emptysrc);
+	testing_on("src: random filled map size: " << stdsrc->size());
+	testing("m = src");
+	*std = *stdsrc;
+	*ft = *ftsrc;
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+	delete stdsrc;
+	delete ftsrc;
+}
+
+template<class K, class M>
 void		test_constructors(data<K, M> *d) {
 	print_title("constructor [empty]");
 	test_empty_constructor(d);
+	print_title("constructor [range]");
+	test_range_constructor(d, 0);
+	test_range_constructor(d, 1);
+	print_title("constructor [copy]");
+	test_copy_constructor(d, 0);
+	test_copy_constructor(d, 1);
+	print_title("operator= ");
+	test_operator_assign(d, 0, 0);
+	test_operator_assign(d, 0, 1);
+	test_operator_assign(d, 1, 0);
+	test_operator_assign(d, 1, 1);
 }
 
 /*-----------------------------------ITERATOR CLASS TESTS-----------------------------------*/
@@ -410,7 +486,7 @@ void		itest_constructors(data<K, M> *d) {
 	typename std::map<K, M>::iterator	*stdi;
 
 	create_map_empty_size(std, ft, 0, 5);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 
 	testing("i = new iterator()");
 	fti = new typename ft::map<K, M>::iterator();
@@ -442,7 +518,7 @@ void		itest_copy_op(data<K, M> *d) {
 	typename std::map<K, M>::iterator	stdi;
 
 	create_map_empty_size(std, ft, 0, 5);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 	testing("i = m.begin()");
 	fti = ft->begin();
 	stdi = std->begin();
@@ -465,7 +541,7 @@ void		itest_comp_ops(data<K, M> *d) {
 	typename std::map<K, M>::iterator	stdi2;
 
 	create_map_empty_size(std, ft, 0, 5);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 	testing_on("i = m.begin()");
 	testing_on("i2 = m.begin()");
 	fti = ft->begin();
@@ -497,7 +573,7 @@ void		itest_deref_ops(data<K, M> *d) {
 	typename std::map<K, M>::iterator	stdi;
 
 	create_map_empty_size(std, ft, 0, 5);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 	testing_on("i = m.begin()");
 	fti = ft->begin();
 	stdi = std->begin();
@@ -518,7 +594,7 @@ void		itest_val_assign(data<K, M> *d) {
 	typename std::map<K, M>::iterator	stdi;
 
 	create_map_empty_size(std, ft, 0, 5);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 	testing("i = m.begin()");
 	fti = ft->begin();
 	stdi = std->begin();
@@ -546,8 +622,14 @@ void		itest_incr_decr(data<K, M> *d) {
 	typename ft::map<K, M>::iterator	fti2;
 	typename std::map<K, M>::iterator	stdi2;
 
-	create_map_empty_size(std, ft, 0, 5);
-	testing_on("radom filled map size: " << std->size());
+	while (1) {
+		create_map_empty_size(std, ft, 0, 10);
+		if (std->size() > 5)
+			break;
+		delete std;
+		delete ft;
+	}
+	testing_on("random filled map size: " << std->size());
 	testing_on("i = m.begin()");
 	fti = ft->begin();
 	stdi = std->begin();
@@ -658,7 +740,7 @@ void		irtest_constructors(data<K, M> *d) {
 	typename std::map<K, M>::reverse_iterator	*stdi;
 
 	create_map_empty_size(std, ft, 0, 5);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 
 	testing("i = new reverse_iterator()");
 	fti = new typename ft::map<K, M>::reverse_iterator();
@@ -690,7 +772,7 @@ void		irtest_copy_op(data<K, M> *d) {
 	typename std::map<K, M>::reverse_iterator	stdi;
 
 	create_map_empty_size(std, ft, 0, 5);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 	testing("i = m.rbegin()");
 	fti = ft->rbegin();
 	stdi = std->rbegin();
@@ -713,7 +795,7 @@ void		irtest_comp_ops(data<K, M> *d) {
 	typename std::map<K, M>::reverse_iterator	stdi2;
 
 	create_map_empty_size(std, ft, 0, 5);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 	testing_on("i = m.rbegin()");
 	testing_on("i2 = m.rbegin()");
 	fti = ft->rbegin();
@@ -745,7 +827,7 @@ void		irtest_deref_ops(data<K, M> *d) {
 	typename std::map<K, M>::reverse_iterator	stdi;
 
 	create_map_empty_size(std, ft, 0, 5);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 	testing_on("i = m.rbegin()");
 	fti = ft->rbegin();
 	stdi = std->rbegin();
@@ -766,7 +848,7 @@ void		irtest_val_assign(data<K, M> *d) {
 	typename std::map<K, M>::reverse_iterator	stdi;
 
 	create_map_empty_size(std, ft, 0, 5);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 	testing("i = m.rbegin()");
 	fti = ft->rbegin();
 	stdi = std->rbegin();
@@ -794,8 +876,14 @@ void		irtest_incr_decr(data<K, M> *d) {
 	typename ft::map<K, M>::reverse_iterator	fti2;
 	typename std::map<K, M>::reverse_iterator	stdi2;
 
-	create_map_empty_size(std, ft, 0, 5);
-	testing_on("radom filled map size: " << std->size());
+	while (1) {
+		create_map_empty_size(std, ft, 0, 10);
+		if (std->size() > 5)
+			break;
+		delete std;
+		delete ft;
+	}
+	testing_on("random filled map size: " << std->size());
 	testing_on("i = m.rbegin()");
 	fti = ft->rbegin();
 	stdi = std->rbegin();
@@ -907,7 +995,7 @@ void		test_begin_end(data<K, M> *d, bool empty) {
 
 	create_map_empty_size(std, ft, empty, 5);
 
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 
 	testing("for(i = m.begin(); i != m.end(); i++) *i;");
 	stdi = std->begin();
@@ -935,7 +1023,7 @@ void		test_rbegin_rend(data<K, M> *d, bool empty) {
 
 	create_map_empty_size(std, ft, empty, 5);
 
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 
 	testing("for(i = m.rbegin(); i != m.rend(); i++) *i;");
 	stdi = std->rbegin();
@@ -973,7 +1061,7 @@ void		test_empty(data<K, M> *d, bool empty) {
 	bool				r2;
 
 	create_map(std, ft, empty);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 
 	r1 = std->empty();
 	r2 = ft->empty();
@@ -994,7 +1082,7 @@ void		test_size(data<K, M> *d, bool empty) {
 	typename ft::map<K, M>::size_type		r2;
 
 	create_map(std, ft, empty);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 
 	r1 = std->size();
 	r2 = ft->size();
@@ -1016,7 +1104,7 @@ void		test_max_size(data<K, M> *d) {
 	typename ft::map<K, M>::size_type		r2;
 
 	create_map(std, ft, 1);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 
 	r1 = std->max_size();
 	r2 = ft->max_size();
@@ -1054,7 +1142,7 @@ void		test_access_op(data<K, M> *d, bool empty) {
 
 
 	create_map(std, ft, empty);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 
 	test_size = 5;
 	for (int i = 0; i < test_size; i++) {
@@ -1106,7 +1194,7 @@ void		test_insert_single(data<K, M> *d, bool empty) {
 	typename std::pair<typename ft::map<K, M>::iterator, bool>	r2;
 
 	create_map(std, ft, empty);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 
 	size = rand() % 5;
 	for (int i = 0; i < size; i++) {
@@ -1140,7 +1228,6 @@ void		test_insert_single(data<K, M> *d, bool empty) {
 	delete ft;
 }
 
-
 template<class K, class M>
 void		test_insert_hint(data<K, M> *d) {
 	std::map<K, M>		*std = NULL;
@@ -1153,7 +1240,7 @@ void		test_insert_hint(data<K, M> *d) {
 	typename ft::map<K, M>::iterator	fti;
 
 	create_map(std, ft, 0);
-	testing_on("radom filled map size: " << std->size());
+	testing_on("random filled map size: " << std->size());
 
 	size = rand() % 5;
 	for (int i = 0; i < size; i++) {
@@ -1197,7 +1284,29 @@ void		test_insert_hint(data<K, M> *d) {
 	delete ft;
 }
 
+template<class K, class M>
+void		test_insert_range(data<K, M> *d, bool empty, bool emptysrc) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	std::map<K, M>		*stdsrc = NULL;
+	ft::map<K, M>		*ftsrc = NULL;
 
+	create_map(std, ft, empty);
+	testing_on("dest: random filled map size: " << std->size());
+	create_map(stdsrc, ftsrc, emptysrc);
+	testing_on("src: random filled map size: " << stdsrc->size());
+
+	testing("m.insert(src.begin(), src.end())");
+	std->insert(stdsrc->begin(), stdsrc->end());
+	ft->insert(ftsrc->begin(), ftsrc->end());
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+	delete stdsrc;
+	delete ftsrc;
+}
 
 template<class K, class M>
 void		test_modifiers(data<K, M> *d) {
@@ -1206,6 +1315,11 @@ void		test_modifiers(data<K, M> *d) {
 	test_insert_single(d, 1);
 	print_title("insert [hint]");
 	test_insert_hint(d);
+	print_title("insert [range]");
+	test_insert_range(d, 0, 0);
+	test_insert_range(d, 0, 1);
+	test_insert_range(d, 1, 0);
+	test_insert_range(d, 1, 1);
 }
 /*-----------------------------------OBSERVERS TESTS-----------------------------------*/
 /*-----------------------------------OPERATIONS TESTS-----------------------------------*/

@@ -1,8 +1,10 @@
 https://www.cs.usfca.edu/~galles/visualization/BTree.html
 
-(constructor)	Construct map (public member function )             default: done|tested  range:  copy:  
-(destructor)	Map destructor (public member function )            : done|tested,	but still some leaks
-operator=		Copy container content (public member function )    
+CHECK LEAKS
+
+(constructor)	Construct map (public member function )             default: done|tested  range: done|tested  copy:  done|tested
+(destructor)	Map destructor (public member function )            : done|tested
+operator=		Copy container content (public member function )    : done|tested
 
 Iterator class:
 forwards iterator
@@ -52,7 +54,7 @@ Element access:
 operator[]	    Access element (public member function )					: done|tested
 
 Modifiers:
-insert		    Insert elements (public member function )		single: done|tested	hint: done|tested	range:
+insert		    Insert elements (public member function )		single: done|tested	hint: done|tested	range: done|tested
 erase		    Erase elements (public member function )		
 swap		    Swap content (public member function )
 clear		    Clear content (public member function )
@@ -67,3 +69,16 @@ count		    Count elements with a specific key (public member function )
 lower_bound		Return iterator to lower bound (public member function )
 upper_bound		Return iterator to upper bound (public member function )
 equal_range		Get range of equal elements (public member function )
+
+
+find deletenode to erase
+	find next highest node
+		if right: traverse right
+			while left: traverse left
+		else if left: traverse left
+			while right: traverse right
+	remove node connections
+	delete deletenode
+	add node connections
+
+		
