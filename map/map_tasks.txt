@@ -56,8 +56,8 @@ operator[]	    Access element (public member function )					: done|tested
 Modifiers:
 insert		    Insert elements (public member function )	single: done|tested	hint: done|tested	range: done|tested
 erase		    Erase elements (public member function )		
-swap		    Swap content (public member function )
-clear		    Clear content (public member function )		: 
+swap		    Swap content (public member function )		: done|tested
+clear		    Clear content (public member function )		: done|tested
 
 Observers:
 key_comp	    Return key comparison object (public member function )		: 

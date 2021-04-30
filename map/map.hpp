@@ -331,9 +331,7 @@ template < class Key,											 	// map::key_type
 /*	Assigns new contents to the container, replacing its current content.	*/
 
 			map&						operator= (const map& x) {
-				_rdel(_head);
-				_lend = new node_type();
-				_rend = new node_type();
+				clear();
 				insert(x.begin(), x.end());
 				return *this;
 			}
@@ -492,6 +490,40 @@ template < class Key,											 	// map::key_type
 					insert(*first);
 					first++;
 				}
+			}
+/*	Exchanges the content of the container by the content of x, which is another map of the same type. 
+ *	Sizes may differ.
+ *	After the call to this member function, the elements in this container are those which were in x before the 
+ *	call, and the elements of x are those which were in this. All iterators, references and pointers remain valid
+ *	for the swapped objects	*/
+
+			void						swap (map& x) {
+				node_type	*ptr;
+				size_type	tmpsize;
+
+				ptr = x._head;
+				x._head = _head;
+				_head = ptr;
+
+				tmpsize = x._size;
+				x._size = _size;
+				_size = tmpsize;
+
+				ptr = x._lend;
+				x._lend = _lend;
+				_lend = ptr;
+
+				ptr = x._rend;
+				x._rend = _rend;
+				_rend = ptr;
+			}
+
+/*	Removes all elements from the map container (which are destroyed), leaving the container with a size of 0.	*/
+
+			void						clear() {
+				_rdel(_head);
+				_lend = new node_type();
+				_rend = new node_type();
 			}
 
 /*-------------------------------------------NON-STL FUNCTIONS-------------------------------------------*/

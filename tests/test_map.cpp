@@ -1309,6 +1309,48 @@ void		test_insert_range(data<K, M> *d, bool empty, bool emptysrc) {
 }
 
 template<class K, class M>
+void		test_swap(data<K, M> *d, bool empty, bool emptysrc) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+	std::map<K, M>		*stdsrc = NULL;
+	ft::map<K, M>		*ftsrc = NULL;
+
+	create_map(std, ft, empty);
+	testing_on("a: random filled map size: " << std->size());
+	create_map(stdsrc, ftsrc, emptysrc);
+	testing_on("b: random filled map size: " << stdsrc->size());
+
+	testing("a.swap(b)");
+	std->swap(*stdsrc);
+	ft->swap(*ftsrc);
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+	delete stdsrc;
+	delete ftsrc;
+}
+
+template<class K, class M>
+void		test_clear(data<K, M> *d, bool empty) {
+	std::map<K, M>		*std = NULL;
+	ft::map<K, M>		*ft = NULL;
+
+	create_map(std, ft, empty);
+	testing_on("random filled map size: " << std->size());
+
+	testing("m.clear()");
+	std->clear();
+	ft->clear();
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
 void		test_modifiers(data<K, M> *d) {
 	print_title("insert [single]");
 	test_insert_single(d, 0);
@@ -1320,6 +1362,15 @@ void		test_modifiers(data<K, M> *d) {
 	test_insert_range(d, 0, 1);
 	test_insert_range(d, 1, 0);
 	test_insert_range(d, 1, 1);
+	print_title("erase");
+	print_title("swap");
+	test_swap(d, 0, 0);
+	test_swap(d, 0, 1);
+	test_swap(d, 1, 0);
+	test_swap(d, 1, 1);
+	print_title("clear");
+	test_clear(d, 0);
+	test_clear(d, 1);
 }
 /*-----------------------------------OBSERVERS TESTS-----------------------------------*/
 /*-----------------------------------OPERATIONS TESTS-----------------------------------*/
