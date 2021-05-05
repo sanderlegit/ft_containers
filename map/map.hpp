@@ -78,10 +78,12 @@ namespace ft {
 
 				if (rhs > 0)
 					for (int i = 0; i < rhs; ++i)
-						++(*this);
+						/* ++(*this); */
+						++ret;
 				else if (rhs < 0)
 					for (int i = 0; i > rhs; --i)
-						--(*this);
+						/* --(*this); */
+						--ret;
 				return ret;
 			}
 
@@ -90,10 +92,12 @@ namespace ft {
 
 				if (rhs > 0)
 					for (int i = 0; i < rhs; ++i)
-						--(*this);
+						/* --(*this); */
+						++ret;
 				else if (rhs < 0)
 					for (int i = 0; i > rhs; --i)
-						++(*this);
+						/* ++(*this); */
+						--ret;
 				return ret;
 			}
 
@@ -157,10 +161,12 @@ namespace ft {
 
 				if (rhs > 0)
 					for (int i = 0; i < rhs; ++i)
-						++(*this);
+						/* ++(*this); */
+						++ret;
 				else if (rhs < 0)
 					for (int i = 0; i > rhs; --i)
-						--(*this);
+						/* --(*this); */
+						--ret;
 				return ret;
 			}
 
@@ -169,10 +175,12 @@ namespace ft {
 
 				if (rhs > 0)
 					for (int i = 0; i < rhs; ++i)
-						--(*this);
+						/* --(*this); */
+						--ret;
 				else if (rhs < 0)
 					for (int i = 0; i > rhs; --i)
-						++(*this);
+						/* ++(*this); */
+						++ret;
 				return ret;
 			}
 
@@ -606,6 +614,40 @@ template < class Key,											 	// map::key_type
 			}
 
 			const_iterator				upper_bound (const key_type& k) const;
+
+/*	Returns the bounds of a range that includes all the elements in the container which have a key 
+ *	equivalent to k.
+ *	Because the elements in a map container have unique keys, the range returned will contain a 
+ *	single element at most.
+ *	If no matches are found, the range returned has a length of zero, with both iterators pointing 
+ *	to the first element that has a key considered to go after k according to the container's 
+ *	internal comparison object (key_comp).
+ *	Two keys are considered equivalent if the container's comparison object returns false reflexively
+ *	(i.e., no matter the order in which the keys are passed as arguments).	*/
+
+			std::pair<iterator, iterator>             equal_range (const key_type& k) {
+				for (iterator i = begin(); i != end(); i++) {
+					if (!_kcomp(i->first, k) && !_kcomp(k, i->first)) {
+						return std::pair<iterator, iterator>(i, i + 1);
+					}
+					if (!_kcomp(i->first, k)) {
+						return std::pair<iterator, iterator>(i, i);
+					}
+				}
+				return std::pair<iterator, iterator>(end(), end());
+			}
+
+			std::pair<const_iterator,const_iterator> equal_range (const key_type& k) const {
+				for (iterator i = begin(); i != end(); i++) {
+					if (!_kcomp(i->first, k) && !_kcomp(k, i->first)) {
+						return std::pair<iterator, iterator>(i, i + 1);
+					}
+					if (!_kcomp(i->first, k)) {
+						return std::pair<iterator, iterator>(i, i);
+					}
+				}
+				return std::pair<iterator, iterator>(end(), end());
+			}
 
 /*-------------------------------------------NON-STL FUNCTIONS-------------------------------------------*/
 		private:

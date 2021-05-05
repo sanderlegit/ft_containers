@@ -340,7 +340,7 @@ pair<K, M>		create_map_internal(std::map<K, M> *std, ft::map<K, M> *ft, bool emp
 	ft = new ft::map<K, M>();
 	for (size_t i = 0; i < size; i++) {
 		val = randomize<M>();
-		key = rand() % size;
+		key = rand() % (size * 2);
 		std->insert(std::pair<K, M>(key, val));
 		ft->insert(std::pair<K, M>(key, val));
 	}
@@ -358,7 +358,7 @@ pair<K, M>		create_map_size_internal(std::map<K, M> *std, ft::map<K, M> *ft, siz
 	std = new std::map<K, M>();
 	ft = new ft::map<K, M>();
 	for (size_t i = 0; i < size; i++) {
-		key = rand() % size;
+		key = rand() % (size * 2);
 		val = randomize<M>();
 		std->insert(std::pair<K, M>(key, val));
 		ft->insert(std::pair<K, M>(key, val));
@@ -1582,6 +1582,73 @@ void		test_upper_bound(data<K, M> *d) {
 	delete ft;
 }
 
+template<class K, class M>
+void		test_equal_range(data<K, M> *d) {
+	std::map<K, M>						*std = NULL;
+	ft::map<K, M>						*ft = NULL;
+	typename std::map<K, M>::iterator	stdi;
+	typename ft::map<K, M>::iterator	fti;
+	std::pair<typename std::map<K, M>::iterator,typename std::map<K, M>::iterator>	r1;
+	std::pair<typename ft::map<K, M>::iterator,typename ft::map<K, M>::iterator>	r2;
+	int									offset;
+	K									key;
+
+	create_map(std, ft, 1);
+	testing_on("random filled map size: " << std->size());
+
+	key = randomize<K>();
+	testing("ret = m.equal_range(" << key << ")");
+	r1 = std->equal_range(key);
+	r2 = ft->equal_range(key);
+	print_comp("r.i == end()", r1.first == std->end(), r2.first == ft->end());
+	comp((r1.first == std->end()) == (r2.first == ft->end()));
+	print_comp("r.i2 == end()", r1.second == std->end(), r2.second == ft->end());
+	comp((r1.second == std->end()) == (r2.second == ft->end()));
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_map(std, ft, 0);
+	offset = rand() % std->size();
+	testing("ret = m.equal_range((m.begin() + " << offset << ").k)");
+	stdi = std->begin();
+	fti = ft->begin();
+	for (int i = 0; i < offset; i++) {
+		stdi++;
+		fti++;
+	}
+	r1 = std->equal_range(stdi->first);
+	r2 = ft->equal_range(fti->first);
+	print_comp("r.i.k", r1.first->first, r2.first->first);
+	comp(r1.first->first == r2.first->first);
+	print_comp("r.i.m", r1.first->second, r2.first->second);
+	comp(r1.first->second == r2.first->second);
+	print_comp("r.i2.k", r1.second->first, r2.second->first);
+	comp(r1.second->first == r2.second->first);
+	print_comp("r.i2.m", r1.second->second, r2.second->second);
+	comp(r1.second->second == r2.second->second);
+
+	testing("ret = m.equal_range((m.begin() + " << offset << ").k - 1)");
+	r1 = std->equal_range(stdi->first - 1);
+	r2 = ft->equal_range(fti->first - 1);
+	print_comp("r.i.k", r1.first->first, r2.first->first);
+	comp(r1.first->first == r2.first->first);
+	print_comp("r.i.m", r1.first->second, r2.first->second);
+	comp(r1.first->second == r2.first->second);
+	print_comp("r.i2.k", r1.second->first, r2.second->first);
+	comp(r1.second->first == r2.second->first);
+	print_comp("r.i2.m", r1.second->second, r2.second->second);
+	comp(r1.second->second == r2.second->second);
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+
 template<class k, class m>
 void		test_operations(data<k, m> *d) {
 	print_title("find");
@@ -1594,6 +1661,8 @@ void		test_operations(data<k, m> *d) {
 	test_lower_bound(d);
 	print_title("upper_bound");
 	test_upper_bound(d);
+	print_title("equal_range");
+	test_equal_range(d);
 }
 
 /*-----------------------------------MAIN-----------------------------------*/
