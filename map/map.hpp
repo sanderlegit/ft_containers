@@ -427,6 +427,7 @@ template < class Key,											 	// map::key_type
  *	with that key and returns a reference to its mapped value. Notice that this always increases the 
  *	container size by one, even if no mapped value is assigned to the element (the element is constructed 
  *	using its default constructor).	*/	
+
 			mapped_type&	operator[] (const key_type& k) {
 				return  (*((insert(value_type(k, mapped_type()))).first)).second;
 			}
@@ -491,6 +492,7 @@ template < class Key,											 	// map::key_type
 					first++;
 				}
 			}
+
 /*	Exchanges the content of the container by the content of x, which is another map of the same type. 
  *	Sizes may differ.
  *	After the call to this member function, the elements in this container are those which were in x before the 
@@ -524,6 +526,47 @@ template < class Key,											 	// map::key_type
 				_rdel(_head);
 				_lend = new node_type();
 				_rend = new node_type();
+			}
+
+/*-------------------------------------------OBSERVERS-------------------------------------------*/
+/*-------------------------------------------OPERATIONS-------------------------------------------*/
+
+/*	Searches the container for an element with a key equivalent to k and returns an iterator to it if found, 
+ *	otherwise it returns an iterator to map::end.
+ *	Two keys are considered equivalent if the container's comparison object returns false reflexively
+ *	(i.e., no matter the order in which the elements are passed as arguments). */
+
+			iterator					find (const key_type& k) {
+				for (iterator i = begin(); i != end(); i++) {
+					if (!_kcomp(i->first, k) && !_kcomp(k, i->first)) {
+						return i;
+					}
+				}
+				return end();
+			}
+
+			const_iterator				find (const key_type& k) const {
+				for (iterator i = begin(); i != end(); i++) {
+					if (!_kcomp(i->first, k) && !_kcomp(k, i->first)) {
+						return i;
+					}
+				}
+				return end();
+			}
+
+/*	Searches the container for elements with a key equivalent to k and returns the number of matches.
+ *	Because all elements in a map container are unique, the function can only return 1 (if the element 
+ *	is found) or zero (otherwise).
+ *	Two keys are considered equivalent if the container's comparison object returns false reflexively
+ *	(i.e., no matter the order in which the keys are passed as arguments).	*/
+
+			size_type count (const key_type& k) const {
+				for (const_iterator i = begin(); i != end(); i++) {
+					if (!_kcomp(i->first, k) && !_kcomp(k, i->first)) {
+						return 1;
+					}
+				}
+				return 0;
 			}
 
 /*-------------------------------------------NON-STL FUNCTIONS-------------------------------------------*/

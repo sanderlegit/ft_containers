@@ -64,8 +64,8 @@ key_comp	    Return key comparison object (public member function )		:
 value_comp	    Return value comparison object (public member function )	: 
 
 Operations:
-find		    Get iterator to element (public member function )
-count		    Count elements with a specific key (public member function )
+find		    Get iterator to element (public member function )			: done|tested
+count		    Count elements with a specific key (public member function ): done|tested
 lower_bound		Return iterator to lower bound (public member function )
 upper_bound		Return iterator to upper bound (public member function )
 equal_range		Get range of equal elements (public member function )
@@ -81,4 +81,5 @@ find deletenode to erase
 	delete deletenode
 	add node connections
 
+https://we.tl/t-Kg5yQP7sIV
 		

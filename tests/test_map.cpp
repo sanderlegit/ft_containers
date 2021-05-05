@@ -1350,8 +1350,8 @@ void		test_clear(data<K, M> *d, bool empty) {
 	delete ft;
 }
 
-template<class K, class M>
-void		test_modifiers(data<K, M> *d) {
+template<class k, class m>
+void		test_modifiers(data<k, m> *d) {
 	print_title("insert [single]");
 	test_insert_single(d, 0);
 	test_insert_single(d, 1);
@@ -1374,6 +1374,112 @@ void		test_modifiers(data<K, M> *d) {
 }
 /*-----------------------------------OBSERVERS TESTS-----------------------------------*/
 /*-----------------------------------OPERATIONS TESTS-----------------------------------*/
+
+template<class K, class M>
+void		test_find(data<K, M> *d, bool empty) {
+	std::map<K, M>						*std = NULL;
+	ft::map<K, M>						*ft = NULL;
+	typename std::map<K, M>::iterator	stdi;
+	typename ft::map<K, M>::iterator	fti;
+	int									offset;
+	K									key;
+
+	create_map(std, ft, empty);
+	testing_on("random filled map size: " << std->size());
+
+	key = randomize<K>();
+	testing("ret = m.find(" << key << ")");
+	stdi = std->find(key);
+	fti = ft->find(key);
+	print_comp("ret == end()", stdi == std->end(), fti == ft->end());
+	comp((stdi == std->end()) == (fti == ft->end()));
+
+	if (empty) {
+		equal(std, ft);
+		incr_score(d);
+		delete std;
+		delete ft;
+		return;
+	}
+
+	offset = rand() % std->size();
+	testing("ret = m.find((m.begin() + " << offset << ").k)");
+	stdi = std->begin();
+	fti = ft->begin();
+	for (int i = 0; i < offset; i++) {
+		stdi++;
+		fti++;
+	}
+	stdi = std->find(stdi->first);
+	fti = ft->find(fti->first);
+	print_comp("ret.k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("ret.m", fti->second, fti->second);
+	comp(stdi->second == fti->second);
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		test_count(data<K, M> *d, bool empty) {
+	std::map<K, M>						*std = NULL;
+	ft::map<K, M>						*ft = NULL;
+	typename std::map<K, M>::iterator	stdi;
+	typename ft::map<K, M>::iterator	fti;
+	typename std::map<K, M>::size_type	r1;
+	typename ft::map<K, M>::size_type	r2;
+	int									offset;
+	K									key;
+
+	create_map(std, ft, empty);
+	testing_on("random filled map size: " << std->size());
+
+	key = randomize<K>();
+	testing("ret = m.count(" << key << ")");
+	r1 = std->count(key);
+	r2 = ft->count(key);
+	print_comp("ret", r1, r2);
+	comp(r1 == r2);
+
+	if (empty) {
+		equal(std, ft);
+		incr_score(d);
+		delete std;
+		delete ft;
+		return;
+	}
+
+	offset = rand() % std->size();
+	testing("ret = m.count((m.begin() + " << offset << ").k)");
+	stdi = std->begin();
+	fti = ft->begin();
+	for (int i = 0; i < offset; i++) {
+		stdi++;
+		fti++;
+	}
+	r1 = std->count(stdi->first);
+	r2 = ft->count(fti->first);
+	print_comp("ret", r1, r2);
+	comp(r1 == r2);
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class k, class m>
+void		test_operations(data<k, m> *d) {
+	print_title("find");
+	test_find(d, 0);
+	test_find(d, 1);
+	print_title("count");
+	test_count(d, 0);
+	test_count(d, 1);
+}
 
 /*-----------------------------------MAIN-----------------------------------*/
 template<class K, class M>
@@ -1398,8 +1504,8 @@ void		do_tests(void) {
 	test_modifiers(d);
 	/* print_group_title("OBSERVERS"); */
 	/* test_observers(d); */
-	/* print_group_title("OPERATIONS"); */
-	/* test_operations(d); */
+	print_group_title("OPERATIONS");
+	test_operations(d);
 	/* print_group_title("ITERATOR CLASS"); */
 	/* test_iterator_class(d); */
 
