@@ -1471,6 +1471,117 @@ void		test_count(data<K, M> *d, bool empty) {
 	delete ft;
 }
 
+template<class K, class M>
+void		test_lower_bound(data<K, M> *d) {
+	std::map<K, M>						*std = NULL;
+	ft::map<K, M>						*ft = NULL;
+	typename std::map<K, M>::iterator	stdi;
+	typename ft::map<K, M>::iterator	fti;
+	int									offset;
+	K									key;
+
+	create_map(std, ft, 1);
+	testing_on("random filled map size: " << std->size());
+
+	key = randomize<K>();
+	testing("ret = m.lower_bound(" << key << ")");
+	stdi = std->lower_bound(key);
+	fti = ft->lower_bound(key);
+	print_comp("ret == end()", stdi == std->end(), fti == ft->end());
+	comp((stdi == std->end()) == (fti == ft->end()));
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_map(std, ft, 0);
+	offset = rand() % std->size();
+	testing("ret = m.lower_bound((m.begin() + " << offset << ").k)");
+	stdi = std->begin();
+	fti = ft->begin();
+	for (int i = 0; i < offset; i++) {
+		stdi++;
+		fti++;
+	}
+	stdi = std->lower_bound(stdi->first);
+	fti = ft->lower_bound(fti->first);
+	print_comp("ret.k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("ret.m", fti->second, fti->second);
+	comp(stdi->second == fti->second);
+
+	testing("ret = m.lower_bound((m.begin() + " << offset << ").k - 1)");
+	stdi = std->lower_bound(stdi->first - 1);
+	fti = ft->lower_bound(fti->first - 1);
+	print_comp("ret.k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("ret.m", fti->second, fti->second);
+	comp(stdi->second == fti->second);
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		test_upper_bound(data<K, M> *d) {
+	std::map<K, M>						*std = NULL;
+	ft::map<K, M>						*ft = NULL;
+	typename std::map<K, M>::iterator	stdi;
+	typename ft::map<K, M>::iterator	fti;
+	int									offset;
+	K									key;
+
+	create_map(std, ft, 1);
+	testing_on("random filled map size: " << std->size());
+
+	key = randomize<K>();
+	testing("ret = m.upper_bound(" << key << ")");
+	stdi = std->upper_bound(key);
+	fti = ft->upper_bound(key);
+	print_comp("ret == end()", stdi == std->end(), fti == ft->end());
+	comp((stdi == std->end()) == (fti == ft->end()));
+
+	equal(std, ft);
+	incr_score(d);
+
+	/* offset = 0; */
+	/* while (offset <= 1) { */
+		delete std;
+		delete ft;
+		create_map(std, ft, 0);
+		offset = rand() % std->size();
+	/* } */
+	testing("ret = m.upper_bound((m.begin() + " << offset << ").k)");
+	stdi = std->begin();
+	fti = ft->begin();
+	for (int i = 0; i < offset; i++) {
+		stdi++;
+		fti++;
+	}
+	stdi = std->upper_bound(stdi->first);
+	fti = ft->upper_bound(fti->first);
+	print_comp("ret.k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("ret.m", fti->second, fti->second);
+	comp(stdi->second == fti->second);
+
+	testing("ret = m.upper_bound((m.begin() + " << offset << ").k - 1)");
+	stdi = std->upper_bound(stdi->first - 1);
+	fti = ft->upper_bound(fti->first - 1);
+	print_comp("ret.k", stdi->first, fti->first);
+	comp(stdi->first == fti->first);
+	print_comp("ret.m", fti->second, fti->second);
+	comp(stdi->second == fti->second);
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
 template<class k, class m>
 void		test_operations(data<k, m> *d) {
 	print_title("find");
@@ -1479,6 +1590,10 @@ void		test_operations(data<k, m> *d) {
 	print_title("count");
 	test_count(d, 0);
 	test_count(d, 1);
+	print_title("lower_bound");
+	test_lower_bound(d);
+	print_title("upper_bound");
+	test_upper_bound(d);
 }
 
 /*-----------------------------------MAIN-----------------------------------*/

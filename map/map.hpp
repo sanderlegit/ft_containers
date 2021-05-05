@@ -560,7 +560,7 @@ template < class Key,											 	// map::key_type
  *	Two keys are considered equivalent if the container's comparison object returns false reflexively
  *	(i.e., no matter the order in which the keys are passed as arguments).	*/
 
-			size_type count (const key_type& k) const {
+			size_type					count (const key_type& k) const {
 				for (const_iterator i = begin(); i != end(); i++) {
 					if (!_kcomp(i->first, k) && !_kcomp(k, i->first)) {
 						return 1;
@@ -568,6 +568,44 @@ template < class Key,											 	// map::key_type
 				}
 				return 0;
 			}
+
+/*	Returns an iterator pointing to the first element in the container whose key is not considered to
+ *	go before k (i.e., either it is equivalent or goes after).
+ *	The function uses its internal comparison object (key_comp) to determine this, returning an iterator
+ *	to the first element for which key_comp(element_key,k) would return false.	*/
+
+			iterator					lower_bound (const key_type& k) {
+				for (iterator i = begin(); i != end(); i++) {
+					if (!_kcomp(i->first, k)) {
+						return i;
+					}
+				}
+				return end();
+			}
+
+			const_iterator				lower_bound (const key_type& k) const {
+				for (const_iterator i = begin(); i != end(); i++) {
+					if (!_kcomp(i->first, k)) {
+						return i;
+					}
+				}
+				return end();
+			}
+/*	Returns an iterator pointing to the first element in the container whose key is considered to 
+ *	go after k.
+ *	The function uses its internal comparison object (key_comp) to determine this, returning an 
+ *	iterator to the first element for which key_comp(k,element_key) would return true.	*/
+
+			iterator					upper_bound (const key_type& k) {
+				for (iterator i = begin(); i != end(); i++) {
+					if (_kcomp(k, i->first)) {
+						return i;
+					}
+				}
+				return end();
+			}
+
+			const_iterator				upper_bound (const key_type& k) const;
 
 /*-------------------------------------------NON-STL FUNCTIONS-------------------------------------------*/
 		private:
