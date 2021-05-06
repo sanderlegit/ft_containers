@@ -537,6 +537,41 @@ template < class Key,											 	// map::key_type
 			}
 
 /*-------------------------------------------OBSERVERS-------------------------------------------*/
+
+/*	Returns a copy of the comparison object used by the container to compare keys.	*/
+
+			key_compare key_comp() const {
+				return _kcomp;
+			}
+
+
+/*	Returns a comparison object that can be used to compare two elements to get whether the key of 
+ *	the first one goes before the second.
+ *	The arguments taken by this function object are of member type value_type (defined in map as an alias
+ *	of pair<const key_type,mapped_type>), but the mapped_type part of the value is not taken into 
+ *	consideration in this comparison.
+ *	The comparison object returned is an object of the member type map::value_compare, which is a 
+ *	nested class that uses the internal comparison object to generate the appropriate comparison functional 
+ *	class. It is defined with the same behavior as:	*/
+
+			class value_compare : public std::binary_function<value_type, value_type, bool>{
+				friend class map;
+				protected:
+					Compare comp;
+					value_compare (Compare c) : comp(c) {}
+				public:
+					typedef bool		result_type;
+					typedef value_type	first_argument_type;
+					typedef value_type	second_argument_type;
+					bool				operator() (const value_type& x, const value_type& y) const {
+						return comp(x.first, y.first);
+					}
+			};
+
+			value_compare					value_comp() const {
+				return value_compare(_kcomp);
+			}
+
 /*-------------------------------------------OPERATIONS-------------------------------------------*/
 
 /*	Searches the container for an element with a key equivalent to k and returns an iterator to it if found, 

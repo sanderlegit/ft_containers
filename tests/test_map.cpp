@@ -1373,6 +1373,83 @@ void		test_modifiers(data<k, m> *d) {
 	test_clear(d, 1);
 }
 /*-----------------------------------OBSERVERS TESTS-----------------------------------*/
+
+template<class K, class M>
+void		test_key_comp(data<K, M> *d) {
+	std::map<K, M>						*std = NULL;
+	ft::map<K, M>						*ft = NULL;
+	typename std::map<K, M>::iterator	stdi;
+	typename ft::map<K, M>::iterator	fti;
+	int									r1;
+	int									r2;
+	/* K									key; */
+
+	create_map_size(std, ft, 5);
+	testing_on("random filled map size: " << std->size());
+
+	testing("v_c = m.key_comp()");
+	testing("m.v_c()(*b(), *(b() + 1))");
+	r1 = std->key_comp()(std->begin()->first, (++std->begin())->first);
+	r2 = ft->key_comp()(ft->begin()->first, (ft->begin() + 1)->first);
+	print_comp("ret", r1, r2);
+	comp(r1 == r2);
+	incr_score(d);
+
+	testing("m.v_c()(*(b() + 1)), *b()");
+	r1 = std->key_comp()((++std->begin())->first, std->begin()->first);
+	r2 = ft->key_comp()((ft->begin() + 1)->first, ft->begin()->first);
+	print_comp("ret", r1, r2);
+	comp(r1 == r2);
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+	return;
+}
+
+template<class K, class M>
+void		test_value_comp(data<K, M> *d) {
+	std::map<K, M>						*std = NULL;
+	ft::map<K, M>						*ft = NULL;
+	typename std::map<K, M>::iterator	stdi;
+	typename ft::map<K, M>::iterator	fti;
+	int									r1;
+	int									r2;
+	/* K									key; */
+
+	create_map_size(std, ft, 5);
+	testing_on("random filled map size: " << std->size());
+
+	testing("v_c = m.value_comp()");
+	testing("m.v_c()(*b(), *(b() + 1))");
+	r1 = std->value_comp()(*std->begin(), *(++std->begin()));
+	r2 = ft->value_comp()(*ft->begin(), *(ft->begin() + 1));
+	print_comp("ret", r1, r2);
+	comp(r1 == r2);
+	incr_score(d);
+
+	testing("m.v_c()(*(b() + 1)), *b()");
+	r1 = std->value_comp()(*(++std->begin()), *std->begin());
+	r2 = ft->value_comp()(*(ft->begin() + 1), *ft->begin());
+	print_comp("ret", r1, r2);
+	comp(r1 == r2);
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+	return;
+}
+
+template<class k, class m>
+void		test_observers(data<k, m> *d) {
+	print_title("key_comp");
+	test_key_comp(d);
+	print_title("value_comp");
+	test_value_comp(d);
+}
+
 /*-----------------------------------OPERATIONS TESTS-----------------------------------*/
 
 template<class K, class M>
@@ -1686,8 +1763,8 @@ void		do_tests(void) {
 	test_element_access(d);
 	print_group_title("MODIFIERS");
 	test_modifiers(d);
-	/* print_group_title("OBSERVERS"); */
-	/* test_observers(d); */
+	print_group_title("OBSERVERS");
+	test_observers(d);
 	print_group_title("OPERATIONS");
 	test_operations(d);
 	/* print_group_title("ITERATOR CLASS"); */
