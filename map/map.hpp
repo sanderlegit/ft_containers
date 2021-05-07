@@ -501,6 +501,93 @@ template < class Key,											 	// map::key_type
 				}
 			}
 
+/*	Removes from the map container either a single element or a range of elements ([first,last)).
+ *	This effectively reduces the container size by the number of elements removed, which are destroyed.	*/
+
+
+			void						erase (iterator position) {
+				_rdebug(_head, 0, 3);
+				node_type	*ins;
+				node_type	*del;
+				bool		wentchild;
+
+				std::cout << "deleting: " << position->first << std::endl;
+				del = position.node;
+				ins = position.node;
+				wentchild = false;
+				if (del->right) {
+					ins = del->right;
+					while (ins->left) {
+						wentchild = true;
+						ins = ins->left;
+					}
+				} else if (del->left) {
+					ins = del->left;
+					while (ins->right) {
+						wentchild = true;
+						ins = ins->right;
+					}
+				} else {
+					ins = NULL;
+				}
+				if (ins)
+					std::cout << "insert: " << ins->data.first << std::endl;
+				if (ins) {
+					//if we went left and wentchild, ins must be right child, cannot have a right node
+					if (ins->left) {
+						if (wentchild) {
+							ins->parent->right = ins->left;
+							ins->left->parent = ins->parent;
+						} else {
+							ins->parent->left = ins->left;
+							/* ins->left->parent = ins->parent; */
+						}
+					//if we went right and wentchild, ins must be left child, cannot have a left node
+					} else if (ins->right) {
+						if (wentchild) {
+							ins->parent->left = ins->right;
+							ins->right->parent = ins->parent;
+						} else {
+							ins->parent->right = ins->right;
+							/* ins->right->parent = ins->parent; */
+						}
+					}
+					ins->left = del->left;
+					ins->right = del->right;
+					ins->parent = del->parent;
+				}
+				//if ins
+					//if (i->left)
+						//set parent/child connection to i->left
+						//if (i->right)
+							//set i->left->right (while right != NULL) to i->right
+					//else (i->right)
+						//set parent connection to i->right
+					//give i the del nodes connections
+					//parent
+					//left
+					//right
+					//set parent connection
+				//parent connect of del == ins
+				if (del == _head) {
+					_head = ins;
+				} else {
+					if (del->parent->right == del) {
+						del->parent->right = ins;
+					} else if (del->parent->left == del) {
+						del->parent->left = ins;
+					}
+				}
+				delete position.node;
+				_size--;
+				_fix_tail();
+				_rdebug(_head, 0, 3);
+				return;
+			}
+
+			size_type					erase (const key_type& k);
+			void						erase (iterator first, iterator last);
+
 /*	Exchanges the content of the container by the content of x, which is another map of the same type. 
  *	Sizes may differ.
  *	After the call to this member function, the elements in this container are those which were in x before the 
@@ -731,6 +818,34 @@ template < class Key,											 	// map::key_type
 					delete me;
 				}
 				_head = NULL;
+			}
+
+			void					_rdebug(node_type *me, int pad, int incr) {
+				if (me) {
+					if (pad / incr > _size) {
+						std::cout << "infinite loop!" << std::endl;
+						return;
+					}
+					if (me->right)
+						_rdebug(me->right, pad + incr, incr);
+					for (int i = 0; i < pad; i++) {
+						if (i % incr == 0)
+							std::cout << "|";
+						else
+							std::cout << " ";
+					}
+					/* std::cout << me->data.first; */
+					printf("%-4d", me->data.first);
+					int tmp = _size - (pad / incr);
+					tmp *= incr;
+					for (int i = 0; i < tmp; i++) {
+						std::cout << "-";
+					}
+						std::cout << "\t";
+					std::cout << me << "\tp: " << me->parent << "\tl: " << me->left << "\tr: " << me->right << std::endl;
+					if (me->left)
+						_rdebug(me->left, pad + incr, incr);
+				}
 			}
 
 	};

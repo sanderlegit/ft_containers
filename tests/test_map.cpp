@@ -34,7 +34,7 @@
 #define TESTING	true
 #define TESTING_ON	true
 #define VERBOSE	true
-/* #define EQUALITY	true */
+#define EQUALITY	true
 #define VVERBOSE	true
 
 /*--------------------------------DO NOT TOUCH--------------------------------*/
@@ -1309,6 +1309,34 @@ void		test_insert_range(data<K, M> *d, bool empty, bool emptysrc) {
 }
 
 template<class K, class M>
+void		test_erase_single(data<K, M> *d) {
+	std::map<K, M>						*std = NULL;
+	ft::map<K, M>						*ft = NULL;
+	typename std::map<K, M>::iterator	stdi;
+	typename ft::map<K, M>::iterator	fti;
+	int									offset;
+	/* K									key; */
+
+	create_map_size(std, ft, 15);
+	testing_on("random filled map size: " << std->size());
+	offset = rand() % std->size();
+	testing("m.erase((m.begin() + " << offset << "))");
+	stdi = std->begin();
+	fti = ft->begin();
+	for (int i = 0; i < offset; i++) {
+		stdi++;
+		fti++;
+	}
+	std->erase(stdi);
+	ft->erase(fti);
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+
+template<class K, class M>
 void		test_swap(data<K, M> *d, bool empty, bool emptysrc) {
 	std::map<K, M>		*std = NULL;
 	ft::map<K, M>		*ft = NULL;
@@ -1352,25 +1380,29 @@ void		test_clear(data<K, M> *d, bool empty) {
 
 template<class k, class m>
 void		test_modifiers(data<k, m> *d) {
-	print_title("insert [single]");
-	test_insert_single(d, 0);
-	test_insert_single(d, 1);
-	print_title("insert [hint]");
-	test_insert_hint(d);
-	print_title("insert [range]");
-	test_insert_range(d, 0, 0);
-	test_insert_range(d, 0, 1);
-	test_insert_range(d, 1, 0);
-	test_insert_range(d, 1, 1);
+	/* print_title("insert [single]"); */
+	/* test_insert_single(d, 0); */
+	/* test_insert_single(d, 1); */
+	/* print_title("insert [hint]"); */
+	/* test_insert_hint(d); */
+	/* print_title("insert [range]"); */
+	/* test_insert_range(d, 0, 0); */
+	/* test_insert_range(d, 0, 1); */
+	/* test_insert_range(d, 1, 0); */
+	/* test_insert_range(d, 1, 1); */
+	/* print_title("erase"); */
+	/* test_erase_single(d); */
+	/* print_title("swap"); */
+	/* test_swap(d, 0, 0); */
+	/* test_swap(d, 0, 1); */
+	/* test_swap(d, 1, 0); */
+	/* test_swap(d, 1, 1); */
+	/* print_title("clear"); */
+	/* test_clear(d, 0); */
+	/* test_clear(d, 1); */
+
 	print_title("erase");
-	print_title("swap");
-	test_swap(d, 0, 0);
-	test_swap(d, 0, 1);
-	test_swap(d, 1, 0);
-	test_swap(d, 1, 1);
-	print_title("clear");
-	test_clear(d, 0);
-	test_clear(d, 1);
+	test_erase_single(d);
 }
 /*-----------------------------------OBSERVERS TESTS-----------------------------------*/
 
@@ -1573,6 +1605,7 @@ void		test_lower_bound(data<K, M> *d) {
 	delete ft;
 
 	create_map(std, ft, 0);
+	testing_on("random filled map size: " << std->size());
 	offset = rand() % std->size();
 	testing("ret = m.lower_bound((m.begin() + " << offset << ").k)");
 	stdi = std->begin();
@@ -1631,6 +1664,7 @@ void		test_upper_bound(data<K, M> *d) {
 		create_map(std, ft, 0);
 		offset = rand() % std->size();
 	/* } */
+	testing_on("random filled map size: " << std->size());
 	testing("ret = m.upper_bound((m.begin() + " << offset << ").k)");
 	stdi = std->begin();
 	fti = ft->begin();
@@ -1688,6 +1722,7 @@ void		test_equal_range(data<K, M> *d) {
 	delete ft;
 
 	create_map(std, ft, 0);
+	testing_on("random filled map size: " << std->size());
 	offset = rand() % std->size();
 	testing("ret = m.equal_range((m.begin() + " << offset << ").k)");
 	stdi = std->begin();
@@ -1702,6 +1737,7 @@ void		test_equal_range(data<K, M> *d) {
 	comp(r1.first->first == r2.first->first);
 	print_comp("r.i.m", r1.first->second, r2.first->second);
 	comp(r1.first->second == r2.first->second);
+	//check this isnt end?
 	print_comp("r.i2.k", r1.second->first, r2.second->first);
 	comp(r1.second->first == r2.second->first);
 	print_comp("r.i2.m", r1.second->second, r2.second->second);
@@ -1761,14 +1797,17 @@ void		do_tests(void) {
 	test_capacity(d);
 	print_group_title("ELEMENT ACCESS");
 	test_element_access(d);
-	print_group_title("MODIFIERS");
-	test_modifiers(d);
+	/* print_group_title("MODIFIERS"); */
+	/* test_modifiers(d); */
 	print_group_title("OBSERVERS");
 	test_observers(d);
 	print_group_title("OPERATIONS");
 	test_operations(d);
 	/* print_group_title("ITERATOR CLASS"); */
 	/* test_iterator_class(d); */
+
+	print_group_title("MODIFIERS");
+	test_modifiers(d);
 
 	std::cout << std::endl << GREEN << "pass: " << RESET << d->pass << RED << "\tfail:\t" << RESET << d->fail << std::endl;
 	delete d;
