@@ -506,69 +506,77 @@ template < class Key,											 	// map::key_type
 
 
 			void						erase (iterator position) {
-				_rdebug(_head, 0, 3);
 				node_type	*ins;
 				node_type	*del;
 				bool		wentchild;
+				bool		wentleft;
 
-				std::cout << "deleting: " << position->first << std::endl;
+				/* _rdebug(_head, 0, 3); */
+				/* std::cout << "deleting: " << position->first << std::endl; */
 				del = position.node;
 				ins = position.node;
 				wentchild = false;
+				//finding the ins node
 				if (del->right) {
 					ins = del->right;
 					while (ins->left) {
 						wentchild = true;
 						ins = ins->left;
 					}
+					wentleft = false;
 				} else if (del->left) {
 					ins = del->left;
 					while (ins->right) {
 						wentchild = true;
 						ins = ins->right;
 					}
+					wentleft = true;
 				} else {
 					ins = NULL;
 				}
-				if (ins)
-					std::cout << "insert: " << ins->data.first << std::endl;
+				/* if (ins) */
+				/* 	std::cout << "insert: " << ins->data.first << std::endl; */
+				//setting ins
 				if (ins) {
-					//if we went left and wentchild, ins must be right child, cannot have a right node
-					if (ins->left) {
-						if (wentchild) {
+					//fixing ins children
+					if (wentleft) {
+						//if we went left and wentchild, ins must be right child, cannot have a right node
+						if (wentchild && ins->left) {
 							ins->parent->right = ins->left;
 							ins->left->parent = ins->parent;
-						} else {
+						} else if (ins->left) {
 							ins->parent->left = ins->left;
 							/* ins->left->parent = ins->parent; */
+						} else if (wentchild) {
+							ins->parent->right = NULL; 
+						} else {
+							ins->parent->left = NULL; 
 						}
-					//if we went right and wentchild, ins must be left child, cannot have a left node
-					} else if (ins->right) {
-						if (wentchild) {
+					} else {
+						//if we went right and wentchild, ins must be left child, cannot have a left node
+						if (wentchild && ins->right) {
 							ins->parent->left = ins->right;
 							ins->right->parent = ins->parent;
-						} else {
+						} else if (ins->right) {
 							ins->parent->right = ins->right;
 							/* ins->right->parent = ins->parent; */
+						} else if (wentchild) {
+							ins->parent->left = NULL; 
+						} else {
+							ins->parent->right = NULL; 
 						}
 					}
+					//giving ins dels links
 					ins->left = del->left;
+					if (del->left)
+						del->left->parent = ins;
 					ins->right = del->right;
+					if (del->right)
+						del->right->parent = ins;
 					ins->parent = del->parent;
 				}
-				//if ins
-					//if (i->left)
-						//set parent/child connection to i->left
-						//if (i->right)
-							//set i->left->right (while right != NULL) to i->right
-					//else (i->right)
-						//set parent connection to i->right
-					//give i the del nodes connections
-					//parent
-					//left
-					//right
-					//set parent connection
-				//parent connect of del == ins
+
+				//fixing dels parent
 				if (del == _head) {
 					_head = ins;
 				} else {
@@ -578,10 +586,11 @@ template < class Key,											 	// map::key_type
 						del->parent->left = ins;
 					}
 				}
+
 				delete position.node;
 				_size--;
 				_fix_tail();
-				_rdebug(_head, 0, 3);
+				/* _rdebug(_head, 0, 3); */
 				return;
 			}
 

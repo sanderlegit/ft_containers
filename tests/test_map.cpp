@@ -34,7 +34,7 @@
 #define TESTING	true
 #define TESTING_ON	true
 #define VERBOSE	true
-#define EQUALITY	true
+/* #define EQUALITY	true */
 #define VVERBOSE	true
 
 /*--------------------------------DO NOT TOUCH--------------------------------*/
@@ -1309,7 +1309,7 @@ void		test_insert_range(data<K, M> *d, bool empty, bool emptysrc) {
 }
 
 template<class K, class M>
-void		test_erase_single(data<K, M> *d) {
+void		test_erase_iter(data<K, M> *d) {
 	std::map<K, M>						*std = NULL;
 	ft::map<K, M>						*ft = NULL;
 	typename std::map<K, M>::iterator	stdi;
@@ -1317,7 +1317,8 @@ void		test_erase_single(data<K, M> *d) {
 	int									offset;
 	/* K									key; */
 
-	create_map_size(std, ft, 15);
+	/* create_map_size(std, ft, 15); */
+	create_map(std, ft, 0);
 	testing_on("random filled map size: " << std->size());
 	offset = rand() % std->size();
 	testing("m.erase((m.begin() + " << offset << "))");
@@ -1380,29 +1381,28 @@ void		test_clear(data<K, M> *d, bool empty) {
 
 template<class k, class m>
 void		test_modifiers(data<k, m> *d) {
-	/* print_title("insert [single]"); */
-	/* test_insert_single(d, 0); */
-	/* test_insert_single(d, 1); */
-	/* print_title("insert [hint]"); */
-	/* test_insert_hint(d); */
-	/* print_title("insert [range]"); */
-	/* test_insert_range(d, 0, 0); */
-	/* test_insert_range(d, 0, 1); */
-	/* test_insert_range(d, 1, 0); */
-	/* test_insert_range(d, 1, 1); */
-	/* print_title("erase"); */
-	/* test_erase_single(d); */
-	/* print_title("swap"); */
-	/* test_swap(d, 0, 0); */
-	/* test_swap(d, 0, 1); */
-	/* test_swap(d, 1, 0); */
-	/* test_swap(d, 1, 1); */
-	/* print_title("clear"); */
-	/* test_clear(d, 0); */
-	/* test_clear(d, 1); */
-
-	print_title("erase");
-	test_erase_single(d);
+	print_title("insert [single]");
+	test_insert_single(d, 0);
+	test_insert_single(d, 1);
+	print_title("insert [hint]");
+	test_insert_hint(d);
+	print_title("insert [range]");
+	test_insert_range(d, 0, 0);
+	test_insert_range(d, 0, 1);
+	test_insert_range(d, 1, 0);
+	test_insert_range(d, 1, 1);
+	print_title("erase [iter]");
+	test_erase_iter(d);
+	print_title("erase [key]");
+	print_title("erase [range]");
+	print_title("swap");
+	test_swap(d, 0, 0);
+	test_swap(d, 0, 1);
+	test_swap(d, 1, 0);
+	test_swap(d, 1, 1);
+	print_title("clear");
+	test_clear(d, 0);
+	test_clear(d, 1);
 }
 /*-----------------------------------OBSERVERS TESTS-----------------------------------*/
 

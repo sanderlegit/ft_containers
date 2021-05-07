@@ -55,7 +55,7 @@ operator[]	    Access element (public member function )					: done|tested
 
 Modifiers:
 insert		    Insert elements (public member function )	single: done|tested	hint: done|tested	range: done|tested
-erase		    Erase elements (public member function )	: 
+erase		    Erase elements (public member function )	iter: done|tested key: range:  
 swap		    Swap content (public member function )		: done|tested
 clear		    Clear content (public member function )		: done|tested
 
@@ -68,17 +68,8 @@ find		    Get iterator to element (public member function )			: done|tested
 count		    Count elements with a specific key (public member function ): done|tested
 lower_bound		Return iterator to lower bound (public member function )	: done|tested
 upper_bound		Return iterator to upper bound (public member function )	: done|tested
+	bugs in these tests
 equal_range		Get range of equal elements (public member function )		: done|tested
-
-
-find deletenode to erase
-	find next highest node
-		if right: traverse right
-			while left: traverse left
-		else if left: traverse left
-			while right: traverse right
-	remove node connections
-	delete deletenode
-	add node connections
+	bugs in these tests
 
 https://we.tl/t-Kg5yQP7sIV
