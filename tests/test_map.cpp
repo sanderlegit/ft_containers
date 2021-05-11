@@ -697,6 +697,8 @@ void		itest_incr_decr(data<K, M> *d) {
 	print_comp("r->m", r2->second, r1->second);
 	comp(r2->second == r1->second);
 	incr_score(d);
+	delete r1;
+	delete r2;
 
 	testing("r = *i--");
 	r1 = new typename ft::map<K, M>::value_type(*fti--);
@@ -710,6 +712,8 @@ void		itest_incr_decr(data<K, M> *d) {
 	print_comp("r->m", r2->second, r1->second);
 	comp(r2->second == r1->second);
 	incr_score(d);
+	delete r1;
+	delete r2;
 
 	delete std;
 	delete ft;
@@ -951,6 +955,8 @@ void		irtest_incr_decr(data<K, M> *d) {
 	print_comp("r->m", r2->second, r1->second);
 	comp(r2->second == r1->second);
 	incr_score(d);
+	delete r1;
+	delete r2;
 
 	testing("r = *i--");
 	r1 = new typename ft::map<K, M>::value_type(*fti--);
@@ -964,6 +970,8 @@ void		irtest_incr_decr(data<K, M> *d) {
 	print_comp("r->m", r2->second, r1->second);
 	comp(r2->second == r1->second);
 	incr_score(d);
+	delete r1;
+	delete r2;
 
 	delete std;
 	delete ft;
@@ -1336,6 +1344,116 @@ void		test_erase_iter(data<K, M> *d) {
 	delete ft;
 }
 
+template<class K, class M>
+void		test_erase_key(data<K, M> *d, bool empty) {
+	std::map<K, M>						*std = NULL;
+	ft::map<K, M>						*ft = NULL;
+	typename std::map<K, M>::iterator	stdi;
+	typename ft::map<K, M>::iterator	fti;
+	typename std::map<K, M>::size_type	s1;
+	typename ft::map<K, M>::size_type	s2;
+	int									offset;
+	K									key;
+
+	create_map(std, ft, empty);
+	testing_on("random filled map size: " << std->size());
+
+	key = randomize<K>();
+	testing("ret = m.erase(" << key << ")");
+	s1 = std->erase(key);
+	s2 = ft->erase(key);
+	print_comp("ret", s1, s2);
+	comp(s1 == s2);
+
+	if (empty) {
+		equal(std, ft);
+		incr_score(d);
+		delete std;
+		delete ft;
+		return;
+	}
+
+	offset = rand() % std->size();
+	testing("ret = m.erase((m.begin() + " << offset << ").k)");
+	stdi = std->begin();
+	fti = ft->begin();
+	for (int i = 0; i < offset; i++) {
+		stdi++;
+		fti++;
+	}
+	s1 = std->erase(stdi->first);
+	s2 = ft->erase(fti->first);
+	print_comp("ret", s1, s2);
+	comp(s1 == s2);
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
+template<class K, class M>
+void		test_erase_range(data<K, M> *d, bool empty) {
+	std::map<K, M>						*std = NULL;
+	ft::map<K, M>						*ft = NULL;
+	typename std::map<K, M>::iterator	stdi;
+	typename ft::map<K, M>::iterator	fti;
+	int									offset;
+	K									key;
+
+	create_map(std, ft, empty);
+	testing_on("random filled map size: " << std->size());
+
+	key = randomize<K>();
+	testing("ret = m.erase(m.begin(), m.end())");
+	std->erase(std->begin(), std->end());
+	ft->erase(ft->begin(), ft->end());
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+	if (empty) {
+		return;
+	}
+
+	create_map(std, ft, 0);
+	testing_on("random filled map size: " << std->size());
+	offset = rand() % std->size();
+	testing("ret = m.erase((m.begin() + " << offset << ").k, m.end())");
+	stdi = std->begin();
+	fti = ft->begin();
+	for (int i = 0; i < offset; i++) {
+		stdi++;
+		fti++;
+	}
+	std->erase(stdi, std->end());
+	ft->erase(fti, ft->end());
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+
+	create_map(std, ft, 0);
+	testing_on("random filled map size: " << std->size());
+	offset = rand() % std->size();
+	testing("ret = m.erase((m.begin(), m.end() - " << offset << ").k)");
+	stdi = std->end();
+	fti = ft->end();
+	for (int i = 0; i < offset; i++) {
+		stdi--;
+		fti--;
+	}
+	std->erase(std->begin(), stdi);
+	ft->erase(ft->begin(), fti);
+
+	equal(std, ft);
+	incr_score(d);
+	delete std;
+	delete ft;
+}
+
 
 template<class K, class M>
 void		test_swap(data<K, M> *d, bool empty, bool emptysrc) {
@@ -1394,7 +1512,11 @@ void		test_modifiers(data<k, m> *d) {
 	print_title("erase [iter]");
 	test_erase_iter(d);
 	print_title("erase [key]");
+	test_erase_key(d, 0);
+	test_erase_key(d, 1);
 	print_title("erase [range]");
+	test_erase_range(d, 0);
+	test_erase_range(d, 1);
 	print_title("swap");
 	test_swap(d, 0, 0);
 	test_swap(d, 0, 1);
@@ -1797,17 +1919,15 @@ void		do_tests(void) {
 	test_capacity(d);
 	print_group_title("ELEMENT ACCESS");
 	test_element_access(d);
-	/* print_group_title("MODIFIERS"); */
-	/* test_modifiers(d); */
+	print_group_title("MODIFIERS");
+	test_modifiers(d);
 	print_group_title("OBSERVERS");
 	test_observers(d);
 	print_group_title("OPERATIONS");
 	test_operations(d);
-	/* print_group_title("ITERATOR CLASS"); */
-	/* test_iterator_class(d); */
 
-	print_group_title("MODIFIERS");
-	test_modifiers(d);
+	/* print_group_title("MODIFIERS"); */
+	/* test_modifiers(d); */
 
 	std::cout << std::endl << GREEN << "pass: " << RESET << d->pass << RED << "\tfail:\t" << RESET << d->fail << std::endl;
 	delete d;

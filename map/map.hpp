@@ -331,7 +331,11 @@ template < class Key,											 	// map::key_type
 			}
 
 			~map(void) {
-				_rdel(_head);
+				if (_head == NULL) {
+					delete _rend;
+					delete _lend;
+				} else 
+					_rdel(_head);
 			} 
 
 /*-------------------------------------------OPERATORS-------------------------------------------*/
@@ -594,8 +598,26 @@ template < class Key,											 	// map::key_type
 				return;
 			}
 
-			size_type					erase (const key_type& k);
-			void						erase (iterator first, iterator last);
+			size_type					erase (const key_type& k) {
+				iterator	i;
+
+				i = find(k);
+				if (i != end()) {
+					erase(i);
+					return 1;
+				}
+				return 0;
+			}
+
+			void						erase (iterator first, iterator last) {
+				iterator i;
+
+				while (first != last) {
+					i = first;
+					first++;
+					erase(i);
+				}
+			}
 
 /*	Exchanges the content of the container by the content of x, which is another map of the same type. 
  *	Sizes may differ.
@@ -627,9 +649,11 @@ template < class Key,											 	// map::key_type
 /*	Removes all elements from the map container (which are destroyed), leaving the container with a size of 0.	*/
 
 			void						clear() {
-				_rdel(_head);
-				_lend = new node_type();
-				_rend = new node_type();
+				if (_head != NULL) {
+					_rdel(_head);
+					_lend = new node_type();
+					_rend = new node_type();
+				}
 			}
 
 /*-------------------------------------------OBSERVERS-------------------------------------------*/
@@ -786,10 +810,6 @@ template < class Key,											 	// map::key_type
 			 *	returns: node_type* new node	*/
 
 			node_type*				_new_node(const value_type& val, node_type *left = NULL, node_type *right = NULL, node_type *parent = NULL) {
-				value_type	*tmp;
-
-				tmp = _alloc.allocate(1);
-				_alloc.construct(tmp, val);
 				return new node_type(val, left, right, parent);
 			}
 
@@ -798,7 +818,6 @@ template < class Key,											 	// map::key_type
 			void					_fix_tail(void) {
 				node_type	*ptr;
 
-				/* perror("fix tail: setting left"); */
 				ptr = _head;
 				while (ptr->left)
 					ptr = ptr->left;
@@ -806,7 +825,6 @@ template < class Key,											 	// map::key_type
 					_lend->parent = ptr;
 					ptr->left = _lend;
 				}
-				/* perror("fix tail: setting right"); */
 				ptr = _head;
 				while (ptr->right)
 					ptr = ptr->right;
@@ -814,7 +832,6 @@ template < class Key,											 	// map::key_type
 					_rend->parent = ptr;
 					ptr->right = _rend;
 				}
-				/* perror("fix tail: done"); */
 			}
 
 			void					_rdel(node_type *me) {
@@ -843,7 +860,6 @@ template < class Key,											 	// map::key_type
 						else
 							std::cout << " ";
 					}
-					/* std::cout << me->data.first; */
 					printf("%-4d", me->data.first);
 					int tmp = _size - (pad / incr);
 					tmp *= incr;
